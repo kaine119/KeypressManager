@@ -12,26 +12,26 @@ namespace Database.Types
         /// <summary>
         /// When the key was issued.
         /// </summary>
-        public DateTime DateTimeIssued { get; }
+        public DateTime DateTimeIssued { get; set; }
         /// <summary>
         /// Who drew the key.
         /// </summary>
-        public Person PersonDrawingKey { get; }
+        public Person PersonDrawingKey { get; set; }
         /// <summary>
         /// Who (as a staff member) issued the key.
         /// </summary>
-        public Person PersonIssuingKey { get; }
+        public Person PersonIssuingKey { get; set; }
         /// <summary>
         /// When the key was returned.
         /// </summary>
-        public DateTime DateTimeReturned { get; }
+        public DateTime DateTimeReturned { get; set; }
         /// <summary>
         /// Who returned the key.
         /// </summary>
-        public Person PersonReturningKey { get; }
+        public Person PersonReturningKey { get; set; }
         /// <summary>
         /// Who (as a staff member) received the key.
         /// </summary>
-        public Person PersonReceivingKey { get; }
+        public Person PersonReceivingKey { get; set; }
     }
 }

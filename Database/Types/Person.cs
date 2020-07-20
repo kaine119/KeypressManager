@@ -6,9 +6,17 @@ namespace Database.Types
     /// </summary>
     public class Person
     {
-        public string NRIC { get; }
-        public string Name { get; }
-        public Rank Rank { get; }
-        public string ContactNumber { get; }
+        public string NRIC { get; set; }
+        public string Name { get; set; }
+        public Rank Rank { get; set; }
+        public string ContactNumber { get; set; }
+
+        public Person(string nric, string name, Rank rank, string contactNumber)
+        {
+            NRIC = nric;
+            Name = name;
+            Rank = rank;
+            ContactNumber = contactNumber;
+        }
     }
 }

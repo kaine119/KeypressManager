@@ -7,6 +7,6 @@ namespace Database.Types
     public class KeyList
     {
         public string Name { get; set; }
-        public List<KeyBunch> Keys { get; }
+        public List<KeyBunch> Keys { get; set; }
     }
 }

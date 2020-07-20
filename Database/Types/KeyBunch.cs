@@ -8,6 +8,6 @@ namespace Database.Types
     {
         public string Name { get; set; }
         public string BunchNumber { get; set; }
-        public List<Person> AuthorizedPersonnel { get; }
+        public List<Person> AuthorizedPersonnel { get; set; }
     }
 }
