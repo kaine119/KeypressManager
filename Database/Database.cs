@@ -16,5 +16,7 @@ namespace Database
         {
             DatabaseModel.EstablishConnection($"Data source={databasePath}");
         }
+
+        public IEnumerable<Person> AllPersonnel => Person.GetAll();
     }
 }

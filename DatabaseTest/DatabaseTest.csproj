@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Database\Database.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFixtures\test.sqlite3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

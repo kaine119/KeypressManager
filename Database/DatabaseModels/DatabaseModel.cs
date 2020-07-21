@@ -20,6 +20,6 @@ namespace Database.DatabaseModels
 
         public int ID { get; set; }
         public abstract bool IsValid { get; }
-        //public abstract void Write();
+        public abstract void Write();
     }
 }

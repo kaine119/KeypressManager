@@ -10,5 +10,10 @@ namespace Database.DatabaseModels
         public List<KeyBunch> Keys { get; set; } = new List<KeyBunch>();
 
         public override bool IsValid => !(Name is null);
+
+        public override void Write()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

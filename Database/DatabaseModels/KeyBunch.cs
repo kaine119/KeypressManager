@@ -34,5 +34,10 @@ namespace Database.DatabaseModels
                 return AuthorizedPersonnel.Where(personnel => Regex.IsMatch(personnel.Name, query, RegexOptions.IgnoreCase)).ToList();
             }
         }
+
+        public override void Write()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

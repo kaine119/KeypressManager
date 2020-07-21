@@ -13,22 +13,32 @@ namespace Database.DatabaseModels
         /// When the key was issued.
         /// </summary>
         public DateTime? DateTimeIssued { get; set; }
+
+        /// <summary>
+        /// The bunch that was drawn.
+        /// </summary>
+        public KeyBunch? KeyBunchDrawn { get; set; }
+
         /// <summary>
         /// Who drew the key.
         /// </summary>
         public Person? PersonDrawingKey { get; set; }
+
         /// <summary>
         /// Who (as a staff member) issued the key.
         /// </summary>
         public Person? PersonIssuingKey { get; set; }
+
         /// <summary>
         /// When the key was returned.
         /// </summary>
         public DateTime? DateTimeReturned { get; set; }
+
         /// <summary>
         /// Who returned the key.
         /// </summary>
         public Person? PersonReturningKey { get; set; }
+
         /// <summary>
         /// Who (as a staff member) received the key.
         /// </summary>
@@ -49,13 +59,11 @@ namespace Database.DatabaseModels
         /// <summary>
         /// Whether the key has been returned.
         /// </summary>
-        public bool IsKeyReturned
-        {
-            get
-            {
-                return !(DateTimeReturned is null);
-            }
-        }
+        public bool IsKeyReturned => !(DateTimeReturned is null);
 
+        public override void Write()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
