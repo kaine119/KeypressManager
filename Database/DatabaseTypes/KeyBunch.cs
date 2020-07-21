@@ -10,9 +10,10 @@ namespace Database.DatabaseTypes
     {
         public string? Name { get; set; }
         public string? BunchNumber { get; set; }
+        public int? NumberOfKeys { get; set; }
         public List<Person> AuthorizedPersonnel { get; set; } = new List<Person>();
 
-        public bool IsValid => !(Name is null) && !(BunchNumber is null);
+        public bool IsValid => !(Name is null) && !(BunchNumber is null) && !(NumberOfKeys is null);
 
         /// <summary>
         /// Looks up this keybunch's Authorized Personnel list for the NRIC or name given.
