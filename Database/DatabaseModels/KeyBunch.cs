@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Database.DatabaseTypes
+namespace Database.DatabaseModels
 {
-    public class KeyBunch: IDatabaseType
+    public class KeyBunch: DatabaseModel
     {
         public string? Name { get; set; }
         public string? BunchNumber { get; set; }
         public int? NumberOfKeys { get; set; }
         public List<Person> AuthorizedPersonnel { get; set; } = new List<Person>();
 
-        public bool IsValid => !(Name is null) && !(BunchNumber is null) && !(NumberOfKeys is null);
+        public override bool IsValid => !(Name is null) && !(BunchNumber is null) && !(NumberOfKeys is null);
 
         /// <summary>
         /// Looks up this keybunch's Authorized Personnel list for the NRIC or name given.

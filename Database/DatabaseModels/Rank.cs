@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Database.DatabaseTypes
+namespace Database.DatabaseModels
 {
     public enum Rank
     { 

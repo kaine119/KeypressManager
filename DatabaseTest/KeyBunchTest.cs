@@ -1,4 +1,4 @@
-using Database.DatabaseTypes;
+using Database.DatabaseModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 

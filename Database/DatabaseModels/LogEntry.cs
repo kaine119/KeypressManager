@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Database.DatabaseTypes
+namespace Database.DatabaseModels
 {
     /// <summary>
     /// A line in the keypress log.
     /// </summary>
-    public class LogEntry: IDatabaseType
+    public class LogEntry: DatabaseModel
     {
         /// <summary>
         /// When the key was issued.
@@ -34,7 +34,7 @@ namespace Database.DatabaseTypes
         /// </summary>
         public Person? PersonReceivingKey { get; set; }
 
-        public bool IsValid { 
+        public override bool IsValid { 
             get
             {
                 // If the key hasn't been returned yet, only all three of the issuing fields are required
