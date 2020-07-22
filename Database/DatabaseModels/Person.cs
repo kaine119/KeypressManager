@@ -22,6 +22,16 @@ namespace Database.DatabaseModels
             return DbConnection.Query<Person>("SELECT * FROM Personnel");
         }
 
+        /// <summary>
+        /// Gets the keys this person is authorized to draw.
+        /// </summary>
+        public IEnumerable<KeyBunch> AuthorizedKeys =>
+            DbConnection.Query<KeyBunch>(@"SELECT kb.* FROM Authorizations AS a
+                                            JOIN Personnel AS p ON a.personId = p.id
+                                            JOIN KeyBunches as kb ON a.keyBunchId = kb.id
+                                            WHERE p.id = @personId",
+                                         new { personId = ID });
+
         public override void Write()
         {
             if (!IsValid) throw new ArgumentException("Object not valid to write to database");
