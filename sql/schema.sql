@@ -23,6 +23,7 @@ CREATE TABLE Authorizations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   keyBunchId INTEGER NOT NULL,
   personId INTEGER NOT NULL,
+  UNIQUE (keyBunchId, personId),
   FOREIGN KEY (keyBunchId) REFERENCES KeyBunches(id),
   FOREIGN KEY (personId)   REFERENCES Personnel(id)
 );
