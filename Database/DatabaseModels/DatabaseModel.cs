@@ -18,7 +18,7 @@ namespace Database.DatabaseModels
             DbConnection = new SQLiteConnection(connectionString);
         }
 
-        public int ID { get; set; }
+        public int? ID { get; protected set; }
         public abstract bool IsValid { get; }
         public abstract void Write();
     }
