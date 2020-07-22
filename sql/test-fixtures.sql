@@ -6,10 +6,10 @@ INSERT INTO KeyBunches (id, name, bunchNumber, keyListId)
          (2, "Office", "02", 1),
          (3, "HQ", "B01", 1);
 
-INSERT INTO Personnel (id, name, rank, contactNumber)
-  VALUES (1, "Alice Tan", 4, "90123456"),
-         (2, "Bob Lee", 5, "90123456"),
-         (3, "Charlie Chan", 6, "90123456");
+INSERT INTO Personnel (id, nric, name, rank, contactNumber)
+  VALUES (1, "101A", "Alice Tan", 4, "90123456"),
+         (2, "102B", "Bob Lee", 5, "90123456"),
+         (3, "103C", "Charlie Chan", 6, "90123456");
 
 INSERT INTO Authorizations (keyBunchId, personId)
   VALUES (1, 1), (2, 2), (3, 3);

@@ -15,6 +15,7 @@ CREATE TABLE Personnel (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   rank INTEGER NOT NULL,
+  nric TEXT NOT NULL,
   contactNumber TEXT
 );
 
