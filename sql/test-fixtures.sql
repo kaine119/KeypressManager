@@ -4,7 +4,8 @@ INSERT INTO KeyLists (id, name) VALUES (1, "Main Keypress");
 INSERT INTO KeyBunches (id, name, bunchNumber, keyListId, numberOfKeys)
   VALUES (1, "Mess", "01", 1, 4),
          (2, "Office", "02", 1, 16),
-         (3, "HQ", "B01", 1, 20);
+         (3, "HQ", "B01", 1, 20),
+         (4, "Edit target", "B11", 1, 25);
 
 INSERT INTO Personnel (id, nric, name, rank, contactNumber)
   VALUES (1, "101A", "Alice Tan", 4, "90123456"),

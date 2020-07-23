@@ -24,42 +24,7 @@ namespace DatabaseTest
         }
 
         [TestMethod]
-        public void IsValid_ReturnsCorrectly()
-        {
-            // Requirements: Rank, Name, NRIC
-            // Rank missing
-            Assert.IsFalse(
-                new Person
-                {
-                    Name = "Bennett",
-                    NRIC = "100A"
-                }.IsValid);
-
-            // Name missing
-            Assert.IsFalse(new Person
-            {
-                Rank = Rank.PTE,
-                NRIC = "100A"
-            }.IsValid);
-
-            // NRIC missing
-            Assert.IsFalse(new Person
-            {
-                Name = "Bennett",
-                Rank = Rank.PTE
-            }.IsValid);
-
-            // nothing missing, should be valid
-            Assert.IsTrue(new Person
-            {
-                Name = "Bennett",
-                Rank = Rank.PTE,
-                NRIC = "100A"
-            }.IsValid);
-        }
-
-        [TestMethod]
-        public void Write_WritesCorrectly()
+        public void Write_CreatesNewPersonCorrectly()
         {
             Person test = new Person
             {
@@ -69,6 +34,16 @@ namespace DatabaseTest
             };
             test.Write();
             Assert.IsTrue(db.AllPersonnel.Any(arg => arg.Name == "PersonWrite"));
+        }
+
+        [TestMethod]
+        public void Write_EditsExistingPersonCorrectly()
+        {
+            Person test = db.AllPersonnel.Where(person => person.Name == "PersonWrite").Single();
+            test.NRIC = "106A";
+            test.Write();
+            Person testAfterWrite = db.AllPersonnel.Where(person => person.Name == "PersonWrite").Single();
+            Assert.AreEqual("106A", testAfterWrite.NRIC);
         }
     }
 }

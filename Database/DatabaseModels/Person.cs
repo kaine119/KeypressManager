@@ -15,6 +15,13 @@ namespace Database.DatabaseModels
         public Rank? Rank { get; set; }
         public string ContactNumber { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Person)) return false;
+            var person = (Person)obj;
+            return NRIC == person.NRIC && Name == person.Name && Rank == person.Rank && ContactNumber == person.ContactNumber;
+        }
+
         public override bool IsValid => !(NRIC is null) && !(Name is null) && !(Rank is null);
 
         public static IEnumerable<Person> GetAll()
@@ -46,10 +53,10 @@ namespace Database.DatabaseModels
             else
             {
                 // The personnel exists, update the existing one
-                DbConnection.Execute(@"UPDATE TABLE personnel
+                DbConnection.Execute(@"UPDATE personnel
                                         SET nric = @NRIC, name = @Name, rank = @Rank, contactNumber = @ContactNumber
                                         WHERE id = @ID",
-                                     new { NRIC, Name, Rank, ContactNumber });
+                                     new { NRIC, Name, Rank, ContactNumber, ID });
             }
         }
     }

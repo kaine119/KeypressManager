@@ -18,5 +18,6 @@ namespace Database
         }
 
         public IEnumerable<Person> AllPersonnel => Person.GetAll();
+        public IEnumerable<KeyBunch> AllKeyBunches => KeyBunch.GetAll();
     }
 }
