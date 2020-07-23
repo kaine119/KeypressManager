@@ -8,6 +8,7 @@ CREATE TABLE KeyBunches (
   name TEXT NOT NULL,
   bunchNumber TEXT NOT NULL,
   keyListId INTEGER NOT NULL,
+  numberOfKeys INTEGER NOT NULL,
   FOREIGN KEY (keyListId) REFERENCES KeyLists(id)
 );
 
