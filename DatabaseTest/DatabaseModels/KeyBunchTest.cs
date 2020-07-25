@@ -79,5 +79,16 @@ namespace DatabaseTest
             Assert.AreEqual(db.AllKeyBunches.Count(bunch => bunch.Name == "Edit target"), 0);
             Assert.AreEqual(db.AllKeyBunches.Count(bunch => bunch.Name == "Edit target (edited)"), 1);
         }
+
+        [TestMethod]
+        public void IsPersonnelAuthorized_ReturnsCorrectly()
+        {
+            KeyBunch keyBunch = db.AllKeyBunches.First();
+            Person alice = db.AllPersonnel.First();
+            Person bob = db.AllPersonnel.ElementAt(1);
+            Console.WriteLine(alice.Equals(keyBunch.AuthorizedPersonnel.First()));
+            Assert.IsTrue(keyBunch.IsPersonAuthorized(alice));
+            Assert.IsFalse(keyBunch.IsPersonAuthorized(bob));
+        }
     }
 }

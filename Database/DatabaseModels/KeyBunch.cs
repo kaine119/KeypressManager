@@ -62,6 +62,8 @@ namespace Database.DatabaseModels
             }
         }
 
+        public bool IsPersonAuthorized(Person person) => AuthorizedPersonnel.Any(p => p.Equals(person));
+
         /// <summary>
         /// Save the keybunch to the database.
         /// Also inserts/updates personnel records for any AuthorizedPersonnel.

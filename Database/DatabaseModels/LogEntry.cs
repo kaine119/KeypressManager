@@ -103,6 +103,10 @@ namespace Database.DatabaseModels
             {
                 throw new InvalidOperationException("One of the personnel in the entry does not exist.");
             }
+            if (!KeyBunchDrawn.IsPersonAuthorized(PersonDrawingKey) || !KeyBunchDrawn.IsPersonAuthorized(PersonReturningKey))
+            {
+                throw new PersonNotAuthorizedException();
+            }
             if (ID is null)
             {
                 ID = DbConnection.Query<int>(

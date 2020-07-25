@@ -74,5 +74,25 @@ namespace DatabaseTest
             Console.WriteLine($"Read timestamp: {writtenLog.TimeIssued}");
             Assert.AreEqual(log.TimeIssued, writtenLog.TimeIssued.Value);
         }
+
+        [TestMethod]
+        public void Write_ThrowsOnUnauthorizedPersonnel()
+        {
+            KeyBunch keyBunchDrawn = db.AllKeyBunches.First();
+            Person unauthorized = db.AllPersonnel.ElementAt(1);
+            Person staff = db.AllPersonnel.Last();
+            LogEntry log = new LogEntry
+            {
+                KeyBunchDrawn = keyBunchDrawn,
+                TimeIssued = new DateTimeOffset(2020, 4, 1, 14, 0, 0, TimeSpan.FromHours(8)),
+                PersonDrawingKey = unauthorized,
+                PersonIssuingKey = staff,
+                TimeReturned = new DateTimeOffset(2020, 4, 1, 16, 0, 0, TimeSpan.FromHours(8)),
+                PersonReturningKey = unauthorized,
+                PersonReceivingKey = staff
+            };
+            Assert.ThrowsException<PersonNotAuthorizedException>(log.Write);
+
+        }
     }
 }

@@ -50,8 +50,13 @@ namespace Database
 
             public override void SetValue(IDbDataParameter parameter, DateTimeOffset? value)
             {
-                parameter.Value = (int) (value?.ToUnixTimeSeconds() ?? null);
+                parameter.Value = (int)(value?.ToUnixTimeSeconds() ?? null);
             }
         }
     }
+
+    /// <summary>
+    /// Thrown when personnel is not authorized to draw or return a key.
+    /// </summary>
+    public class PersonNotAuthorizedException : Exception { }
 }
