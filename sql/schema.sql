@@ -31,17 +31,17 @@ CREATE TABLE Authorizations (
 
 CREATE TABLE LogEntries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  keyBunchDrawn INTEGER NOT NULL,
+  keyBunchDrawnId INTEGER NOT NULL,
   timeIssued INTEGER NOT NULL,
-  personDrawingKey INTEGER NOT NULL,
-  personIssuingKey INTEGER NOT NULL, 
+  personDrawingKeyId INTEGER NOT NULL,
+  personIssuingKeyId INTEGER NOT NULL, 
   timeReturned INTEGER NULL,
-  personReturningKey INTEGER NULL,
-  personReceivingKey INTEGER NULL,
+  personReturningKeyId INTEGER NULL,
+  personReceivingKeyId INTEGER NULL,
 
-  FOREIGN KEY (keyBunchDrawn) REFERENCES KeyBunches(id),
-  FOREIGN KEY (personDrawingKey) REFERENCES Personnel(id),
-  FOREIGN KEY (personIssuingKey) REFERENCES Personnel(id),
-  FOREIGN KEY (personReturningKey) REFERENCES Personnel(id),
-  FOREIGN KEY (personReceivingKey) REFERENCES Personnel(id)
+  FOREIGN KEY (keyBunchDrawnId) REFERENCES KeyBunches(id),
+  FOREIGN KEY (personDrawingKeyId) REFERENCES Personnel(id),
+  FOREIGN KEY (personIssuingKeyId) REFERENCES Personnel(id),
+  FOREIGN KEY (personReturningKeyId) REFERENCES Personnel(id),
+  FOREIGN KEY (personReceivingKeyId) REFERENCES Personnel(id)
 );

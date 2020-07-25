@@ -19,6 +19,6 @@ INSERT INTO Personnel (id, nric, name, rank, contactNumber)
 INSERT INTO Authorizations (keyBunchId, personId)
   VALUES (1, 1), (2, 2), (3, 3);
 
-INSERT INTO LogEntries (timeIssued, keyBunchDrawn, personDrawingKey, personIssuingKey, timeReturned, personReturningKey, personReceivingKey)
-  VALUES (1585742400, 1, 1, 3, 1585756800, 1, 3),
-         (1585742410, 1, 2, 3, NULL, NULL, NULL);
+INSERT INTO LogEntries (timeIssued, keyBunchDrawnId, personDrawingKeyId, personIssuingKeyId, timeReturned, personReturningKeyId, personReceivingKeyId)
+  VALUES (1585713600, 1, 1, 3, 1585717200, 1, 3),
+         (1585713660, 1, 2, 3, NULL, NULL, NULL);
