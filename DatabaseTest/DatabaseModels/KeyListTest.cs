@@ -6,7 +6,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DatabaseTest
 {
-    [TestClass]
+    [TestClass, TestCategory("Models")]
     public class KeyListTest
     {
         KeypressDatabase db = DatabaseTestHelper.TestDatabase;

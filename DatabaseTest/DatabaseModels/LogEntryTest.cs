@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DatabaseTest
 {
-    [TestClass]
+    [TestClass, TestCategory("Models")]
     public class LogEntryTest
     {
         KeypressDatabase db = DatabaseTestHelper.TestDatabase;

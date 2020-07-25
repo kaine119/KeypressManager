@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace DatabaseTest
 {
-    [TestClass]
+    [TestClass, TestCategory("Models")]
     public class PersonTest
     {
         KeypressDatabase db = DatabaseTestHelper.TestDatabase;
