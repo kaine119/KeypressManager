@@ -36,6 +36,15 @@ CREATE TABLE Authorizations (
   FOREIGN KEY (personId)   REFERENCES Personnel(id)
 );
 
+CREATE TABLE SquadronAuthorizations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  keyBunchId INTEGER NOT NULL,
+  squadronId INTEGER NOT NULL,
+  UNIQUE (keyBunchId, squadronId),
+  FOREIGN KEY (keyBunchId) REFERENCES KeyBunches(id),
+  FOREIGN KEY (squadronId) REFERENCES Squadrons(id)
+);
+
 CREATE TABLE LogEntries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   keyBunchDrawnId INTEGER NOT NULL,

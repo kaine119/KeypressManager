@@ -15,8 +15,8 @@ namespace DatabaseTest
         public void Squadron_InstantiatesCorrectly()
         {
             Squadron sqn = db.AllSquadrons.First();
-            Person charlie = db.AllPersonnel.Single(person => person.Name == "Charlie Chan");
-            Assert.AreEqual(charlie, sqn.Personnel.First());
+            Person bob = db.AllPersonnel.ElementAt(1);
+            Assert.AreEqual(bob, sqn.Personnel.First());
         }
 
         [TestMethod]

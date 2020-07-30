@@ -20,6 +20,9 @@ namespace DatabaseTest
             Assert.AreEqual("01", mess.BunchNumber);
             Assert.AreEqual("Alice Tan", mess.AuthorizedPersonnel.First().Name);
             Assert.AreEqual("Main Keypress", mess.KeyList.Name);
+
+            KeyBunch hq = db.AllKeyBunches.ElementAt(2);
+            Assert.AreEqual("111 SQN", hq.AuthorizedSquadrons.First().Name);
         }
 
         [TestMethod]
@@ -71,6 +74,25 @@ namespace DatabaseTest
         }
 
         [TestMethod]
+        public void Write_InsertsNewRecordAndWritesSquadron()
+        {
+            List<Squadron> squadrons = db.AllSquadrons.ToList();
+            KeyBunch newBunch = new KeyBunch
+            {
+                Name = "New key bunch 3",
+                BunchNumber = "B1003",
+                AuthorizedSquadrons = squadrons,
+                NumberOfKeys = 25,
+                KeyList = db.AllKeyLists.First()
+            };
+
+            newBunch.Write();
+
+            KeyBunch writtenBunch = db.AllKeyBunches.Single(bunch => bunch.BunchNumber == "B1003");
+            Assert.AreEqual("111 SQN", writtenBunch.AuthorizedSquadrons.First().Name);
+        }
+
+        [TestMethod]
         public void Write_EditsExistingBunch()
         {
             KeyBunch target = db.AllKeyBunches.Single(bunch => bunch.Name == "Edit target");
@@ -83,12 +105,19 @@ namespace DatabaseTest
         [TestMethod]
         public void IsPersonnelAuthorized_ReturnsCorrectly()
         {
-            KeyBunch keyBunch = db.AllKeyBunches.First();
+            KeyBunch mess = db.AllKeyBunches.First();
             Person alice = db.AllPersonnel.First();
             Person bob = db.AllPersonnel.ElementAt(1);
-            Console.WriteLine(alice.Equals(keyBunch.AuthorizedPersonnel.First()));
-            Assert.IsTrue(keyBunch.IsPersonAuthorized(alice));
-            Assert.IsFalse(keyBunch.IsPersonAuthorized(bob));
+            Assert.IsTrue(mess.IsPersonAuthorized(alice));
+            Assert.IsFalse(mess.IsPersonAuthorized(bob));
+        }
+
+        [TestMethod]
+        public void IsPersonnelAuthorized_ReturnsThroughSquadrons()
+        {
+            KeyBunch hq = db.AllKeyBunches.ElementAt(2);
+            Person bob = db.AllPersonnel.ElementAt(1);
+            Assert.IsTrue(hq.IsPersonAuthorized(bob));
         }
     }
 }
