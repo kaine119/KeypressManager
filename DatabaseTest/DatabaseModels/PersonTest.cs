@@ -21,6 +21,9 @@ namespace DatabaseTest
             Assert.AreEqual("101A", alice.NRIC);
             Assert.AreEqual(Rank.REC, alice.Rank);
             Assert.AreEqual("90123456", alice.ContactNumber);
+
+            Person charlie = db.AllPersonnel.Single(person => person.Name == "Charlie Chan");
+            Assert.AreEqual("111 SQN", charlie.Squadron.Name);
         }
 
         [TestMethod]

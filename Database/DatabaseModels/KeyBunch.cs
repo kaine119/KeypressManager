@@ -83,7 +83,6 @@ namespace Database.DatabaseModels
             else
             {
                 // Update the existing KeyBunch record.
-                // TODO: not hardcode the keyListId
                 DbConnection.Execute(@"
                     UPDATE KeyBunches
                     SET name = @Name,

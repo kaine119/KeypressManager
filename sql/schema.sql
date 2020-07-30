@@ -12,12 +12,19 @@ CREATE TABLE KeyBunches (
   FOREIGN KEY (keyListId) REFERENCES KeyLists(id)
 );
 
+CREATE TABLE Squadrons (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL
+);
+
 CREATE TABLE Personnel (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   rank INTEGER NOT NULL,
   nric TEXT NOT NULL,
-  contactNumber TEXT
+  contactNumber TEXT,
+  squadronId INTEGER NULL,
+  FOREIGN KEY (squadronId) REFERENCES Squadrons(id)
 );
 
 CREATE TABLE Authorizations (

@@ -14,6 +14,7 @@ namespace Database.DatabaseModels
         public string Name { get; set; }
         public Rank? Rank { get; set; }
         public string ContactNumber { get; set; }
+        public Squadron Squadron { get; private set; }
 
         public override bool Equals(object obj)
         {
@@ -26,7 +27,18 @@ namespace Database.DatabaseModels
 
         public static IEnumerable<Person> GetAll()
         {
-            return DbConnection.Query<Person>("SELECT * FROM Personnel");
+            return DbConnection.Query<Person, Squadron, Person>(
+                @"SELECT p.*, s.* FROM Personnel AS p
+                    LEFT OUTER JOIN Squadrons AS s ON p.squadronId = s.id;",
+                (p, s) =>
+                {
+                    if (!(s is null))
+                    {
+                        p.Squadron = s;
+                    }
+                    return p;
+                }
+            );
         }
 
         /// <summary>
@@ -39,6 +51,10 @@ namespace Database.DatabaseModels
                                             WHERE p.id = @personId",
                                          new { personId = ID });
 
+        /// <summary>
+        /// Writes the person to the database.
+        /// Does NOT update squadron associations; use Squadron.Write().
+        /// </summary>
         public override void Write()
         {
             if (!IsValid) throw new ArgumentException("Person not valid to write to database");

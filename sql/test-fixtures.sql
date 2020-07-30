@@ -11,10 +11,14 @@ INSERT INTO KeyBunches (id, name, bunchNumber, keyListId, numberOfKeys)
          (5, "Pristine 1", "01", 2, 10),
          (6, "Pristine 2", "01", 2, 10);
 
-INSERT INTO Personnel (id, nric, name, rank, contactNumber)
-  VALUES (1, "101A", "Alice Tan", 4, "90123456"),
-         (2, "102B", "Bob Lee", 5, "90123456"),
-         (3, "103C", "Charlie Chan", 6, "90123456");
+INSERT INTO Squadrons (id, name)
+  VALUES (1, "111 SQN");
+
+INSERT INTO Personnel (id, nric, name, rank, contactNumber, squadronId)
+  VALUES (1, "101A", "Alice Tan", 4, "90123456", NULL),
+         (2, "102B", "Bob Lee", 5, "90123456", NULL),
+         (3, "103C", "Charlie Chan", 6, "90123456", 1);
+
 
 INSERT INTO Authorizations (keyBunchId, personId)
   VALUES (1, 1), (2, 2), (3, 3);

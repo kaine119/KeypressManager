@@ -24,6 +24,7 @@ namespace Database
         public IEnumerable<KeyBunch> AllKeyBunches => KeyBunch.GetAll();
         public IEnumerable<KeyList> AllKeyLists => KeyList.GetAll();
         public IEnumerable<LogEntry> AllLogEntries => LogEntry.GetAll();
+        public IEnumerable<Squadron> AllSquadrons => Squadron.GetAll();
 
         /// <summary>
         /// Maps unix timestamps to DateTimeOffsets.
