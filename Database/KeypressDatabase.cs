@@ -3,10 +3,6 @@ using Database.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Data.SQLite;
-using System.Linq;
-using System.Text;
 
 namespace Database
 {
@@ -25,6 +21,26 @@ namespace Database
         public IEnumerable<KeyList> AllKeyLists => KeyList.GetAll();
         public IEnumerable<LogEntry> AllLogEntries => LogEntry.GetAll();
         public IEnumerable<Squadron> AllSquadrons => Squadron.GetAll();
+
+        /// <summary>
+        /// Book a key out.
+        /// </summary>
+        /// <param name="key">The key bunch to book out.</param>
+        /// <param name="personDrawing">The person drawing the key.</param>
+        /// <param name="personIssuing">The person issuing the key.</param>
+        /// <exception cref="PersonNotAuthorizedException">Thrown when the person drawing the key is not authorized.</exception>
+        public void BookKeyOut(KeyBunch key, Person personDrawing, Person personIssuing)
+        {
+            LogEntry log = new LogEntry
+            {
+                KeyBunchDrawn = key,
+                PersonDrawingKey = personDrawing,
+                PersonIssuingKey = personIssuing
+            };
+            log.Write();
+        }
+
+        
 
         /// <summary>
         /// Maps unix timestamps to DateTimeOffsets.

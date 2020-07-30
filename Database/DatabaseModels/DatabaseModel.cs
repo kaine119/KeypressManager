@@ -13,6 +13,11 @@ namespace Database.DatabaseModels
     public abstract class DatabaseModel
     {
         public static IDbConnection DbConnection { get; set; }
+
+        /// <summary>
+        /// Establish a new SQL connection object that all models use.
+        /// </summary>
+        /// <param name="connectionString">A IDbConnection connection string. See documentation for <seealso cref="IDbConnection"/>.</param>
         public static void EstablishConnection(string connectionString)
         {
             DbConnection = new SQLiteConnection(connectionString);
