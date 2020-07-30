@@ -27,14 +27,17 @@ namespace Database.DatabaseModels
                 LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
                 LEFT OUTER JOIN Personnel  AS p  ON a.personId = p.id
                 LEFT OUTER JOIN KeyLists AS kl ON kb.keyListId = kl.id;",
-                (keyBunch, person, keyList) =>
+                (kb, p, kl) =>
                 {
                     KeyBunch bunch;
-                    if (!results.TryGetValue((int) keyBunch.ID, out bunch))
-                        results.Add((int) keyBunch.ID, bunch = keyBunch);
-                    if (!(person is null)) 
-                        bunch.AuthorizedPersonnel.Add(person);
-                    bunch.KeyList = keyList;
+                    if (!results.TryGetValue((int)kb.ID, out bunch))
+                    {
+                        results.Add((int)kb.ID, kb);
+                        bunch = kb;
+                    }
+                    if (!(p is null)) 
+                        bunch.AuthorizedPersonnel.Add(p);
+                    bunch.KeyList = kl;
                     return bunch;
                 }
              );
