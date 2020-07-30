@@ -24,12 +24,10 @@ namespace DatabaseTest
         {
             Person newPerson = new Person { Name = "NewSquadronTest", Rank = Rank.PTE, NRIC = "101A", ContactNumber = "90123456" };
             Person bob = db.AllPersonnel.Single(person => person.Name == "Bob Lee");
-            Squadron sqn = new Squadron
-            {
-                Name = "TEST SQN",
-                Personnel = new List<Person> { bob, newPerson }
-            };
+            Squadron sqn = new Squadron { Name = "TEST SQN" };
             sqn.Write();
+            sqn.AddPersonnel(newPerson);
+            sqn.AddPersonnel(bob);
 
             Squadron written = db.AllSquadrons.Single(sqn => sqn.Name == "TEST SQN");
             Assert.IsTrue(written.Personnel.Contains(bob));

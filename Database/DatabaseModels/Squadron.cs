@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,41 +8,67 @@ namespace Database.DatabaseModels
     public class Squadron : DatabaseModel
     {
         public string Name { get; set; }
-        public List<Person> Personnel { get; set; } = new List<Person>();
+        public IEnumerable<Person> Personnel =>
+            DbConnection.Query<Person>(
+                @"SELECT * FROM Personnel AS p
+                  WHERE p.squadronId = @ID",
+                new { ID }            
+            );
 
         public override bool IsValid => !(Name is null);
 
         public static IEnumerable<Squadron> GetAll()
         {
-            var results = new Dictionary<int, Squadron>();
-
-            DbConnection.Query<Squadron, Person, Squadron>(
-                @"SELECT s.*, p.* FROM Squadrons AS s
-                    LEFT OUTER JOIN Personnel AS p ON s.id = p.squadronId;",
-                (s, p) =>
-                {
-                    if (!results.TryGetValue((int)s.ID, out Squadron sqn))
-                    {
-                        results.Add((int)s.ID, s);
-                        sqn = s;
-                    }
-                    if (!(p is null))
-                    {
-                        sqn.Personnel.Add(p);
-                    }
-                    return sqn;
-                }
+            return DbConnection.Query<Squadron>(
+                @"SELECT * FROM Squadrons;"
             );
-            return results.Values;
+        }
+
+        public static Squadron ById(int id)
+        {
+            return DbConnection.Query<Squadron>(
+                @"SELECT * FROM Squadrons
+                  WHERE id = @ID",
+                new { ID = id }
+            ).Single();
         }
 
         /// <summary>
-        /// Saves the squadron and its members. <br />
-        /// If a member is newly created, its whole record is inserted to the database,
-        /// otherwise only its squadron association is updated.
+        /// Associates a person to the squadron, and saves the Person record.
+        /// </summary>
+        /// <param name="person">The person to associate with the squadron.</param>
+        public void AddPersonnel(Person person)
+        {
+            if (person.ID is null)
+            {
+                person.Write();
+            }
+            DbConnection.Execute(
+                @"UPDATE personnel
+                  SET squadronId = @SquadronId
+                  WHERE id = @PersonId",
+                new { SquadronId = ID, PersonId = person.ID }
+            );
+        }
+
+        /// <summary>
+        /// Associates personnel to the squadron, and saves the Person records.
+        /// </summary>
+        /// <param name="personnel">The personnel to associate with the squadron.</param>
+        public void AddPersonnel(IEnumerable<Person> personnel)
+        {
+            foreach (var person in personnel)
+            {
+                AddPersonnel(person);
+            }
+        }
+
+        /// <summary>
+        /// Saves the squadron. Does not write members; use <see cref="AddPersonnel"/> to add personnel to the squadron.
         /// </summary>
         public override void Write()
         {
+            if (!IsValid) throw new InvalidOperationException("Squadron not valid to write to database");
             if (ID is null)
             {
                 ID = DbConnection.Query<int>(
@@ -58,27 +85,6 @@ namespace Database.DatabaseModels
                       SET name = @Name
                       WHERE id = @ID",
                     new { Name, ID }
-                );
-            }
-
-            // TODO: come up with something better than this
-            // Remove all squadronId for this squadron
-            DbConnection.Execute(
-                @"UPDATE personnel
-                  SET squadronId = NULL
-                  WHERE squadronId = @SquadronID;",
-                new { SquadronId = ID }
-            );
-
-            // write squadronId for all personnel entries
-            foreach (var person in Personnel)
-            {
-                if (person.ID is null) person.Write(); // Write any new personnel first
-                DbConnection.Execute(
-                    @"UPDATE personnel
-                      SET squadronId = @SquadronId
-                      WHERE id = @PersonId",
-                    new { SquadronId = ID, PersonId = person.ID }
                 );
             }
         }
