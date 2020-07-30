@@ -99,11 +99,12 @@ namespace Database.DatabaseModels
         public override void Write()
         {
             if (!IsValid) throw new InvalidOperationException("LogEntry object is not valid.");
-            if (PersonDrawingKey.ID is null || PersonIssuingKey.ID is null || PersonReturningKey is null || PersonReceivingKey is null)
+            if (PersonDrawingKey.ID is null || PersonIssuingKey.ID is null || 
+                (IsKeyReturned && (PersonReturningKey.ID is null || PersonReceivingKey.ID is null)))
             {
                 throw new InvalidOperationException("One of the personnel in the entry does not exist.");
             }
-            if (!KeyBunchDrawn.IsPersonAuthorized(PersonDrawingKey) || !KeyBunchDrawn.IsPersonAuthorized(PersonReturningKey))
+            if (!KeyBunchDrawn.IsPersonAuthorized(PersonDrawingKey) || (IsKeyReturned && !KeyBunchDrawn.IsPersonAuthorized(PersonReturningKey)))
             {
                 throw new PersonNotAuthorizedException();
             }
@@ -126,8 +127,8 @@ namespace Database.DatabaseModels
                         PersonDrawingKeyId = PersonDrawingKey.ID,
                         PersonIssuingKeyId = PersonIssuingKey.ID,
                         TimeReturned,
-                        PersonReturningKeyId = PersonReturningKey.ID,
-                        PersonReceivingKeyId = PersonReceivingKey.ID
+                        PersonReturningKeyId = PersonReturningKey?.ID,
+                        PersonReceivingKeyId = PersonReceivingKey?.ID
                     }
                 ).Single();
             }

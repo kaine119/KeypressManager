@@ -51,6 +51,24 @@ namespace DatabaseTest
         }
 
         [TestMethod]
+        public void Write_WritesLogForDrawingOut()
+        {
+            Person customer = db.AllPersonnel.First();
+            Person staff = db.AllPersonnel.Last();
+            LogEntry log = new LogEntry
+            {
+                KeyBunchDrawn = db.AllKeyBunches.First(),
+                TimeIssued = new DateTimeOffset(2020, 4, 1, 14, 0, 0, TimeSpan.FromHours(8)),
+                PersonDrawingKey = customer,
+                PersonIssuingKey = staff
+            };
+            log.Write();
+
+            LogEntry writtenLog = db.AllLogEntries.Last();
+            Assert.AreEqual(log.TimeIssued, writtenLog.TimeIssued.Value);
+        }
+
+        [TestMethod]
         public void Write_WritesCorrectlyForExistingPersonnel()
         {
             Person customer = db.AllPersonnel.First();
@@ -67,11 +85,7 @@ namespace DatabaseTest
             };
             log.Write();
 
-            Console.WriteLine($"Object timestamp: {log.TimeIssued}");
-            Console.WriteLine($"Written timestamp: {log.TimeIssued?.ToUnixTimeSeconds()}");
-
             LogEntry writtenLog = db.AllLogEntries.Last();
-            Console.WriteLine($"Read timestamp: {writtenLog.TimeIssued}");
             Assert.AreEqual(log.TimeIssued, writtenLog.TimeIssued.Value);
         }
 
