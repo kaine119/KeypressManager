@@ -51,6 +51,15 @@ namespace DatabaseTest
         }
 
         [TestMethod]
+        public void Unreturned_GetsUnreturnedKeys()
+        {
+            List<LogEntry> logs = db.LogsEntriesForUnreturnedKeys.ToList();
+            Assert.AreEqual(1, logs.Count());
+            Assert.AreEqual(new DateTime(2020, 4, 1, 12, 1, 0), logs.First().TimeIssued);
+            Assert.IsTrue(logs.All(log => !log.IsKeyReturned));
+        }
+
+        [TestMethod]
         public void Write_WritesLogForDrawingOut()
         {
             Person customer = db.AllPersonnel.First();

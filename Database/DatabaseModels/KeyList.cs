@@ -18,16 +18,28 @@ namespace Database.DatabaseModels
 
         public override bool IsValid => !(Name is null);
 
+        /// <summary>
+        /// All the keylists in the database.
+        /// </summary>
         public static IEnumerable<KeyList> All =>
             DbConnection.Query<KeyList>(
                 @"SELECT * FROM KeyLists;"
             );
 
+        /// <summary>
+        /// All the key bunches belonging to this keylist.
+        /// </summary>
         public IEnumerable<KeyBunch> Keys =>
             DbConnection.Query<KeyBunch>(
                 @"SELECT * FROM KeyBunches WHERE keyListId = @ID",
                 new { ID }
             );
+
+        /// <summary>
+        /// All key bunches belonging to this keylist that haven't been returned.
+        /// </summary>
+        public IEnumerable<KeyBunch> UnreturnedKeys =>
+            Keys.Intersect(KeyBunch.Unreturned);
 
         /// <summary>
         /// Saves the name of the keylist. DOES NOT update the keys in the list.

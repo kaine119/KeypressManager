@@ -26,6 +26,14 @@ namespace DatabaseTest
         }
 
         [TestMethod]
+        public void Unreturned_GetsUnreturnedKeys()
+        {
+            List<KeyBunch> keys = db.UnreturnedKeys.ToList();
+            Assert.AreEqual(1, keys.Count());
+            Assert.AreEqual("Mess", keys.First().Name);
+        }
+
+        [TestMethod]
         public void Write_InsertsNewRecordForExistingPersonnel()
         {
             int initialAllPersonnelCount = db.AllPersonnel.Count();

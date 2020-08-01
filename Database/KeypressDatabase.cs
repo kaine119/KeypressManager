@@ -22,6 +22,10 @@ namespace Database
         public IEnumerable<LogEntry> AllLogEntries => LogEntry.All;
         public IEnumerable<Squadron> AllSquadrons => Squadron.All;
 
+        public IEnumerable<LogEntry> LogsEntriesForUnreturnedKeys => LogEntry.ForUnreturnedKeys;
+        public IEnumerable<KeyBunch> UnreturnedKeys => KeyBunch.Unreturned;
+
+
         /// <summary>
         /// Book a key out.
         /// </summary>

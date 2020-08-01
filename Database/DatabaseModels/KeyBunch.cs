@@ -69,6 +69,20 @@ namespace Database.DatabaseModels
         }
 
         /// <summary>
+        /// All the keys in the database that haven't been returned.
+        /// </summary>
+        public static IEnumerable<KeyBunch> Unreturned =>
+            LogEntry.ForUnreturnedKeys.Select(log => log.KeyBunchDrawn);
+
+        public override bool Equals(object obj)
+        {
+            return obj is KeyBunch bunch &&
+                   ID == bunch.ID &&
+                   Name == bunch.Name &&
+                   BunchNumber == bunch.BunchNumber;
+        }
+
+        /// <summary>
         /// Looks up this keybunch's Authorized Personnel list for the NRIC or name given.
         /// Purely numeric queries, or queries matching the last 3 digits + letter of an NRIC, 
         /// will be treated as an NRIC.

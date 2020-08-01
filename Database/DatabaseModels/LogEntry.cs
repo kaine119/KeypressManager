@@ -93,8 +93,31 @@ namespace Database.DatabaseModels
             );
 
         /// <summary>
-        /// Writes the log entry to the database. Throws an error if the personnel in the entry does not exist (i.e. not in the database).
+        /// Returns log entries for unreturned keys, i.e. all log entries without a time returned.
         /// </summary>
+        /// <returns>All log entries without a timeReturned.</returns>
+        public static IEnumerable<LogEntry> ForUnreturnedKeys =>
+            DbConnection.Query<LogEntry, KeyBunch, Person, Person, LogEntry>(
+                @"SELECT log.*, kb.*, personDrawing.*, personIssuing.* FROM LogEntries AS log
+                  INNER JOIN KeyBunches AS kb ON log.keyBunchDrawnId = kb.id
+                  INNER JOIN Personnel AS personDrawing ON log.personDrawingKeyId = personDrawing.id
+                  INNER JOIN Personnel AS personIssuing ON log.personIssuingKeyId = personIssuing.id
+                  WHERE log.timeReturned IS NULL;",
+                (log, kb, personDrawing, personIssuing) =>
+                {
+                    log.KeyBunchDrawn = kb;
+                    log.PersonDrawingKey = personDrawing;
+                    log.PersonIssuingKey = personIssuing;
+                    return log;
+                }
+            );
+
+        /// <summary>
+        /// Writes the log entry to the database.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if the entry is not valid.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if any of the personnel does not exist.</exception>
+        /// <exception cref="PersonNotAuthorizedException">Thrown if any of the personnel is not authorized.</exception>
         public override void Write()
         {
             if (!IsValid) throw new InvalidOperationException("LogEntry object is not valid.");
