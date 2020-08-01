@@ -25,9 +25,8 @@ namespace Database.DatabaseModels
 
         public override bool IsValid => !(NRIC is null) && !(Name is null) && !(Rank is null);
 
-        public static IEnumerable<Person> GetAll()
-        {
-            return DbConnection.Query<Person, Squadron, Person>(
+        public static IEnumerable<Person> All =>
+            DbConnection.Query<Person, Squadron, Person>(
                 @"SELECT p.*, s.* FROM Personnel AS p
                     LEFT OUTER JOIN Squadrons AS s ON p.squadronId = s.id;",
                 (p, s) =>
@@ -39,7 +38,6 @@ namespace Database.DatabaseModels
                     return p;
                 }
             );
-        }
 
         /// <summary>
         /// Gets the keys this person is authorized to draw.

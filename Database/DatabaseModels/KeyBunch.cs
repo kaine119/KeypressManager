@@ -18,51 +18,54 @@ namespace Database.DatabaseModels
         public override bool IsValid => !(Name is null) && !(BunchNumber is null) && !(NumberOfKeys is null);
 
         /// <returns>All the keybunches in the database.</returns>
-        public static IEnumerable<KeyBunch> GetAll()
+        public static IEnumerable<KeyBunch> All
         {
-            var results = new Dictionary<int, KeyBunch>();
+            get
+            {
+                var results = new Dictionary<int, KeyBunch>();
 
-            // Join KeyBunch to Person via Authorizations
-            // LEFT OUTER JOIN to include any bunches that don't have any auths
-            DbConnection.Query<KeyBunch, Person, KeyList, KeyBunch>(
-                @"SELECT kb.*, p.*, kl.* FROM KeyBunches AS kb
+                // Join KeyBunch to Person via Authorizations
+                // LEFT OUTER JOIN to include any bunches that don't have any auths
+                DbConnection.Query<KeyBunch, Person, KeyList, KeyBunch>(
+                    @"SELECT kb.*, p.*, kl.* FROM KeyBunches AS kb
                   LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
                   LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
                   LEFT OUTER JOIN KeyLists AS kl ON kb.keyListId = kl.id;",
-                (kb, p, kl) =>
-                {
-                    KeyBunch bunch;
-                    if (!results.TryGetValue((int)kb.ID, out bunch))
+                    (kb, p, kl) =>
                     {
-                        results.Add((int)kb.ID, kb);
-                        bunch = kb;
+                        KeyBunch bunch;
+                        if (!results.TryGetValue((int)kb.ID, out bunch))
+                        {
+                            results.Add((int)kb.ID, kb);
+                            bunch = kb;
+                        }
+                        if (!(p is null))
+                            bunch.AuthorizedPersonnel.Add(p);
+                        bunch.KeyList = kl;
+                        return bunch;
                     }
-                    if (!(p is null)) 
-                        bunch.AuthorizedPersonnel.Add(p);
-                    bunch.KeyList = kl;
-                    return bunch;
-                }
-             );
+                 );
 
-            // Add the squadrons to the relevant keybunches
-            DbConnection.Query<KeyBunch, Squadron, KeyBunch>(
-                @"SELECT kb.*, sqn.* FROM KeyBunches AS kb
+                // Add the squadrons to the relevant keybunches
+                DbConnection.Query<KeyBunch, Squadron, KeyBunch>(
+                    @"SELECT kb.*, sqn.* FROM KeyBunches AS kb
                   INNER JOIN SquadronAuthorizations AS sqn_a ON sqn_a.keyBunchId = kb.id
                   INNER JOIN Squadrons AS sqn ON sqn_a.squadronId = sqn.id",
-                (kb, sqn) =>
-                {
-                    KeyBunch bunch;
-                    if (!results.TryGetValue((int)kb.ID, out bunch))
+                    (kb, sqn) =>
                     {
-                        results.Add((int)kb.ID, kb);
-                        bunch = kb;
+                        KeyBunch bunch;
+                        if (!results.TryGetValue((int)kb.ID, out bunch))
+                        {
+                            results.Add((int)kb.ID, kb);
+                            bunch = kb;
+                        }
+                        bunch.AuthorizedSquadrons.Add(sqn);
+                        return bunch;
                     }
-                    bunch.AuthorizedSquadrons.Add(sqn);
-                    return bunch;
-                }
-            );
+                );
 
-            return results.Values;
+                return results.Values;
+            }
         }
 
         /// <summary>

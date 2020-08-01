@@ -17,12 +17,10 @@ namespace Database.DatabaseModels
 
         public override bool IsValid => !(Name is null);
 
-        public static IEnumerable<Squadron> GetAll()
-        {
-            return DbConnection.Query<Squadron>(
+        public static IEnumerable<Squadron> All =>
+            DbConnection.Query<Squadron>(
                 @"SELECT * FROM Squadrons;"
             );
-        }
 
         public static Squadron ById(int id)
         {

@@ -18,12 +18,10 @@ namespace Database.DatabaseModels
 
         public override bool IsValid => !(Name is null);
 
-        public static IEnumerable<KeyList> GetAll()
-        {
-            return DbConnection.Query<KeyList>(
+        public static IEnumerable<KeyList> All =>
+            DbConnection.Query<KeyList>(
                 @"SELECT * FROM KeyLists;"
             );
-        }
 
         public IEnumerable<KeyBunch> Keys =>
             DbConnection.Query<KeyBunch>(

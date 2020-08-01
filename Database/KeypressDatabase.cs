@@ -16,11 +16,11 @@ namespace Database
             DatabaseModel.EstablishConnection($"Data source={databasePath}");
         }
 
-        public IEnumerable<Person> AllPersonnel => Person.GetAll();
-        public IEnumerable<KeyBunch> AllKeyBunches => KeyBunch.GetAll();
-        public IEnumerable<KeyList> AllKeyLists => KeyList.GetAll();
-        public IEnumerable<LogEntry> AllLogEntries => LogEntry.GetAll();
-        public IEnumerable<Squadron> AllSquadrons => Squadron.GetAll();
+        public IEnumerable<Person> AllPersonnel => Person.All;
+        public IEnumerable<KeyBunch> AllKeyBunches => KeyBunch.All;
+        public IEnumerable<KeyList> AllKeyLists => KeyList.All;
+        public IEnumerable<LogEntry> AllLogEntries => LogEntry.All;
+        public IEnumerable<Squadron> AllSquadrons => Squadron.All;
 
         /// <summary>
         /// Book a key out.

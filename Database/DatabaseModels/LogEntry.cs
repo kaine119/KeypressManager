@@ -10,7 +10,7 @@ namespace Database.DatabaseModels
     /// <summary>
     /// A line in the keypress log.
     /// </summary>
-    public class LogEntry: DatabaseModel
+    public class LogEntry : DatabaseModel
     {
         /// <summary>
         /// The bunch that was drawn.
@@ -51,7 +51,8 @@ namespace Database.DatabaseModels
         /// Whether the LogEntry is valid. <br />
         /// For the entry to be valid, either only the issuing fields are present, or all the fields are present.
         /// </summary>
-        public override bool IsValid { 
+        public override bool IsValid
+        {
             get
             {
                 // If the key hasn't been returned yet, only all three of the issuing fields are required
@@ -61,7 +62,7 @@ namespace Database.DatabaseModels
                     && (!(TimeIssued is null) && !(PersonDrawingKey is null) && !(PersonIssuingKey is null)) // first 3 fields
                     || (!(TimeIssued is null) && !(PersonDrawingKey is null) && !(PersonIssuingKey is null)  // all 6 fields
                         && !(TimeReturned is null) && !(PersonReturningKey is null) && !(PersonReceivingKey is null));
-            } 
+            }
         }
 
         /// <summary>
@@ -69,9 +70,8 @@ namespace Database.DatabaseModels
         /// </summary>
         public bool IsKeyReturned => !(TimeReturned is null);
 
-        public static IEnumerable<LogEntry> GetAll()
-        {
-            return DbConnection.Query<LogEntry, KeyBunch, Person, Person, Person, Person, LogEntry>(
+        public static IEnumerable<LogEntry> All =>
+            DbConnection.Query<LogEntry, KeyBunch, Person, Person, Person, Person, LogEntry>(
                 @"SELECT log.*, kb.*, personDrawing.*, personIssuing.*, personReturning.*, personReceiving.* FROM LogEntries AS log
                   INNER JOIN KeyBunches AS kb ON log.keyBunchDrawnId = kb.id
                   INNER JOIN Personnel AS personDrawing ON log.personDrawingKeyId = personDrawing.id
@@ -91,7 +91,6 @@ namespace Database.DatabaseModels
                     return log;
                 }
             );
-        }
 
         /// <summary>
         /// Writes the log entry to the database. Throws an error if the personnel in the entry does not exist (i.e. not in the database).
@@ -99,7 +98,7 @@ namespace Database.DatabaseModels
         public override void Write()
         {
             if (!IsValid) throw new InvalidOperationException("LogEntry object is not valid.");
-            if (PersonDrawingKey.ID is null || PersonIssuingKey.ID is null || 
+            if (PersonDrawingKey.ID is null || PersonIssuingKey.ID is null ||
                 (IsKeyReturned && (PersonReturningKey.ID is null || PersonReceivingKey.ID is null)))
             {
                 throw new InvalidOperationException("One of the personnel in the entry does not exist.");
@@ -150,7 +149,7 @@ namespace Database.DatabaseModels
                         TimeReturned,
                         PersonReturningKeyId = PersonReturningKey.ID,
                         PersonReceivingKeyId = PersonReceivingKey.ID
-                 });
+                    });
             }
         }
 
