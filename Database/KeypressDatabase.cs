@@ -3,6 +3,7 @@ using Database.DatabaseModels;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Database
 {
@@ -35,8 +36,13 @@ namespace Database
         /// <exception cref="PersonNotAuthorizedException">Thrown when the person drawing the key is not authorized.</exception>
         public void BookKeyOut(KeyBunch key, Person personDrawing, Person personIssuing)
         {
+            if (KeyBunch.Unreturned.Contains(key))
+            {
+                throw new InvalidOperationException("Key is already booked out.");
+            }
             LogEntry log = new LogEntry
             {
+                TimeIssued = DateTimeOffset.Now,
                 KeyBunchDrawn = key,
                 PersonDrawingKey = personDrawing,
                 PersonIssuingKey = personIssuing
@@ -44,7 +50,23 @@ namespace Database
             log.Write();
         }
 
-        
+        /// <summary>
+        /// Book a key in.
+        /// </summary>
+        /// <param name="key">The key bunch to book in.</param>
+        /// <param name="personReturning">The person returning the key.</param>
+        /// <param name="personReceiving">The person receiving the key.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the key wasn't booked out in the first place.</exception>
+        /// <exception cref="PersonNotAuthorizedException">Thrown when the person returning the key is not authorized.</exception>
+        public void BookKeyIn(KeyBunch key, Person personReturning, Person personReceiving)
+        {
+            LogEntry log = LogEntry.ForUnreturnedKeys
+                                   .Single(log => log.KeyBunchDrawn == key);
+            log.TimeIssued = DateTimeOffset.Now;
+            log.PersonReturningKey = personReturning;
+            log.PersonReceivingKey = personReceiving;
+            log.Write();
+        }
 
         /// <summary>
         /// Maps unix timestamps to DateTimeOffsets.
