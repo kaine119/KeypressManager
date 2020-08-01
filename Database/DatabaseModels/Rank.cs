@@ -7,16 +7,17 @@ namespace Database.DatabaseModels
         // Civilians
         MR = 0,
         MS = 1,
-        MRS = 3,
-        OTHER = 4,
+        MRS = 2,
+        OTHER = 3,
 
         // Chao Recruits
-        REC = 5,
-        PTE = 6,
-        CPL = 7,
-        CFC = 8,
+        REC = 4,
+        PTE = 5,
+        CPL = 6,
+        CFC = 7,
 
         // Specs
+        CADET_SGT = 8,
         THIRD_SGT = 9,
         SECOND_SGT = 10,
         FIRST_SGT = 11,
@@ -34,42 +35,44 @@ namespace Database.DatabaseModels
         CHIEF_WO = 19,
 
         // Officers
-        SECOND_LT = 20,
-        FIRST_LT = 21,
-        CPT = 22,
+        CADET_LT = 20,
+        SECOND_LT = 21,
+        FIRST_LT = 22,
+        CPT = 23,
 
         // Crabs
-        MAJ = 23,
-        LTC = 24,
-        SLTC = 25,
-        COL = 26,
+        MAJ = 24,
+        LTC = 25,
+        SLTC = 26,
+        COL = 27,
 
         // Stars
-        BG = 27,
-        MG = 28,
-        LG = 29,
-        GEN = 30,
+        BG = 28,
+        MG = 29,
+        LG = 30,
+        GEN = 31,
 
         // Military Experts
-        ME2 = 31,
-        ME3 = 32,
-        ME4 = 33,
-        ME5 = 34,
-        ME6 = 35,
-        ME7 = 36,
-        ME8 = 37,
-        ME9 = 38,
+        ME1_T = 32,
+        ME1 = 33,
+        ME2 = 34,
+        ME3 = 35,
+        ME4 = 36,
+        ME5 = 37,
+        ME6 = 38,
+        ME7 = 39,
+        ME8 = 40,
 
         // DXOs
-        DX2 = 39,
-        DX3 = 40,
-        DX4 = 41,
-        DX5 = 42,
-        DX6 = 43,
-        DX7 = 44,
-        DX8 = 45,
-        DX9 = 46,
-        DX10 = 47,
-        DX11 = 48
+        DX1 = 41,
+        DX2 = 42,
+        DX3 = 43,
+        DX4 = 44,
+        DX5 = 45,
+        DX6 = 46,
+        DX7 = 47,
+        DX8 = 48,
+        DX9 = 49,
+        DX10 = 50
     }
 }
