@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Database.DatabaseModels
 {
-    public class KeyBunch: DatabaseModel
+    public class KeyBunch : DatabaseModel
     {
         public string Name { get; set; }
         public string BunchNumber { get; set; }
@@ -71,8 +71,9 @@ namespace Database.DatabaseModels
         /// <summary>
         /// All the keys in the database that haven't been returned.
         /// </summary>
-        public static IEnumerable<KeyBunch> Unreturned =>
-            LogEntry.ForUnreturnedKeys.Select(log => log.KeyBunchDrawn);
+        public static IEnumerable<KeyBunch> Unreturned => LogEntry.ForUnreturnedKeys.Select(log => log.KeyBunchDrawn);
+
+        public static IEnumerable<KeyBunch> Returned => All.Except(Unreturned);
 
         public override bool Equals(object obj)
         {
@@ -80,6 +81,11 @@ namespace Database.DatabaseModels
                    ID == bunch.ID &&
                    Name == bunch.Name &&
                    BunchNumber == bunch.BunchNumber;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ID, Name, BunchNumber);
         }
 
         /// <summary>
@@ -102,7 +108,7 @@ namespace Database.DatabaseModels
             }
         }
 
-        public bool IsPersonAuthorized(Person person) => 
+        public bool IsPersonAuthorized(Person person) =>
             AuthorizedPersonnel.Contains(person) || AuthorizedSquadrons.Any(sqn => sqn.Personnel.Contains(person));
 
         /// <summary>

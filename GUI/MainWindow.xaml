@@ -3,14 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GUI"
+        xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1067"
+        Title="MainWindow" Height="900" Width="1600"
         WindowState="Maximized">
     <Window.Resources>
         <Style TargetType="GroupBox">
             <Setter Property="Padding" Value="5"/>
         </Style>
+        <DataTemplate DataType="{x:Type model:KeyBunch}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" Text="{Binding Path=BunchNumber}" Margin="0,0,10,0"/>
+                <StackPanel>
+                    <TextBlock Text="{Binding Path=Name}"/>
+                    <TextBlock>
+                        Number of keys: <TextBlock Text="{Binding Path=NumberOfKeys}"/>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
     </Window.Resources>
     <TabControl x:Name="tabControl" Padding="2,2,2,2">
         <TabItem Header="Dashboard">
@@ -28,7 +39,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <GroupBox Header="Keys present">
-                        <DataGrid />
+                        <ListBox ItemsSource="{Binding PresentKeys}"/>
                     </GroupBox>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10">
@@ -56,7 +67,7 @@
                     </StackPanel>
 
                     <GroupBox Header="Keys booked out" Grid.Column="2" Margin="0,0,10,0">
-                        <DataGrid />
+                        <ListBox ItemsSource="{Binding BookedOutKeys}"/>
                     </GroupBox>
                 </Grid>
 
