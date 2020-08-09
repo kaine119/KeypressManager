@@ -80,7 +80,7 @@ namespace Database.DatabaseModels
                   LEFT OUTER JOIN Personnel AS personReceiving ON log.personReceivingKeyId = personReceiving.id",
                 (log, kb, personDrawing, personIssuing, personReturning, personReceiving) =>
                 {
-                    log.KeyBunchDrawn = kb;
+                    log.KeyBunchDrawn = KeyBunch.ById(kb.ID.Value);
                     log.PersonDrawingKey = personDrawing;
                     log.PersonIssuingKey = personIssuing;
                     if (log.IsKeyReturned)
@@ -105,12 +105,40 @@ namespace Database.DatabaseModels
                   WHERE log.timeReturned IS NULL;",
                 (log, kb, personDrawing, personIssuing) =>
                 {
-                    log.KeyBunchDrawn = kb;
+                    log.KeyBunchDrawn = KeyBunch.ById(kb.ID.Value);
                     log.PersonDrawingKey = personDrawing;
                     log.PersonIssuingKey = personIssuing;
                     return log;
                 }
             );
+
+        public static LogEntry LatestForKeyBunch(KeyBunch bunch)
+        {
+            if (bunch == null) return null;
+            return DbConnection.Query<LogEntry, KeyBunch, Person, Person, Person, Person, LogEntry>(
+                @"SELECT log.*, kb.*, personDrawing.*, personIssuing.*, personReturning.*, personReceiving.* FROM LogEntries AS log
+                  INNER JOIN KeyBunches AS kb ON log.keyBunchDrawnId = kb.id
+                  INNER JOIN Personnel AS personDrawing ON log.personDrawingKeyId = personDrawing.id
+                  INNER JOIN Personnel AS personIssuing ON log.personIssuingKeyId = personIssuing.id
+                  LEFT OUTER JOIN Personnel AS personReturning ON log.personReturningKeyId = personReturning.id
+                  LEFT OUTER JOIN Personnel AS personReceiving ON log.personReceivingKeyId = personReceiving.id
+                  WHERE log.keyBunchDrawnId = @KeyBunchID                  
+                  ORDER BY log.timeIssued DESC LIMIT 1;",
+                (log, kb, personDrawing, personIssuing, personReturning, personReceiving) =>
+                {
+                    log.KeyBunchDrawn = KeyBunch.ById(kb.ID.Value);
+                    log.PersonDrawingKey = personDrawing;
+                    log.PersonIssuingKey = personIssuing;
+                    if (log.IsKeyReturned)
+                    {
+                        log.PersonReturningKey = personReturning;
+                        log.PersonReceivingKey = personReceiving;
+                    }
+                    return log;
+                },
+                new { KeyBunchId = bunch.ID }
+            ).FirstOrDefault();
+        }
 
         /// <summary>
         /// Writes the log entry to the database.

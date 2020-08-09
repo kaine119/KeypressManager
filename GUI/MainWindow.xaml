@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
+        xmlns:convert="clr-namespace:GUI.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1600"
         WindowState="Maximized"
@@ -40,6 +41,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <convert:LogEntryReturnedToDetailVisibility x:Key="LogToVis" />
+        <convert:NullToVisibility x:Key="NullToVis"/>
     </Window.Resources>
     <TabControl x:Name="tabControl" Padding="10" Margin="0,5,0,0" Background="{DynamicResource ContentBackgroundBrush}" BorderThickness="0">
         <TabItem Header="Dashboard">
@@ -60,7 +63,8 @@
                         <ListBox ItemsSource="{Binding PresentKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
-                                 ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" />
+                                 ItemContainerStyle="{StaticResource KeyListItemContainerStyle}"
+                                 SelectedValue="{Binding SelectedKeyBunch}"/>
                     </GroupBox>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
@@ -91,7 +95,8 @@
                         <ListBox ItemsSource="{Binding BookedOutKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
-                                 ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" />
+                                 ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" 
+                                 SelectedValue="{Binding SelectedKeyBunch}"/>
                     </GroupBox>
                 </Grid>
 

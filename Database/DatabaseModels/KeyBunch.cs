@@ -68,6 +68,50 @@ namespace Database.DatabaseModels
             }
         }
 
+        public static KeyBunch ById(int id)
+        {
+            KeyBunch result = DbConnection.Query<KeyBunch, KeyList, KeyBunch>(
+                @"SELECT kb.*, kl.* FROM KeyBunches AS kb
+                  LEFT OUTER JOIN KeyLists AS kl ON kb.keyListId = kl.id
+                  WHERE kb.id = @ID;",
+                (kb, kl) =>
+                {
+                    kb.KeyList = kl;
+                    return kb;
+                },
+                new { ID = id }
+            ).SingleOrDefault();
+
+            // Join KeyBunch to Person via Authorizations
+            // LEFT OUTER JOIN to include any bunches that don't have any auths
+            DbConnection.Query<KeyBunch,Person, KeyBunch>(
+                @"SELECT kb.*, p.* FROM KeyBunches as kb
+                  LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
+                  LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
+                  WHERE kb.id = @ID",
+                (kb, p) =>
+                {
+                    result.AuthorizedPersonnel.Add(p);
+                    return result;
+                },
+                new { ID = id }
+             );
+
+            // Add the squadrons to the relevant keybunches
+            DbConnection.Query<KeyBunch, Squadron, KeyBunch>(
+                @"SELECT kb.*, sqn.* FROM KeyBunches AS kb
+                  INNER JOIN SquadronAuthorizations AS sqn_a ON sqn_a.keyBunchId = kb.id
+                  INNER JOIN Squadrons AS sqn ON sqn_a.squadronId = sqn.id",
+                (kb, sqn) =>
+                {
+                    result.AuthorizedSquadrons.Add(sqn);
+                    return result;
+                }
+            );
+
+            return result;
+        }
+
         /// <summary>
         /// All the keys in the database that haven't been returned.
         /// </summary>
