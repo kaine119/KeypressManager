@@ -27,4 +27,4 @@ INSERT INTO SquadronAuthorizations (keyBunchId, squadronId)
 
 INSERT INTO LogEntries (timeIssued, keyBunchDrawnId, personDrawingKeyId, personIssuingKeyId, timeReturned, personReturningKeyId, personReceivingKeyId)
   VALUES (1585713600, 1, 1, 3, 1585717200, 1, 3),
-         (1585713660, 1, 2, 3, NULL, NULL, NULL);
+         (1585713660, 2, 2, 3, NULL, NULL, NULL);

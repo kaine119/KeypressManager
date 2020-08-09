@@ -30,6 +30,8 @@ namespace GUI.ViewModels
             }
         }
 
+        public LogEntry LogEntryForSelectedBunch => LogEntry.LatestForKeyBunch(SelectedKeyBunch);
+
         public DashboardViewModel(string path)
         {
             db = new KeypressDatabase(path);

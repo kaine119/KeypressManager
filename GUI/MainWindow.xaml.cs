@@ -1,7 +1,4 @@
-﻿using Database;
-using Database.DatabaseModels;
-using GUI.ViewModels;
-using System.Collections.Generic;
+﻿using GUI.ViewModels;
 using System.Windows;
 
 namespace GUI
