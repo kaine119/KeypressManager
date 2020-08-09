@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Themes\Dark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
     <Resource Include="main.sqlite3" />
   </ItemGroup>
 

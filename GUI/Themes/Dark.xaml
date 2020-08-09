@@ -1,0 +1,163 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--#region Color definitions-->
+    <Color x:Key="SelectionBorder">#ffffff</Color>
+    <SolidColorBrush x:Key="SelectionBorderBrush" Color="{DynamicResource SelectionBorder}" />
+
+    <Color x:Key="NormalText">#ffffff</Color>
+    <SolidColorBrush x:Key="NormalTextBrush" Color="{DynamicResource NormalText}"/>
+
+    <Color x:Key="WindowBackground">#222</Color>
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{DynamicResource WindowBackground}"/>
+    
+    <Color x:Key="ContentBackground">#334</Color>
+    <SolidColorBrush x:Key="ContentBackgroundBrush" Color="{DynamicResource ContentBackground}"/>
+
+    <Color x:Key="SelectedTabHighlight">#3A86C3</Color>
+    <SolidColorBrush x:Key="SelectedTabHighlightBrush" Color="{DynamicResource SelectedTabHighlight}"/>
+
+    <Color x:Key="GroupBoxOutline">#3A86C3</Color>
+    <SolidColorBrush x:Key="GroupBoxOutlineBrush" Color="{DynamicResource GroupBoxOutline}"/>
+
+    <Color x:Key="TextBoxOutline">#30CCCCCC</Color>
+    <SolidColorBrush x:Key="TextBoxOutlineBrush" Color="{DynamicResource TextBoxOutline}"/>
+
+    <Color x:Key="HighlightButtonBackground">#3A86C3</Color>
+    <SolidColorBrush x:Key="HighlightButtonBackgroundBrush" Color="{DynamicResource HighlightButtonBackground}"/>
+
+    <Color x:Key="HighlightButtonMouseOverBackground">#69A1CE</Color>
+    <SolidColorBrush x:Key="HighlightButtonMouseOverBackgroundBrush" Color="{DynamicResource HighlightButtonMouseOverBackground}"/>
+
+    <Color x:Key="HighlightButtonClickedBackground">#2E75AE</Color>
+    <SolidColorBrush x:Key="HighlightButtonClickedBackgroundBrush" Color="{DynamicResource HighlightButtonClickedBackground}"/>
+    <!--#endregion--> 
+    
+    <!--#region Component definitions-->
+
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+    </Style>
+
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="Foreground" Value="{DynamicResource NormalTextBrush}"/>
+    </Style>
+
+    <Style TargetType="TabItem">
+        <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource NormalTextBrush}"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border x:Name="Border" Margin="-2,0,15,0" Padding="10,2,10,0" Background="{TemplateBinding Background}" CornerRadius="2,2,0,0">
+                        <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Bottom" TextElement.FontSize="15"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="BorderThickness" Value="0,5,0,0"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource SelectedTabHighlightBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="HighlightButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="{DynamicResource HighlightButtonBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Border" CornerRadius="5" Padding="10" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource HighlightButtonMouseOverBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource HighlightButtonClickedBackgroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
+    <Style TargetType="GroupBox">
+        <Setter Property="Foreground" Value="{DynamicResource NormalTextBrush}"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource GroupBoxOutlineBrush}" />
+        
+        <!--#region Workaround for double-bordered group boxes -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GroupBox}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="4"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="4"/>
+                        </Grid.RowDefinitions>
+                        <Border CornerRadius="4" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="4"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="Transparent"
+                                    Background="{TemplateBinding Background}"/>
+                        <!-- ContentPresenter for the header -->
+                        <Border x:Name="Header" Padding="6,0,6,0" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
+                            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" />
+                        </Border>
+                        <!-- Primary content for GroupBox -->
+                        <ContentPresenter Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="{TemplateBinding Padding}"/>
+                        <Border CornerRadius="5" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="4"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="{TemplateBinding BorderBrush}">
+                            <Border.OpacityMask>
+                                <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="6">
+                                    <Binding ElementName="Header"  Path="ActualWidth"/>
+                                    <Binding RelativeSource="{RelativeSource Self}" Path="ActualWidth"/>
+                                    <Binding RelativeSource="{RelativeSource Self}" Path="ActualHeight"/>
+                                </MultiBinding>
+                            </Border.OpacityMask>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--#endregion-->
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Foreground" Value="{DynamicResource NormalTextBrush}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource NormalTextBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border CornerRadius="3" Background="{DynamicResource ContentBackgroundBrush}" BorderThickness="2" BorderBrush="{DynamicResource TextBoxOutlineBrush}">
+                        <ScrollViewer Margin="0" x:Name="PART_ContentHost" TextElement.Foreground="{DynamicResource NormalTextBrush}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+</ResourceDictionary>
