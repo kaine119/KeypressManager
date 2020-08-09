@@ -6,21 +6,21 @@
         xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
         xmlns:convert="clr-namespace:GUI.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600"
+        Title="MainWindow" Height="900" Width="1600" MinWidth="900"
         WindowState="Maximized"
         Style="{DynamicResource {x:Type Window}}">
     <Window.Resources>
         <DataTemplate DataType="{x:Type model:KeyBunch}">
             <Border Padding="10"  TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="#4b566a">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="20" Text="{Binding Path=BunchNumber}" Margin="0,0,10,0"/>
-                    <StackPanel>
-                        <TextBlock Text="{Binding Path=Name}"/>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" FontSize="20" Text="{Binding Path=BunchNumber}" Margin="0,0,10,0"/>
+                    <StackPanel DockPanel.Dock="Right">
+                        <TextBlock Text="{Binding Path=Name}" TextWrapping="Wrap"/>
                         <TextBlock>
                             Number of keys: <TextBlock Text="{Binding Path=NumberOfKeys}"/>
                         </TextBlock>
                     </StackPanel>
-                </StackPanel>
+                </DockPanel>
             </Border>
         </DataTemplate>
         <Style x:Key="KeyListItemContainerStyle" TargetType="ListBoxItem">
@@ -58,29 +58,35 @@
                         <ColumnDefinition Width="2*" MinWidth="250"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <GroupBox Header="Keys present">
                         <ListBox ItemsSource="{Binding PresentKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
                                  ItemContainerStyle="{StaticResource KeyListItemContainerStyle}"
-                                 SelectedValue="{Binding SelectedKeyBunch}"/>
+                                 SelectedValue="{Binding SelectedKeyBunch}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
                     </GroupBox>
-
-                    <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
-                        <GroupBox Header="Debug" Margin="0,0,0,10">
+                    <Grid Margin="10,0,10,0" VerticalAlignment="Stretch" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Debug" Margin="0,0,0,10" VerticalAlignment="Stretch" Grid.Row="0">
                             <Button Click="Button_Click" Content="Show selected item"
                                     Style="{DynamicResource HighlightButton}"/>
                         </GroupBox>
-                        <GroupBox Header="Search" Margin="0,0,0,10">
+                        <GroupBox Header="Search" Margin="0,0,0,10" Grid.Row="1">
                             <TextBox />
                         </GroupBox>
-                        <GroupBox Header="Details" Margin="0,0,0,10" Visibility="{Binding Path=SelectedKeyBunch, Converter={StaticResource NullToVis}}">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=SelectedKeyBunch.BunchNumber}" FontSize="60" Padding="4,0,0,0"/>
-                                    <StackPanel VerticalAlignment="Center" Margin="8,0">
-                                        <TextBlock Text="{Binding Path=SelectedKeyBunch.Name}" FontSize="18"/>
+                        <GroupBox Grid.Row="2" Header="Details" Visibility="{Binding Path=SelectedKeyBunch, Converter={StaticResource NullToVis}}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                <DockPanel Margin="0,0,0,10">
+                                    <TextBlock DockPanel.Dock="Left" Text="{Binding Path=SelectedKeyBunch.BunchNumber}" FontSize="60" Padding="4,0,0,0" VerticalAlignment="Center"/>
+                                    <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Margin="8,0">
+                                        <TextBlock Text="{Binding Path=SelectedKeyBunch.Name}" FontSize="18" TextWrapping="Wrap"/>
                                         <TextBlock>
                                             <TextBlock Text="{Binding Path=SelectedKeyBunch.NumberOfKeys}"/> keys in bunch
                                         </TextBlock>
@@ -88,7 +94,7 @@
                                             Key List: <TextBlock Text="{Binding Path=SelectedKeyBunch.KeyList.Name}"/>
                                         </TextBlock>
                                     </StackPanel>
-                                </StackPanel>
+                                </DockPanel>
                                 <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}, ConverterParameter=True}">
                                     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
                                         <Label Content="Date booked out" VerticalAlignment="Center"/>
@@ -133,15 +139,17 @@
                                     <Button Content="Book out &gt;&gt;" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                 </StackPanel>
                             </StackPanel>
+                            </ScrollViewer>
                         </GroupBox>
-                    </StackPanel>
+                    </Grid>
 
                     <GroupBox Header="Keys booked out" Grid.Column="2" Margin="0,0,10,0">
                         <ListBox ItemsSource="{Binding BookedOutKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
                                  ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" 
-                                 SelectedValue="{Binding SelectedKeyBunch}"/>
+                                 SelectedValue="{Binding SelectedKeyBunch}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
                     </GroupBox>
                 </Grid>
 
