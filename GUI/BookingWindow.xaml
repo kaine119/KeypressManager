@@ -82,11 +82,31 @@
                              ItemTemplate="{StaticResource ResourceKey=KeyBunchListItem}"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
                 </GroupBox>
-                <GroupBox Grid.Column="1" Header="Details" Margin="10,0"/>
+                <GroupBox Grid.Column="1" Header="Details" Margin="10,0">
+                    <StackPanel>
+                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                            <Label Content="Drawn out by" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding Path=SelectedPerson.Name}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        </DockPanel>
+                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                            <Label Content="Booked out at" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding Path=TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        </DockPanel>
+                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                            <Label Content="Issued by" VerticalAlignment="Center"/>
+                            <ComboBox>
+                                <ComboBoxItem>Item 1</ComboBoxItem>
+                                <ComboBoxItem>Item 2</ComboBoxItem>
+                                <ComboBoxItem>Item 3</ComboBoxItem>
+                            </ComboBox>
+                        </DockPanel>
+                    </StackPanel>
+                </GroupBox>
                 <GroupBox Grid.Column="2" Header="Authorized Personnel">
                     <ListBox ItemsSource="{Binding AuthorizedPersonnel}"
                              BorderThickness="0"
                              ItemContainerStyle="{StaticResource KeyListItemContainerStyle}"
+                             SelectedValue="{Binding Path=SelectedPerson}"
                              />
                 </GroupBox>
             </Grid>

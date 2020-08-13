@@ -40,6 +40,31 @@ namespace GUI.ViewModels
                 )
             );
 
+        private Person _selectedPerson;
+
+        public Person SelectedPerson
+        {
+            get { return _selectedPerson; }
+            set
+            {
+                _selectedPerson = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedPerson"));
+            }
+        }
+
+        private DateTimeOffset _timeIssued;
+
+        public DateTimeOffset TimeIssued
+        {
+            get { return _timeIssued; }
+            set
+            {
+                _timeIssued = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TimeIssued"));
+            }
+        }
+
+
         /// <summary>
         /// The latest log entries for each pending key.
         /// </summary>
