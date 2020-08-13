@@ -101,5 +101,9 @@ namespace Database
     /// <summary>
     /// Thrown when personnel is not authorized to draw or return a key.
     /// </summary>
-    public class PersonNotAuthorizedException : Exception { }
+    public class PersonNotAuthorizedException : Exception
+    {
+        public PersonNotAuthorizedException() : base() { }
+        public PersonNotAuthorizedException(string message) : base(message) { }
+    }
 }

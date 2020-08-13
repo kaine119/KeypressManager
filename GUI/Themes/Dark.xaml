@@ -30,6 +30,15 @@
 
     <Color x:Key="HighlightButtonClickedBackground">#2E75AE</Color>
     <SolidColorBrush x:Key="HighlightButtonClickedBackgroundBrush" Color="{DynamicResource HighlightButtonClickedBackground}"/>
+
+    <Color x:Key="NormalButtonBackground">#7E7E8D</Color>
+    <SolidColorBrush x:Key="NormalButtonBackgroundBrush" Color="{DynamicResource NormalButtonBackground}"/>
+
+    <Color x:Key="NormalButtonMouseOverBackground">#9E9EB0</Color>
+    <SolidColorBrush x:Key="NormalButtonMouseOverBackgroundBrush" Color="{DynamicResource NormalButtonMouseOverBackground}"/>
+
+    <Color x:Key="NormalButtonClickedBackground">#33333C</Color>
+    <SolidColorBrush x:Key="NormalButtonClickedBackgroundBrush" Color="{DynamicResource NormalButtonClickedBackground}"/>
     <!--#endregion--> 
     
     <!--#region Component definitions-->
@@ -93,6 +102,32 @@
         </Style.Triggers>
     </Style>
 
+    <Style TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="{DynamicResource NormalButtonBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Border" CornerRadius="5" Padding="10" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource NormalButtonMouseOverBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource NormalButtonClickedBackgroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
     <BorderGapMaskConverter x:Key="BorderGapMaskConverter"/>
     <Style TargetType="GroupBox">
         <Setter Property="Foreground" Value="{DynamicResource NormalTextBrush}"/>

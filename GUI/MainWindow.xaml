@@ -86,7 +86,7 @@
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="Keys present">
+                    <GroupBox Header="Keys Present">
                         <ListBox ItemsSource="{Binding PresentKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
@@ -101,11 +101,7 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <GroupBox Header="Debug" Margin="0,0,0,10" VerticalAlignment="Stretch" Grid.Row="0">
-                            <Button Click="Button_Click" Content="Show selected item"
-                                    Style="{DynamicResource HighlightButton}"/>
-                        </GroupBox>
-                        <GroupBox Header="Search" Margin="0,0,0,10" Grid.Row="1">
+                       <GroupBox Header="Search" Margin="0,0,0,10" Grid.Row="1">
                             <TextBox />
                         </GroupBox>
                         <GroupBox Grid.Row="2" Header="Details" Visibility="{Binding Path=SelectedKeyBunch, Converter={StaticResource NullToVis}}">
@@ -116,8 +112,8 @@
                                         ItemTemplate="{StaticResource ResourceKey=KeyBunchDetails}"
                                         BorderThickness="0"/>
                                     <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}, ConverterParameter=Invert}">
-                                        <Button Visibility="{Binding Path=SelectedKeyBunchesAllBookedOut, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">&lt;&lt; Book all in</Button>
-                                        <Button Visibility="{Binding Path=SelectedKeyBunchesAllBookedIn, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">Book all out &gt;&gt;</Button>
+                                        <Button Click="Button_Click" Visibility="{Binding Path=SelectedKeyBunchesAllBookedOut, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">&lt;&lt; Book all in</Button>
+                                        <Button Click="Button_Click" Visibility="{Binding Path=SelectedKeyBunchesAllBookedIn, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">Book all out &gt;&gt;</Button>
                                     </StackPanel>
                                     <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}}">
                                         <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}, ConverterParameter=True}">
@@ -133,7 +129,7 @@
                                                 <Label Content="Issued by" VerticalAlignment="Center"/>
                                                 <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                             </DockPanel>
-                                            <Button Content="&lt;&lt; Book in" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
+                                            <Button Click="Button_Click" Content="&lt;&lt; Book in" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                         </StackPanel>
                                         <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}}">
                                             <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
@@ -161,7 +157,7 @@
                                                 <Label Content="Last received by" VerticalAlignment="Center"/>
                                                 <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReceivingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                             </DockPanel>
-                                            <Button Content="Book out &gt;&gt;" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
+                                            <Button Click="Button_Click" Content="Book out &gt;&gt;" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
@@ -169,7 +165,7 @@
                         </GroupBox>
                     </Grid>
 
-                    <GroupBox Header="Keys booked out" Grid.Column="2" Margin="0,0,10,0">
+                    <GroupBox Header="Keys Drawn Out" Grid.Column="2" Margin="0,0,10,0">
                         <ListBox ItemsSource="{Binding BookedOutKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
