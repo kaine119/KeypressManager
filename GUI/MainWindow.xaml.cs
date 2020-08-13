@@ -18,7 +18,7 @@ namespace GUI
             DataContext = vm;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void StartBookingWindow(object sender, RoutedEventArgs e)
         {
             BookingViewModel newVm;
             try
@@ -40,6 +40,28 @@ namespace GUI
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Warning);
             }
+        }
+
+        /// <summary>
+        /// Handle Home (focuses the search bar) and End (opens the booking window).
+        /// </summary>
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case System.Windows.Input.Key.Home:
+                    SearchBox.Focus();
+                    break;
+                case System.Windows.Input.Key.End:
+                    if (vm.SelectedKeyBunches.Count > 0)
+                    {
+                        StartBookingWindow(sender, e);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            e.Handled = true;
         }
     }
 }
