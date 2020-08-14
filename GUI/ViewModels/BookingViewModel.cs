@@ -40,6 +40,12 @@ namespace GUI.ViewModels
                 )
             );
 
+        /// <summary>
+        /// Staff members availbale to issue the key.
+        /// </summary>
+        public ObservableCollection<Person> Staff =>
+            new ObservableCollection<Person>(Person.AllStaff);
+
         private Person _selectedPerson;
 
         public Person SelectedPerson

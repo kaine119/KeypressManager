@@ -17,13 +17,18 @@ INSERT INTO Squadrons (id, name)
 INSERT INTO Personnel (id, nric, name, rank, contactNumber, squadronId)
   VALUES (1, "101A", "Alice Tan", 4, "90123456", NULL),
          (2, "102B", "Bob Lee", 5, "90123456", 1),
-         (3, "103C", "Charlie Chan", 6, "90123456", NULL);
+         (3, "103C", "Charlie Chan", 6, "90123456", NULL),
+         (4, "104D", "Dennis Lau", 7, "90123456", NULL),
+         (5, "105E", "Emily Wong", 9, "90123456", NULL);
 
 INSERT INTO Authorizations (keyBunchId, personId)
   VALUES (1, 1), (2, 2), (3, 3);
 
 INSERT INTO SquadronAuthorizations (keyBunchId, squadronId) 
   VALUES (3, 1);
+
+INSERT INTO Staff (personId)
+  VALUES (3), (4), (5);
 
 INSERT INTO LogEntries (timeIssued, keyBunchDrawnId, personDrawingKeyId, personIssuingKeyId, timeReturned, personReturningKeyId, personReceivingKeyId)
   VALUES (1585713600, 1, 1, 3, 1585717200, 1, 3),

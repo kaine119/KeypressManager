@@ -39,6 +39,21 @@ namespace Database.DatabaseModels
                 }
             );
 
+        public static IEnumerable<Person> AllStaff =>
+            DbConnection.Query<Person, Squadron, Person>(
+                @"SELECT p.*, s.* FROM Staff AS st
+                  JOIN Personnel AS p ON st.personId = p.id
+                  LEFT OUTER JOIN Squadrons AS s ON p.squadronId = s.id;",
+                (p, s) =>
+                {
+                    if (!(s is null))
+                    {
+                        p.Squadron = s;
+                    }
+                    return p;
+                }
+            );
+
         /// <summary>
         /// Gets the keys this person is authorized to draw.
         /// </summary>

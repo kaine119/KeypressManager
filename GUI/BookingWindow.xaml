@@ -10,6 +10,8 @@
         WindowStartupLocation="CenterOwner"
         Style="{DynamicResource {x:Type Window}}">
     <Window.Resources>
+        <convert:BookingModeToVisibility x:Key="ModeToVis"/>
+        <convert:RankToString x:Key="RankToStr"/>
         <DataTemplate x:Key="KeyBunchListItem">
             <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="#4b566a">
                 <Grid>
@@ -28,24 +30,24 @@
             </Border>
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:Person}">
-            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+            <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
                 <TextBlock>
-                    <TextBlock Text="{Binding Rank}"/>
+                    <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
                     <TextBlock Text="{Binding Name}"/>
                 </TextBlock>
             </Border>
         </DataTemplate>
-        <Style x:Key="KeyListItemContainerStyle" TargetType="ListBoxItem">
+        <Style x:Key="ItemContainerStyle" TargetType="ListBoxItem">
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <Border x:Name="ContainerBorder" Padding="2">
+                        <Border x:Name="ContainerBorder" Padding="10" BorderThickness="2">
                             <ContentPresenter x:Name="Item"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="ContainerBorder" Property="Background" Value="{DynamicResource ResourceKey=SelectionBorderBrush}"/>
+                                <Setter TargetName="ContainerBorder" Property="BorderBrush" Value="{DynamicResource ResourceKey=SelectionBorderBrush}"/>
                                 <Setter TargetName="Item" Property="TextElement.FontWeight" Value="SemiBold"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -53,7 +55,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <convert:BookingModeToVisibility x:Key="ModeToVis"/>
     </Window.Resources>
     <Border Padding="10">
         <DockPanel>
@@ -94,20 +95,16 @@
                         </DockPanel>
                         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
                             <Label Content="Issued by" VerticalAlignment="Center"/>
-                            <ComboBox>
-                                <ComboBoxItem>Item 1</ComboBoxItem>
-                                <ComboBoxItem>Item 2</ComboBoxItem>
-                                <ComboBoxItem>Item 3</ComboBoxItem>
-                            </ComboBox>
+                            <ComboBox ItemsSource="{Binding Path=Staff}" SelectedIndex="0"/>
                         </DockPanel>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Grid.Column="2" Header="Authorized Personnel">
                     <ListBox ItemsSource="{Binding AuthorizedPersonnel}"
                              BorderThickness="0"
-                             ItemContainerStyle="{StaticResource KeyListItemContainerStyle}"
-                             SelectedValue="{Binding Path=SelectedPerson}"
-                             />
+                             ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                             SelectedValue="{Binding Path=SelectedPerson}">
+                    </ListBox>
                 </GroupBox>
             </Grid>
         </DockPanel>

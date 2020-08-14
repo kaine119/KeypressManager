@@ -27,6 +27,12 @@ CREATE TABLE Personnel (
   FOREIGN KEY (squadronId) REFERENCES Squadrons(id)
 );
 
+CREATE TABLE Staff (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  personId INTEGER NOT NULL,
+  FOREIGN KEY (personId) REFERENCES Personnel(id)
+);
+
 CREATE TABLE Authorizations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   keyBunchId INTEGER NOT NULL,
