@@ -47,20 +47,40 @@ namespace GUI.ViewModels
         public DashboardViewModel(string path)
         {
             db = new KeypressDatabase(path);
-            PresentKeys = new ObservableCollection<DashboardKeyListItem>(
-                KeyBunch.Returned.Select(kb => new DashboardKeyListItem(kb, false))
-            );
-            foreach (DashboardKeyListItem item in PresentKeys)
+
+            PresentKeys = new ObservableCollection<DashboardKeyListItem>();
+            foreach (KeyBunch key in KeyBunch.Returned)
             {
+                DashboardKeyListItem item = new DashboardKeyListItem(key, false);
                 item.PropertyChanged += OnKeyListItemPropertyChanged;
+                PresentKeys.Add(item);
             }
 
-            BookedOutKeys = new ObservableCollection<DashboardKeyListItem>(
-                KeyBunch.Unreturned.Select(kb => new DashboardKeyListItem(kb, false))
-            );
-            foreach (DashboardKeyListItem item in BookedOutKeys)
+            BookedOutKeys = new ObservableCollection<DashboardKeyListItem>();
+            foreach (KeyBunch key in KeyBunch.Unreturned)
             {
+                DashboardKeyListItem item = new DashboardKeyListItem(key, false);
                 item.PropertyChanged += OnKeyListItemPropertyChanged;
+                BookedOutKeys.Add(item);
+            }
+        }
+
+        public void RefreshViewModel()
+        {
+            PresentKeys.Clear();
+            foreach (KeyBunch key in KeyBunch.Returned)
+            {
+                DashboardKeyListItem item = new DashboardKeyListItem(key, false);
+                item.PropertyChanged += OnKeyListItemPropertyChanged;
+                PresentKeys.Add(item);
+            }
+
+            BookedOutKeys.Clear();
+            foreach (KeyBunch key in KeyBunch.Unreturned)
+            {
+                DashboardKeyListItem item = new DashboardKeyListItem(key, false);
+                item.PropertyChanged += OnKeyListItemPropertyChanged;
+                BookedOutKeys.Add(item);
             }
         }
 
