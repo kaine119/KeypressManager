@@ -193,7 +193,7 @@ namespace Database.DatabaseModels
                     new
                     {
                         ID,
-                        KeyBunchDrawId = KeyBunchDrawn.ID,
+                        KeyBunchDrawnId = KeyBunchDrawn.ID,
                         TimeIssued,
                         PersonDrawingKeyId = PersonDrawingKey.ID,
                         PersonIssuingKeyId = PersonIssuingKey.ID,
