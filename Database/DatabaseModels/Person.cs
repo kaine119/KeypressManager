@@ -2,6 +2,7 @@
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Database.DatabaseModels
 {
@@ -52,6 +53,13 @@ namespace Database.DatabaseModels
                     }
                     return p;
                 }
+            );
+
+        public bool Match(string searchTerm) =>
+            Regex.IsMatch(
+                Regex.IsMatch(searchTerm, @"\d{1,3}[A-Za-z]?$") ? NRIC : Name,
+                searchTerm,
+                RegexOptions.IgnoreCase
             );
 
         /// <summary>

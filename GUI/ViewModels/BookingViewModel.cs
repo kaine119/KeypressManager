@@ -40,6 +40,24 @@ namespace GUI.ViewModels
                 )
             );
 
+        private string _searchTerm;
+
+        public string SearchTerm
+        {
+            get { return _searchTerm; }
+            set
+            {
+                _searchTerm = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SearchTerm"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DisplayedAuthorizedPersonnel"));
+            }
+        }
+
+        public ObservableCollection<Person> DisplayedAuthorizedPersonnel =>
+            new ObservableCollection<Person>(
+                AuthorizedPersonnel.Where(person => person.Match(SearchTerm))
+            );
+
         /// <summary>
         /// Staff members availbale to issue the key.
         /// </summary>
@@ -69,7 +87,6 @@ namespace GUI.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedStaff"));
             }
         }
-
 
         private DateTimeOffset _timeBooked;
 
@@ -130,6 +147,7 @@ namespace GUI.ViewModels
             PendingKeys = pendingKeys;
             Mode = mode;
             SelectedStaff = Staff.First();
+            SearchTerm = "";
 
             CmdBook = new RelayCommand<BookingWindow>(
                 (window) =>

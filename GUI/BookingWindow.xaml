@@ -38,6 +38,7 @@
                 <TextBlock>
                     <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
                     <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
                 </TextBlock>
             </Border>
         </DataTemplate>
@@ -106,13 +107,18 @@
                         </DockPanel>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Grid.Column="2" Header="Authorized Personnel" KeyboardNavigation.DirectionalNavigation="None">
-                    <ListBox ItemsSource="{Binding AuthorizedPersonnel}"
-                             BorderThickness="0"
-                             ItemContainerStyle="{StaticResource ItemContainerStyle}"
-                             SelectedValue="{Binding Path=SelectedPersonBooking}">
-                    </ListBox>
-                </GroupBox>
+                <DockPanel Grid.Column="2">
+                    <GroupBox DockPanel.Dock="Top" Header="Search" Margin="0,0,0,10">
+                        <TextBox x:Name="SearchBox" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"/>
+                    </GroupBox>
+                    <GroupBox Header="Authorized Personnel" KeyboardNavigation.DirectionalNavigation="None">
+                        <ListBox ItemsSource="{Binding DisplayedAuthorizedPersonnel}"
+                                    BorderThickness="0"
+                                    ItemContainerStyle="{StaticResource ItemContainerStyle}"
+                                    SelectedValue="{Binding Path=SelectedPersonBooking}">
+                        </ListBox>
+                    </GroupBox>
+                </DockPanel>
             </Grid>
         </DockPanel>
     </Border>
