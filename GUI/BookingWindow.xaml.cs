@@ -10,26 +10,26 @@ namespace GUI
     /// </summary>
     public partial class BookingWindow : Window
     {
-        private readonly Timer timer = new Timer();
+        public readonly Timer Timer = new Timer();
 
         public BookingWindow()
         {
             InitializeComponent();
             // Use a timer to update the time field, and keep it up to date with current time.
-            timer.Elapsed += (_, e) =>
+            Timer.Elapsed += (_, e) =>
             {
-                Dispatcher.Invoke(() => (DataContext as BookingViewModel).TimeIssued = new DateTimeOffset(e.SignalTime));
+                Dispatcher.Invoke(() => (DataContext as BookingViewModel).TimeBooked = new DateTimeOffset(e.SignalTime));
             };
-            timer.AutoReset = true;
-            timer.Enabled = true;
+            Timer.AutoReset = true;
+            Timer.Enabled = true;
         }
 
 
-        private void Submit(object sender, RoutedEventArgs e)
+        public void Submit(bool isBookinSuccessful)
         {
-            timer.Stop();
-            timer.Dispose();
-            DialogResult = true;
+            Timer.Stop();
+            Timer.Dispose();
+            DialogResult = isBookinSuccessful;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace GUI.ViewModels
         /// Whether the window is for booking in or booking out.
         /// </summary>
         public BookingMode Mode { get; set; }
-        
+
         /// <summary>
         /// Any personnel authorized to book in/out ALL of the pending keys.
         /// </summary>
@@ -46,37 +46,79 @@ namespace GUI.ViewModels
         public ObservableCollection<Person> Staff =>
             new ObservableCollection<Person>(Person.AllStaff);
 
-        private Person _selectedPerson;
+        private Person _selectedPersonBooking;
 
-        public Person SelectedPerson
+        public Person SelectedPersonBooking
         {
-            get { return _selectedPerson; }
+            get { return _selectedPersonBooking; }
             set
             {
-                _selectedPerson = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedPerson"));
+                _selectedPersonBooking = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedPersonBooking"));
             }
         }
 
-        private DateTimeOffset _timeIssued;
+        private Person _selectedStaff;
 
-        public DateTimeOffset TimeIssued
+        public Person SelectedStaff
         {
-            get { return _timeIssued; }
+            get { return _selectedStaff; }
             set
             {
-                _timeIssued = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TimeIssued"));
+                _selectedStaff = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedStaff"));
             }
         }
 
+
+        private DateTimeOffset _timeBooked;
+
+        public DateTimeOffset TimeBooked
+        {
+            get { return _timeBooked; }
+            set
+            {
+                _timeBooked = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TimeBooked"));
+            }
+        }
 
         /// <summary>
-        /// The latest log entries for each pending key.
+        /// The command run when the "Book In" button is pressed.
         /// </summary>
-        public ObservableCollection<LogEntry> LogEntriesForPendingKeys => new ObservableCollection<LogEntry>(
-            PendingKeys.Select(kb => LogEntry.LatestForKeyBunch(kb))
-        );
+        public RelayCommand<BookingWindow> CmdBook { get; set; }
+
+        /// <summary>
+        /// Attempt to book the selected keys in/out, depending on the rest of the viewmodel's parameters.
+        /// </summary>
+        /// <returns>Whether or not the operation succeeded.</returns>
+        private bool TryBook()
+        {
+            if (Mode == BookingMode.In)
+            {
+                IEnumerable<LogEntry> latestLogs = PendingKeys.Select(kb => LogEntry.LatestForKeyBunch(kb));
+                foreach (LogEntry log in latestLogs)
+                {
+                    log.TimeReturned = TimeBooked;
+                    log.PersonReturningKey = SelectedPersonBooking;
+                    log.PersonReceivingKey = SelectedStaff;
+                    log.Write();
+                }
+                return true;
+            }
+            else
+            {
+                IEnumerable<LogEntry> newLogs = PendingKeys.Select(kb => new LogEntry { KeyBunchDrawn = kb });
+                foreach (LogEntry log in newLogs)
+                {
+                    log.TimeIssued = TimeBooked;
+                    log.PersonDrawingKey = SelectedPersonBooking;
+                    log.PersonIssuingKey = SelectedStaff;
+                    log.Write();
+                }
+                return true;
+            }
+        }
 
         /// <summary>
         /// View model for booking window. Used for booking keys in or out.
@@ -87,6 +129,17 @@ namespace GUI.ViewModels
         {
             PendingKeys = pendingKeys;
             Mode = mode;
+            SelectedStaff = Staff.First();
+
+            CmdBook = new RelayCommand<BookingWindow>(
+                (window) =>
+                {
+                    TryBook();
+                    window.Submit(true);
+                },
+                () => SelectedPersonBooking != null
+            );
+
             if (AuthorizedPersonnel.Count == 0)
             {
                 throw new PersonNotAuthorizedException("No personnel is authorized to draw all keys specified");

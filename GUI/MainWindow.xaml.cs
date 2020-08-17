@@ -31,11 +31,14 @@ namespace GUI
                     DataContext = newVm
                 };
                 bookingWindow.ShowDialog();
-                MessageBox.Show($"{bookingWindow.DialogResult}", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (bookingWindow.DialogResult == true)
+                {
+                    vm.RefreshViewModel();
+                }
             }
             catch (PersonNotAuthorizedException)
             {
-                MessageBox.Show($"Nobody is authorized to book {(vm.SelectedKeyBunchesAllBookedOut ? "out" : "in")} all selected keys together. Please try again with a different selection.",
+                MessageBox.Show($"Nobody is authorized to book {(vm.SelectedKeyBunchesAllBookedOut ? "in" : "out")} all selected keys together. Please try again with a different selection.",
                                 "Unauthorized",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Warning);

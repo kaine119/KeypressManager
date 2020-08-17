@@ -31,6 +31,9 @@
     <Color x:Key="HighlightButtonClickedBackground">#2E75AE</Color>
     <SolidColorBrush x:Key="HighlightButtonClickedBackgroundBrush" Color="{DynamicResource HighlightButtonClickedBackground}"/>
 
+    <Color x:Key="HighlightButtonDisabledBackground">#FF284257</Color>
+    <SolidColorBrush x:Key="HighlightButtonDisabledBackgroundBrush" Color="{DynamicResource HighlightButtonDisabledBackground}"/>
+
     <Color x:Key="NormalButtonBackground">#7E7E8D</Color>
     <SolidColorBrush x:Key="NormalButtonBackgroundBrush" Color="{DynamicResource NormalButtonBackground}"/>
 
@@ -98,6 +101,9 @@
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="{DynamicResource HighlightButtonClickedBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource HighlightButtonDisabledBackgroundBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
