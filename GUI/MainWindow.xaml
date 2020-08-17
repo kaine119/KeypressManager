@@ -88,7 +88,7 @@
                     </Grid.ColumnDefinitions>
 
                     <GroupBox Header="Keys Present">
-                        <ListBox ItemsSource="{Binding PresentKeys}" 
+                        <ListBox ItemsSource="{Binding DisplayedPresentKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
                                  ItemContainerStyle="{StaticResource KeyListItemContainerStyle}"
@@ -104,7 +104,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                        <GroupBox Header="Search" Margin="0,0,0,10" Grid.Row="1">
-                            <TextBox x:Name="SearchBox" PreviewKeyDown="Window_KeyDown" />
+                            <TextBox x:Name="SearchBox" PreviewKeyDown="Window_KeyDown" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"/>
                         </GroupBox>
                         <GroupBox Grid.Row="2" Header="Details" Visibility="{Binding Path=SelectedKeyBunch, Converter={StaticResource NullToVis}}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -168,7 +168,7 @@
                     </Grid>
 
                     <GroupBox Header="Keys Drawn Out" Grid.Column="2" Margin="0,0,10,0">
-                        <ListBox ItemsSource="{Binding BookedOutKeys}" 
+                        <ListBox ItemsSource="{Binding DisplayedBookedOutKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
                                  ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" 

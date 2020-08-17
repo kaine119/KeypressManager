@@ -1,6 +1,7 @@
 ﻿using GUI.ViewModels;
 using System.Windows;
 using Database;
+using System.Windows.Input;
 
 namespace GUI
 {
@@ -52,19 +53,26 @@ namespace GUI
         {
             switch (e.Key)
             {
-                case System.Windows.Input.Key.Home:
+                case Key.Home:
                     SearchBox.Focus();
+                    e.Handled = true;
                     break;
-                case System.Windows.Input.Key.End:
+                case Key.End:
                     if (vm.SelectedKeyBunches.Count > 0)
                     {
                         StartBookingWindow(sender, e);
                     }
+                    e.Handled = true;
+                    break;
+                case Key.Escape:
+                    vm.SelectedKeyBunch = null;
+                    vm.SelectedKeyBunches.Clear();
+                    vm.SearchTerm = "";
+                    e.Handled = true;
                     break;
                 default:
                     break;
             }
-            e.Handled = true;
         }
     }
 }

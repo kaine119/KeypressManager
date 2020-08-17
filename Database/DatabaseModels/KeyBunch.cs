@@ -68,6 +68,11 @@ namespace Database.DatabaseModels
             }
         }
 
+        public bool Match(string searchTerm)
+        {
+            return Regex.IsMatch(BunchNumber, searchTerm, RegexOptions.IgnoreCase) || Regex.IsMatch(Name, searchTerm, RegexOptions.IgnoreCase);
+        }
+
         public static KeyBunch ById(int id)
         {
             KeyBunch result = DbConnection.Query<KeyBunch, KeyList, KeyBunch>(

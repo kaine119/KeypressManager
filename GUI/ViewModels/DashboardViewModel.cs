@@ -28,9 +28,34 @@ namespace GUI.ViewModels
             }
         }
 
+        private string _searchTerm;
+
+        public string SearchTerm
+        {
+            get { return _searchTerm; }
+            set
+            {
+                _searchTerm = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SearchTerm"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DisplayedPresentKeys"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DisplayedBookedOutKeys"));
+            }
+        }
+
+        public ObservableCollection<DashboardKeyListItem> DisplayedPresentKeys => 
+            SearchTerm == ""
+                    ? PresentKeys
+                    : new ObservableCollection<DashboardKeyListItem>(PresentKeys.Where(item => item.KeyBunch.Match(SearchTerm)));
+
+        public ObservableCollection<DashboardKeyListItem> DisplayedBookedOutKeys =>
+            SearchTerm == ""
+                    ? BookedOutKeys
+                    : new ObservableCollection<DashboardKeyListItem>(BookedOutKeys.Where(item => item.KeyBunch.Match(SearchTerm)));
+
+
         public LogEntry LogEntryForSelectedBunch => LogEntry.LatestForKeyBunch(SelectedKeyBunch?.KeyBunch);
 
-        public ObservableCollection<KeyBunch> SelectedKeyBunches => 
+        public ObservableCollection<KeyBunch> SelectedKeyBunches =>
             new ObservableCollection<KeyBunch>(
                 PresentKeys
                     .Union(BookedOutKeys)
@@ -47,6 +72,8 @@ namespace GUI.ViewModels
         public DashboardViewModel(string path)
         {
             db = new KeypressDatabase(path);
+
+            SearchTerm = "";
 
             PresentKeys = new ObservableCollection<DashboardKeyListItem>();
             foreach (KeyBunch key in KeyBunch.Returned)
@@ -67,6 +94,7 @@ namespace GUI.ViewModels
 
         public void RefreshViewModel()
         {
+            SearchTerm = "";
             PresentKeys.Clear();
             foreach (KeyBunch key in KeyBunch.Returned)
             {
