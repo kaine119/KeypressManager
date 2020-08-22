@@ -7,6 +7,9 @@
     <Color x:Key="NormalText">#ffffff</Color>
     <SolidColorBrush x:Key="NormalTextBrush" Color="{DynamicResource NormalText}"/>
 
+    <Color x:Key="HighlightText">#47A8F7</Color>
+    <SolidColorBrush x:Key="HighlightTextBrush" Color="{DynamicResource HighlightText}"/>
+
     <Color x:Key="WindowBackground">#222</Color>
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{DynamicResource WindowBackground}"/>
 
@@ -31,13 +34,13 @@
     <Color x:Key="HighlightButtonClickedBackground">#2E75AE</Color>
     <SolidColorBrush x:Key="HighlightButtonClickedBackgroundBrush" Color="{DynamicResource HighlightButtonClickedBackground}"/>
 
-    <Color x:Key="HighlightButtonDisabledBackground">#FF284257</Color>
+    <Color x:Key="HighlightButtonDisabledBackground">#FF5E5E5E</Color>
     <SolidColorBrush x:Key="HighlightButtonDisabledBackgroundBrush" Color="{DynamicResource HighlightButtonDisabledBackground}"/>
 
-    <Color x:Key="NormalButtonBackground">#7E7E8D</Color>
+    <Color x:Key="NormalButtonBackground">#B5B5B5</Color>
     <SolidColorBrush x:Key="NormalButtonBackgroundBrush" Color="{DynamicResource NormalButtonBackground}"/>
 
-    <Color x:Key="NormalButtonMouseOverBackground">#9E9EB0</Color>
+    <Color x:Key="NormalButtonMouseOverBackground">#C8C8C8</Color>
     <SolidColorBrush x:Key="NormalButtonMouseOverBackgroundBrush" Color="{DynamicResource NormalButtonMouseOverBackground}"/>
 
     <Color x:Key="NormalButtonClickedBackground">#33333C</Color>

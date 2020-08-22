@@ -72,23 +72,30 @@
         <convert:MultipleToInvis x:Key="MultipleToInvis"/>
         <convert:BoolToVisibility x:Key="BoolToVis"/>
     </Window.Resources>
-    <TabControl x:Name="tabControl" Padding="10" Margin="0,5,0,0" Background="{DynamicResource ContentBackgroundBrush}" BorderThickness="0">
-        <TabItem Header="Dashboard">
-            <Grid>
+    <Border Padding="20,15,20,20" BorderThickness="0,5,0,0" BorderBrush="{DynamicResource GroupBoxOutlineBrush}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <TextBlock Foreground="{DynamicResource GroupBoxOutlineBrush}" FontSize="30">Keypress Management</TextBlock>
+            </Grid>
+            
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*" MinWidth="250"/>
+                    <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="2*" MinWidth="250"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <GroupBox Header="Keys Present">
-                        <ListBox ItemsSource="{Binding DisplayedPresentKeys}" 
+                <GroupBox Header="Keys Present">
+                    <ListBox ItemsSource="{Binding DisplayedPresentKeys}" 
                                  IsSynchronizedWithCurrentItem="True" 
                                  BorderThickness="0"
                                  ItemContainerStyle="{StaticResource KeyListItemContainerStyle}"
@@ -96,119 +103,114 @@
                                  SelectionMode="Extended"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                  PreviewKeyDown="Window_KeyDown"/>
+                </GroupBox>
+                <Grid Margin="10,0,10,0" VerticalAlignment="Stretch" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Search" Margin="0,0,0,10" Grid.Row="1">
+                        <TextBox x:Name="SearchBox" PreviewKeyDown="Window_KeyDown" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"/>
                     </GroupBox>
-                    <Grid Margin="10,0,10,0" VerticalAlignment="Stretch" Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                       <GroupBox Header="Search" Margin="0,0,0,10" Grid.Row="1">
-                            <TextBox x:Name="SearchBox" PreviewKeyDown="Window_KeyDown" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"/>
-                        </GroupBox>
-                        <GroupBox Grid.Row="2" Header="Details" Visibility="{Binding Path=SelectedKeyBunch, Converter={StaticResource NullToVis}}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel>
-                                    <ItemsControl
+                    <GroupBox Grid.Row="2" Header="Details" Visibility="{Binding Path=SelectedKeyBunch, Converter={StaticResource NullToVis}}">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <ItemsControl
                                         ItemsSource="{Binding Path=SelectedKeyBunches}" 
                                         ItemTemplate="{StaticResource ResourceKey=KeyBunchDetails}"
                                         BorderThickness="0"/>
-                                    <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}, ConverterParameter=Invert}">
-                                        <Button Click="StartBookingWindow" Visibility="{Binding Path=SelectedKeyBunchesAllBookedOut, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">&lt;&lt; Book all in</Button>
-                                        <Button Click="StartBookingWindow" Visibility="{Binding Path=SelectedKeyBunchesAllBookedIn, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">Book all out &gt;&gt;</Button>
+                                <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}, ConverterParameter=Invert}">
+                                    <Button Click="StartBookingWindow" Visibility="{Binding Path=SelectedKeyBunchesAllBookedOut, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">&lt;&lt; Book all in</Button>
+                                    <Button Click="StartBookingWindow" Visibility="{Binding Path=SelectedKeyBunchesAllBookedIn, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">Book all out &gt;&gt;</Button>
+                                </StackPanel>
+                                <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}}">
+                                    <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}, ConverterParameter=True}">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Date booked out" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Booked out by" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonDrawingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Issued by" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <Button Click="StartBookingWindow" Content="&lt;&lt; Book in" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                     </StackPanel>
-                                    <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}}">
-                                        <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}, ConverterParameter=True}">
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Date booked out" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Booked out by" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonDrawingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Issued by" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <Button Click="StartBookingWindow" Content="&lt;&lt; Book in" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
-                                        </StackPanel>
-                                        <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}}">
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Last booked out at" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Last borrowed by" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonDrawingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Last issued by" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <Separator Margin="0,10,0,10"/>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Last booked in at" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeReturned, StringFormat='d/M/yyyy HH:mm'}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Last returned by" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReturningKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
-                                                <Label Content="Last received by" VerticalAlignment="Center"/>
-                                                <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReceivingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                            </DockPanel>
-                                            <Button Click="StartBookingWindow" Content="Book out &gt;&gt;" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
-                                        </StackPanel>
+                                    <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}}">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Last booked out at" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Last borrowed by" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonDrawingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Last issued by" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <Separator Margin="0,10,0,10"/>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Last booked in at" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeReturned, StringFormat='d/M/yyyy HH:mm'}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Last returned by" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReturningKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                            <Label Content="Last received by" VerticalAlignment="Center"/>
+                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReceivingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </DockPanel>
+                                        <Button Click="StartBookingWindow" Content="Book out &gt;&gt;" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                     </StackPanel>
                                 </StackPanel>
-                            </ScrollViewer>
-                        </GroupBox>
-                    </Grid>
-
-                    <GroupBox Header="Keys Drawn Out" Grid.Column="2" Margin="0,0,10,0">
-                        <ListBox ItemsSource="{Binding DisplayedBookedOutKeys}" 
-                                 IsSynchronizedWithCurrentItem="True" 
-                                 BorderThickness="0"
-                                 ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" 
-                                 SelectedValue="{Binding SelectedKeyBunch}"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 SelectionMode="Extended"
-                                 PreviewKeyDown="Window_KeyDown"/>
+                            </StackPanel>
+                        </ScrollViewer>
                     </GroupBox>
                 </Grid>
 
-                <DockPanel Grid.Column="1">
-                    <StackPanel DockPanel.Dock="Top">
-                        <GroupBox Header="External keypress" Margin="0,0,0,10">
-                            <DockPanel Width="180">
-                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
-                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>3</Bold>/65</Span> drawn out
-                                </TextBlock>
-                            </DockPanel>
-                        </GroupBox>
-                        <GroupBox Header="149 Keypress" Margin="0,0,0,10">
-                            <DockPanel Width="180">
-                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
-                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>18</Bold>/40</Span> drawn out
-                                </TextBlock>
-                            </DockPanel>
-                        </GroupBox>
-                        <GroupBox Header="Internal keypress" Margin="0,0,0,10">
-                            <DockPanel Width="180">
-                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
-                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>3</Bold>/24</Span> drawn out
-                                </TextBlock>
-                            </DockPanel>
-                        </GroupBox>
-                    </StackPanel>
-                </DockPanel>
+                <GroupBox Header="Keys Drawn Out" Grid.Column="2" Margin="0,0,10,0">
+                    <ListBox ItemsSource="{Binding DisplayedBookedOutKeys}" 
+                             IsSynchronizedWithCurrentItem="True" 
+                             BorderThickness="0"
+                             ItemContainerStyle="{StaticResource KeyListItemContainerStyle}" 
+                             SelectedValue="{Binding SelectedKeyBunch}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             SelectionMode="Extended"
+                             PreviewKeyDown="Window_KeyDown"/>
+                </GroupBox>
             </Grid>
-        </TabItem>
-        <TabItem Header="Edit">
-            <Grid/>
-        </TabItem>
-    </TabControl>
 
+            <DockPanel Grid.Row="1"  Grid.Column="1">
+                <StackPanel DockPanel.Dock="Top">
+                    <GroupBox Header="External keypress" Margin="0,0,0,10">
+                        <DockPanel Width="180">
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
+                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>3</Bold>/65</Span> drawn out
+                            </TextBlock>
+                        </DockPanel>
+                    </GroupBox>
+                    <GroupBox Header="149 Keypress" Margin="0,0,0,10">
+                        <DockPanel Width="180">
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
+                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>18</Bold>/40</Span> drawn out
+                            </TextBlock>
+                        </DockPanel>
+                    </GroupBox>
+                    <GroupBox Header="Internal keypress" Margin="0,0,0,10">
+                        <DockPanel Width="180">
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
+                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>3</Bold>/24</Span> drawn out
+                            </TextBlock>
+                        </DockPanel>
+                    </GroupBox>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+    </Border>
 </Window>
