@@ -24,12 +24,16 @@ namespace GUI
             Timer.Enabled = true;
         }
 
-
         public void Submit(bool isBookinSuccessful)
         {
             Timer.Stop();
             Timer.Dispose();
             DialogResult = isBookinSuccessful;
+        }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            Submit(false);
         }
     }
 }

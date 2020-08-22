@@ -72,7 +72,7 @@
                         Book <Run Text="{Binding Path=Mode}"/> (Enter)
                     </TextBlock>
                 </Button>
-                <Button Margin="0,0,10,0">Cancel</Button>
+                <Button Margin="0,0,10,0" Click="Cancel">Cancel</Button>
             </StackPanel>
             <Grid DockPanel.Dock="Top">
                 <Grid.ColumnDefinitions>
