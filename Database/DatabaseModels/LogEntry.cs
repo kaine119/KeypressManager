@@ -1,9 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq;
-using System.Text;
 
 namespace Database.DatabaseModels
 {
@@ -136,7 +134,7 @@ namespace Database.DatabaseModels
                     }
                     return log;
                 },
-                new { KeyBunchId = bunch.ID }
+                new { KeyBunchID = bunch.ID }
             ).FirstOrDefault();
         }
 

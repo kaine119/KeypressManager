@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -20,7 +20,7 @@ namespace Database.DatabaseModels
         /// <param name="connectionString">A IDbConnection connection string. See documentation for <seealso cref="IDbConnection"/>.</param>
         public static void EstablishConnection(string connectionString)
         {
-            DbConnection = new SQLiteConnection(connectionString);
+            DbConnection = new SqliteConnection(connectionString);
         }
 
         public int? ID { get; protected set; }

@@ -210,8 +210,8 @@ namespace Database.DatabaseModels
                 person.Write();
                 DbConnection.Execute(@"
                     INSERT INTO Authorizations (keyBunchId, personId)
-                    VALUES (@KeyBunchID, @PersonID)",
-                    new { KeyBunchId = ID, PersonID = person.ID }
+                    VALUES (@KeyBunchId, @PersonId)",
+                    new { KeyBunchId = ID, PersonId = person.ID }
                 );
             }
 
