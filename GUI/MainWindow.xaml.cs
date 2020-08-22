@@ -46,6 +46,8 @@ namespace GUI
             }
         }
 
+
+
         /// <summary>
         /// Handle Home (focuses the search bar) and End (opens the booking window).
         /// </summary>
@@ -73,6 +75,13 @@ namespace GUI
                 default:
                     break;
             }
+        }
+
+        private void StartEditWindow(object sender, RoutedEventArgs e)
+        {
+            EditWindow window = new EditWindow();
+            window.Owner = this;
+            window.ShowDialog();
         }
     }
 }

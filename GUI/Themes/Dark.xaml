@@ -55,6 +55,7 @@
 
     <Style TargetType="ListBox">
         <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
     <Style TargetType="Label">
@@ -68,13 +69,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border x:Name="Border" Margin="-2,0,15,0" Padding="10,2,10,0" Background="{TemplateBinding Background}" CornerRadius="2,2,0,0">
+                    <Border x:Name="Border" 
+                            Margin="0,0,0,0"
+                            Padding="10,2,10,0" 
+                            Background="{TemplateBinding Background}" 
+                            BorderThickness="2,2,2,0" 
+                            CornerRadius="2,2,0,0" 
+                            VerticalAlignment="Bottom">
                         <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Bottom" TextElement.FontSize="15"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="BorderThickness" Value="0,5,0,0"/>
                             <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource SelectedTabHighlightBrush}"/>
+                            <Setter TargetName="Border" Property="Padding" Value="10,4,10,2"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
