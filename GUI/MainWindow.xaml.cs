@@ -79,9 +79,15 @@ namespace GUI
 
         private void StartEditWindow(object sender, RoutedEventArgs e)
         {
-            EditWindow window = new EditWindow();
-            window.Owner = this;
+            EditWindow window = new EditWindow
+            {
+                Owner = this
+            };
             window.ShowDialog();
+            if (window.DialogResult == true)
+            {
+                vm.RefreshViewModel();
+            }
         }
     }
 }
