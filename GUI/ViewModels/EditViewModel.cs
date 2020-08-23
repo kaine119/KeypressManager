@@ -7,7 +7,7 @@ namespace GUI.ViewModels
     class EditViewModel : INotifyPropertyChanged
     {
         /// <summary>
-        /// All key bunches in the list.
+        /// All key bunches in all key lists.
         /// </summary>
         public ObservableCollection<KeyBunch> AllKeyBunches { get; set; }
 
@@ -26,6 +26,13 @@ namespace GUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// All key lists in the database.
+        /// </summary>
+        public ObservableCollection<KeyList> AllKeyLists { get; set; }
+
+
+
         public RelayCommand<EditWindow> CmdSaveAndClose { get; set; }
 
         /// <summary>
@@ -34,6 +41,8 @@ namespace GUI.ViewModels
         public EditViewModel()
         {
             AllKeyBunches = new ObservableCollection<KeyBunch>(KeyBunch.All);
+            AllKeyLists = new ObservableCollection<KeyList>(KeyList.All);
+            
             CmdSaveAndClose = new RelayCommand<EditWindow>(
                 (window) =>
                 {
