@@ -3,18 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GUI"
-        xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
-        xmlns:convert="clr-namespace:GUI.Converters"
-        xmlns:ViewModels="clr-namespace:GUI.ViewModels"
+        xmlns:edit="clr-namespace:GUI.EditControls"
         mc:Ignorable="d"
         Title="EditWindow" Height="800" Width="1200"
         x:Name="ThisWindow"
         WindowStartupLocation="CenterOwner"
-        Style="{DynamicResource {x:Type Window}}" d:DataContext="{d:DesignInstance {x:Type ViewModels:EditViewModel}}">
+        Style="{DynamicResource {x:Type Window}}">
     <Window.Resources>
         <Style TargetType="ListBoxItem">
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
@@ -31,167 +28,22 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <convert:NullToVisibility x:Key="NullToVisibility"/>
-        <convert:RankToString x:Key="RankToStr"/>
     </Window.Resources>
-    <TabControl Background="{DynamicResource ContentBackgroundBrush}" Padding="0" BorderThickness="0">
-        <TabItem Header="Key Lists">
-            <Border Padding="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <ListBox Grid.Column="0" Margin="0,0,10,0">
-                        <ListBoxItem>Hello?</ListBoxItem>
-                    </ListBox>
-                    <Grid Grid.Column="1"/>
-                </Grid>
-            </Border>
-        </TabItem>
-        <TabItem Header="Keys">
-            <TabItem.Resources>
-                <DataTemplate DataType="{x:Type model:KeyBunch}">
-                    <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="#4b566a">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" FontSize="22" Text="{Binding BunchNumber}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
-                                <TextBlock><Run Text="Number of keys: "/><InlineUIContainer>
-                                        <TextBlock Text="{Binding NumberOfKeys}"/>
-                                    </InlineUIContainer></TextBlock>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type model:Person}">
-                    <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
-                        <TextBlock>
-                            <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
-                            <TextBlock Text="{Binding Name}"/>
-                            <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
-                        </TextBlock>    
-                    </Border>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type model:KeyList}">
-                    <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
-                        <TextBlock Text="{Binding Name}"/>
-                    </Border>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type model:Squadron}">
-                    <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <!-- TODO: revisit this and see if squadron authorization selection works -->
-                            <CheckBox 
-                                Grid.Column="0" 
-                                VerticalAlignment="Center" 
-                                FocusVisualStyle="{x:Null}"
-                                IsChecked="{Binding IsSelected}">
-                                <CheckBox.LayoutTransform>
-                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                                </CheckBox.LayoutTransform>
-                            </CheckBox>
-                            <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                                <TextBlock Text="{Binding Path=Name}" TextWrapping="Wrap"/>
-                                <TextBlock>
-                                    Number of personnel: <TextBlock Text="{Binding Path=Personnel.Count}"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </TabItem.Resources>
-            <Border Padding="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <ListBox Grid.Column="0"
-                             Margin="0,0,10,0"
-                             ItemsSource="{Binding AllKeyBunches}"
-                             SelectedValue="{Binding SelectedKeyBunch}"/>
-                    <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}, ConverterParameter=Invert}">
-                        <TextBlock 
-                            HorizontalAlignment="Center"
-                            FontSize="25">
-                            Select a keybunch on the left to edit.
-                        </TextBlock>
-                    </Grid>
-                    <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Margin="0,0,5,0" Grid.Column="0" Grid.Row="0">
-                            <DockPanel Grid.Column="0" Margin="0,0,0,5">
-                                <Label Content="Bunch Number" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding SelectedKeyBunch.BunchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            </DockPanel>
-                            <DockPanel Grid.Column="1" Margin="0,0,0,5">
-                                <Label Content="Under key list" VerticalAlignment="Center"/>
-                                <ComboBox 
-                                    ItemsSource="{Binding AllKeyLists}"
-                                    SelectedItem="{
-                                        Binding SelectedKeyBunch.KeyList, 
-                                        Mode=TwoWay, 
-                                        UpdateSourceTrigger=Default
-                                    }"/>
-                            </DockPanel>
-                        </StackPanel>
-                        <StackPanel Margin="5,0,0,0" Grid.Column="1" Grid.Row="0">
-                            <DockPanel Grid.Column="1" Margin="0,0,0,5">
-                                <Label Content="Name" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding SelectedKeyBunch.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            </DockPanel>
-                            <DockPanel Grid.Column="1" Margin="0,0,0,5">
-                                <Label Content="Number of keys" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            </DockPanel>
-                        </StackPanel>
-                        <GroupBox Margin="0,0,5,0" Grid.Column="0" Grid.Row="1" Header="Authorized Personnel">
-                            <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedPersonnel}"/>
-                        </GroupBox>
-                        <GroupBox Margin="5,0,0,0" Grid.Column="1" Grid.Row="1" Header="Authorized Squadrons">
-                            <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedSquadrons}"/>
-                        </GroupBox>
-                    </Grid>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
-                        <Button Margin="0,0,10,0" Content="Save" Command="{Binding CmdSaveAndClose}" Background="{DynamicResource HighlightButtonBackgroundBrush}" CommandParameter="{Binding ElementName=ThisWindow}"/>
-                        <Button Margin="0,0,10,0" Content="Cancel"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </TabItem>
-        <TabItem Header="Squadrons">
-            <Border Padding="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <ListBox Grid.Column="0" Margin="0,0,10,0">
-                        <ListBoxItem>Hello?</ListBoxItem>
-                    </ListBox>
-                    <Grid Grid.Column="1"/>
-                </Grid>
-            </Border>
-        </TabItem>
-    </TabControl>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Margin="10" Content="Save" Click="Button_Click" Style="{DynamicResource HighlightButton}"/>
+            <Button Margin="0,10,10,10" Content="Cancel"/>
+        </StackPanel>
+        <TabControl Background="{DynamicResource ContentBackgroundBrush}" Padding="0" Margin="10,5,10,0" BorderThickness="0">
+            <TabItem Header="Key Lists">
+                <edit:EditKeyListsControl/>
+            </TabItem>
+            <TabItem Header="Keys">
+                <edit:EditKeyBunchesControl x:Name="EditKeyBunchesControl"/>
+            </TabItem>
+            <TabItem Header="Squadrons">
+                <edit:EditSquadronsControl/>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>

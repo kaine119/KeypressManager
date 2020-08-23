@@ -10,8 +10,13 @@ namespace GUI
     {
         public EditWindow()
         {
-            DataContext = new EditViewModel();
             InitializeComponent();
+            EditKeyBunchesControl.DataContext = new EditKeyBunchesViewModel();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

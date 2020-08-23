@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace GUI.ViewModels
 {
-    class EditViewModel : INotifyPropertyChanged
+    class EditKeyBunchesViewModel : INotifyPropertyChanged
     {
         /// <summary>
         /// All key bunches in all key lists.
@@ -38,7 +38,7 @@ namespace GUI.ViewModels
         /// <summary>
         /// View model for the Edit Keypress window.
         /// </summary>
-        public EditViewModel()
+        public EditKeyBunchesViewModel()
         {
             AllKeyBunches = new ObservableCollection<KeyBunch>(KeyBunch.All);
             AllKeyLists = new ObservableCollection<KeyList>(KeyList.All);
