@@ -18,6 +18,18 @@ namespace Database.DatabaseModels
 
         public override bool IsValid => !(Name is null);
 
+        public override bool Equals(object obj)
+        {
+            return obj is KeyList list &&
+                   ID == list.ID &&
+                   Name == list.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ID, Name);
+        }
+
         /// <summary>
         /// All the keylists in the database.
         /// </summary>

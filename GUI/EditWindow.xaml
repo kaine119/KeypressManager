@@ -31,6 +31,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <convert:NullToVisibility x:Key="NullToVisibility"/>
         <convert:RankToString x:Key="RankToStr"/>
     </Window.Resources>
     <TabControl Background="{DynamicResource ContentBackgroundBrush}" Padding="0" BorderThickness="0">
@@ -70,10 +71,15 @@
                 <DataTemplate DataType="{x:Type model:Person}">
                     <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
                         <TextBlock>
-                    <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
-                    <TextBlock Text="{Binding Name}"/>
-                    <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
-                </TextBlock>
+                            <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                            <TextBlock Text="{Binding Name}"/>
+                            <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
+                        </TextBlock>    
+                    </Border>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:KeyList}">
+                    <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                        <TextBlock Text="{Binding Name}"/>
                     </Border>
                 </DataTemplate>
             </TabItem.Resources>
@@ -91,7 +97,14 @@
                              Margin="0,0,10,0"
                              ItemsSource="{Binding AllKeyBunches}"
                              SelectedValue="{Binding SelectedKeyBunch}"/>
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}, ConverterParameter=Invert}">
+                        <TextBlock 
+                            HorizontalAlignment="Center"
+                            FontSize="25">
+                            Select a keybunch on the left to edit.
+                        </TextBlock>
+                    </Grid>
+                    <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -100,17 +113,23 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Column="0" Grid.Row="0">
+                        <StackPanel Margin="0,0,5,0" Grid.Column="0" Grid.Row="0">
                             <DockPanel Grid.Column="0" Margin="0,0,0,5">
                                 <Label Content="Bunch Number" VerticalAlignment="Center"/>
                                 <TextBox Text="{Binding SelectedKeyBunch.BunchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DockPanel>
                             <DockPanel Grid.Column="1" Margin="0,0,0,5">
                                 <Label Content="Under key list" VerticalAlignment="Center"/>
-                                <ComboBox/>
+                                <ComboBox 
+                                    ItemsSource="{Binding AllKeyLists}"
+                                    SelectedItem="{
+                                        Binding SelectedKeyBunch.KeyList, 
+                                        Mode=TwoWay, 
+                                        UpdateSourceTrigger=Default
+                                    }"/>
                             </DockPanel>
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Grid.Row="0">
+                        <StackPanel Margin="5,0,0,0" Grid.Column="1" Grid.Row="0">
                             <DockPanel Grid.Column="1" Margin="0,0,0,5">
                                 <Label Content="Name" VerticalAlignment="Center"/>
                                 <TextBox Text="{Binding SelectedKeyBunch.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -120,8 +139,12 @@
                                 <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DockPanel>
                         </StackPanel>
-                        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding SelectedKeyBunch.AuthorizedPersonnel}"/>
-                        <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding SelectedKeyBunch.AuthorizedSquadrons}"/>
+                        <GroupBox Margin="0,0,5,0" Grid.Column="0" Grid.Row="1" Header="Authorized Personnel">
+                            <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedPersonnel}"/>
+                        </GroupBox>
+                        <GroupBox Margin="5,0,0,0" Grid.Column="1" Grid.Row="1" Header="Authorized Squadrons">
+                            <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedSquadrons}"/>
+                        </GroupBox>
                     </Grid>
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
                         <Button Margin="0,0,10,0" Content="Save" Command="{Binding CmdSaveAndClose}" Background="{DynamicResource HighlightButtonBackgroundBrush}" CommandParameter="{Binding ElementName=ThisWindow}"/>
