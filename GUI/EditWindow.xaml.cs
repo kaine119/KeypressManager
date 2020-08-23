@@ -8,15 +8,24 @@ namespace GUI
     /// </summary>
     public partial class EditWindow : Window
     {
+        private EditKeyBunchesViewModel editKeyVM = new EditKeyBunchesViewModel();
+
+        public bool CanSave =>
+            editKeyVM.CmdSave.CanExecute();
+
         public EditWindow()
         {
             InitializeComponent();
-            EditKeyBunchesControl.DataContext = new EditKeyBunchesViewModel();
+            EditKeyBunchesControl.DataContext = editKeyVM;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            if (CanSave)
+            {
+                editKeyVM.CmdSave.Execute(null);
+                DialogResult = true;
+            }
         }
     }
 }

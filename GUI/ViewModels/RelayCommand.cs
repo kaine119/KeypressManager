@@ -25,6 +25,11 @@ namespace GUI.ViewModels
             return _canExecute is null || _canExecute();
         }
 
+        public bool CanExecute()
+        {
+            return CanExecute(null);
+        }
+
         public void Execute(object parameter)
         {
             _execute((T)parameter);

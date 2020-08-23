@@ -1,6 +1,7 @@
 ﻿using Database.DatabaseModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace GUI.ViewModels
 {
@@ -31,9 +32,7 @@ namespace GUI.ViewModels
         /// </summary>
         public ObservableCollection<KeyList> AllKeyLists { get; set; }
 
-
-
-        public RelayCommand<EditWindow> CmdSaveAndClose { get; set; }
+        public RelayCommand<object> CmdSave { get; set; }
 
         /// <summary>
         /// View model for the Edit Keypress window.
@@ -42,13 +41,10 @@ namespace GUI.ViewModels
         {
             AllKeyBunches = new ObservableCollection<KeyBunch>(KeyBunch.All);
             AllKeyLists = new ObservableCollection<KeyList>(KeyList.All);
-            
-            CmdSaveAndClose = new RelayCommand<EditWindow>(
-                (window) =>
-                {
-                    SelectedKeyBunch.Write();
-                    window.DialogResult = true;
-                }
+
+            CmdSave = new RelayCommand<object>(
+                execute: (_) => { foreach (KeyBunch kb in AllKeyBunches) { kb.Write(); } },
+                canExecute: () => AllKeyBunches.All(kb => kb.IsValid)
             );
         }
 
