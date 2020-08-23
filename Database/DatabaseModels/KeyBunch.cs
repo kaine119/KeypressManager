@@ -28,9 +28,10 @@ namespace Database.DatabaseModels
                 // LEFT OUTER JOIN to include any bunches that don't have any auths
                 DbConnection.Query<KeyBunch, Person, KeyList, KeyBunch>(
                     @"SELECT kb.*, p.*, kl.* FROM KeyBunches AS kb
-                  LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
-                  LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
-                  LEFT OUTER JOIN KeyLists AS kl ON kb.keyListId = kl.id;",
+                      LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
+                      LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
+                      LEFT OUTER JOIN KeyLists AS kl ON kb.keyListId = kl.id
+                      ORDER BY kb.keyListId, kb.bunchNumber ASC;",
                     (kb, p, kl) =>
                     {
                         KeyBunch bunch;
