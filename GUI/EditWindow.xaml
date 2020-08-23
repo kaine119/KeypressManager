@@ -82,6 +82,32 @@
                         <TextBlock Text="{Binding Name}"/>
                     </Border>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type model:Squadron}">
+                    <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- TODO: revisit this and see if squadron authorization selection works -->
+                            <CheckBox 
+                                Grid.Column="0" 
+                                VerticalAlignment="Center" 
+                                FocusVisualStyle="{x:Null}"
+                                IsChecked="{Binding IsSelected}">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                            <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                <TextBlock Text="{Binding Path=Name}" TextWrapping="Wrap"/>
+                                <TextBlock>
+                                    Number of personnel: <TextBlock Text="{Binding Path=Personnel.Count}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
             </TabItem.Resources>
             <Border Padding="10">
                 <Grid>
