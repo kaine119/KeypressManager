@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Database.DatabaseModels
 {
@@ -80,5 +82,26 @@ namespace Database.DatabaseModels
         DX12 = 55,
 
         SEPARATOR = -1,
+    }
+
+    public static class RankHelper
+    {
+        /// <summary>
+        /// Returns a list of available ranks, with SEPARATOR = -1 inserted where there should be a separation.
+        /// </summary>
+        public static List<Rank> GetValuesWithSeparators()
+        {
+            List<Rank> ret = new List<Rank>(Enum.GetValues(typeof(Rank)).Cast<Rank>());
+            // Insert from the bottom up, in order to not screw up the indexes required.
+            ret.Insert(44, Rank.SEPARATOR);
+            ret.Insert(32, Rank.SEPARATOR);
+            ret.Insert(28, Rank.SEPARATOR);
+            ret.Insert(24, Rank.SEPARATOR);
+            ret.Insert(20, Rank.SEPARATOR);
+            ret.Insert(14, Rank.SEPARATOR);
+            ret.Insert(8, Rank.SEPARATOR);
+            ret.Insert(4, Rank.SEPARATOR);
+            return ret;
+        }
     }
 }

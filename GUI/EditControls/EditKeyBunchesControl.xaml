@@ -2,12 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
              xmlns:vm="clr-namespace:GUI.ViewModels"
              xmlns:convert="clr-namespace:GUI.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="700" d:DesignWidth="1200"
              d:DataContext="{d:DesignInstance {x:Type vm:EditKeyBunchesViewModel}}">
     <UserControl.Resources>
         <convert:NullToVisibility x:Key="NullToVisibility"/>
@@ -68,6 +68,8 @@
                 </Grid>
             </Border>
         </DataTemplate>
+        <ObjectDataProvider x:Key="AllRanks" MethodName="GetValuesWithSeparators"
+                            ObjectType="{x:Type model:RankHelper}"/>
     </UserControl.Resources>
     <Border Padding="10">
         <Grid>
@@ -123,9 +125,72 @@
                         <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </DockPanel>
                 </StackPanel>
-                <GroupBox Margin="0,0,5,0" Grid.Column="0" Grid.Row="1" Header="Authorized Personnel">
-                    <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedPersonnel}"/>
-                </GroupBox>
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Margin="0,0,5,0" Header="Authorized Personnel" Grid.Row="0">
+                        <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedPersonnel}"/>
+                    </GroupBox>
+                    <GroupBox Margin="0,5,5,0" Header="Add Personnel" Grid.Row="1">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <DockPanel Margin="0,0,0,5" Grid.Column="0">
+                                    <Label Content="NRIC" VerticalAlignment="Center"/>
+                                    <TextBox />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,5" Grid.Column="1">
+                                    <Label Content="Rank" VerticalAlignment="Center"/>
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock 
+                                                    Text="{Binding Converter={StaticResource RankToStr}}"
+                                                    ToolTip="{Binding Converter={StaticResource RankToStr}, ConverterParameter=Full}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="Focusable" Value="False"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="ComboBoxItem">
+                                                                    <Separator 
+                                                                        Margin="0,10"
+                                                                        IsEnabled="False"
+                                                                        Focusable="False"/>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
+                                    </ComboBox>
+                                </DockPanel>
+                            </Grid>
+                            <DockPanel Margin="0,0,0,5">
+                                <Label Content="Name" VerticalAlignment="Center"/>
+                                <TextBox />
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5">
+                                <Label Content="Contact number" VerticalAlignment="Center"/>
+                                <TextBox />
+                            </DockPanel>
+                            <Button Style="{DynamicResource HighlightButton}">
+                                Add
+                            </Button>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
                 <GroupBox Margin="5,0,0,0" Grid.Column="1" Grid.Row="1" Header="Authorized Squadrons">
                     <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedSquadrons}"/>
                 </GroupBox>
