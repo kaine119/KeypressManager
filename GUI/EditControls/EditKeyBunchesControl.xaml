@@ -91,10 +91,15 @@
                          SelectedValue="{Binding SelectedKeyBunch}"/>
             </DockPanel>
             <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}, ConverterParameter=Invert}">
-                <TextBlock HorizontalAlignment="Center"
-                            FontSize="25">
-                            Select a keybunch on the left to edit.
-                </TextBlock>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center">Add a new keybunch</TextBlock>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="3">
+                        <Line X1="0" X2="50" Y1="0" Y2="0" StrokeThickness="1" Stroke="#bbb" VerticalAlignment="Center"/>
+                        <TextBlock Margin="3" Foreground="#bbb" FontSize="9" FontWeight="Bold">OR</TextBlock>
+                        <Line X1="0" X2="50" Y1="0" Y2="0" StrokeThickness="1" Stroke="#bbb" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Center">select a keybunch on the left to edit.</TextBlock>
+                </StackPanel>
             </Grid>
             <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}}">
                 <Grid.ColumnDefinitions>
@@ -108,7 +113,9 @@
                 <StackPanel Margin="0,0,5,0" Grid.Column="0" Grid.Row="0">
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label Content="Bunch Number" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding SelectedKeyBunch.BunchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="BunchNumber"/>
+                        <TextBox Text="{Binding SelectedKeyBunch.BunchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 Name="BunchNumber"
+                                 TabIndex="0"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Margin="0,0,0,5">
                         <Label Content="Under key list" VerticalAlignment="Center"/>
@@ -117,17 +124,20 @@
                                       Binding SelectedKeyBunch.KeyList, 
                                       Mode=TwoWay, 
                                       UpdateSourceTrigger=Default
-                                  }"/>
+                                  }"
+                                  TabIndex="2"/>
                     </DockPanel>
                 </StackPanel>
                 <StackPanel Margin="5,0,0,0" Grid.Column="1" Grid.Row="0">
                     <DockPanel Grid.Column="1" Margin="0,0,0,5">
                         <Label Content="Name" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding SelectedKeyBunch.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding SelectedKeyBunch.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 TabIndex="1"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Margin="0,0,0,5">
                         <Label Content="Number of keys" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 TabIndex="3"/>
                     </DockPanel>
                 </StackPanel>
                 <Grid Grid.Column="0" Grid.Row="1">
@@ -150,11 +160,13 @@
                                 </Grid.ColumnDefinitions>
                                 <DockPanel Margin="0,0,0,5" Grid.Column="0">
                                     <Label Content="NRIC" VerticalAlignment="Center"/>
-                                    <TextBox Text="{Binding PersonToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" x:Name="NRIC" />
+                                    <TextBox Text="{Binding PersonToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" x:Name="NRIC"
+                                             TabIndex="4"/>
                                 </DockPanel>
                                 <DockPanel Margin="0,0,0,5" Grid.Column="1">
                                     <Label Content="Rank" VerticalAlignment="Center"/>
-                                    <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" SelectedValue="{Binding PersonToAdd.Rank}">
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" SelectedValue="{Binding PersonToAdd.Rank}"
+                                              TabIndex="5">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock 
@@ -187,11 +199,11 @@
                             </Grid>
                             <DockPanel Margin="0,0,0,5">
                                 <Label Content="Name" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding PersonToAdd.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Text="{Binding PersonToAdd.Name, UpdateSourceTrigger=PropertyChanged}" TabIndex="6" />
                             </DockPanel>
                             <DockPanel Margin="0,0,0,5">
                                 <Label Content="Contact number" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding PersonToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Text="{Binding PersonToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" TabIndex="7"/>
                             </DockPanel>
                             <Button Style="{DynamicResource HighlightButton}" Command="{Binding CmdAddPerson}">
                                 Add
