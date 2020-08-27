@@ -10,33 +10,35 @@ namespace GUI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool full = (parameter as string) == "Full";
-            if (value is Rank rank)
+            return value switch
             {
-                return rank switch
+                null => "",
+                Rank rank => rank switch
                 {
+                    #region Rank -> string
                     Rank.MR => full ? "Mister" : "MR",
                     Rank.MS => full ? "Miss" : "MS",
                     Rank.MRS => full ? "Missus" : "MRS",
-                    Rank.OTHER => full ? "Other" : "",
+                    Rank.OTHER => full ? "Other" : "OTHER",
                     Rank.REC => full ? "Recruit" : "REC",
                     Rank.PTE => full ? "Private" : "PTE",
                     Rank.CPL => full ? "Corporal" : "CPL",
                     Rank.CFC => full ? "Corporal (First Class)" : "CFC",
-                    Rank.CADET_SGT => full ? "Sergeant Cadet"   : "SCT",
-                    Rank.THIRD_SGT => full ? "Third Sergeant"   : "3SG",
+                    Rank.CADET_SGT => full ? "Sergeant Cadet" : "SCT",
+                    Rank.THIRD_SGT => full ? "Third Sergeant" : "3SG",
                     Rank.SECOND_SGT => full ? "Second Sergeant" : "2SG",
-                    Rank.FIRST_SGT => full ? "First Sergeant"   : "1SG",
-                    Rank.STAFF_SGT => full ? "Staff Sergeant"   : "SSG",
+                    Rank.FIRST_SGT => full ? "First Sergeant" : "1SG",
+                    Rank.STAFF_SGT => full ? "Staff Sergeant" : "SSG",
                     Rank.MASTER_SGT => full ? "Master Sergeant" : "MSG",
-                    Rank.THIRD_WO => full ? "Third Warrant Officer"   : "3WO",
+                    Rank.THIRD_WO => full ? "Third Warrant Officer" : "3WO",
                     Rank.SECOND_WO => full ? "Second Warrant Officer" : "2WO",
-                    Rank.FIRST_WO => full ? "First Warrant Officer"   : "1WO",
+                    Rank.FIRST_WO => full ? "First Warrant Officer" : "1WO",
                     Rank.MASTER_WO => full ? "Master Warrant Officer" : "MWO",
                     Rank.SENIOR_WO => full ? "Senior Warrant Officer" : "SWO",
-                    Rank.CHIEF_WO => full ? "Chief Warrant Officer"   : "CWO",
-                    Rank.CADET_LT => full ? "Officer Cadet" : "OCT",
+                    Rank.CHIEF_WO => full ? "Chief Warrant Officer" : "CWO",
+                    Rank.OCT => full ? "Officer Cadet" : "OCT",
                     Rank.SECOND_LT => full ? "Second Lieutenant" : "2LT",
-                    Rank.FIRST_LT => full ? "Lieutenant" : "LTA",
+                    Rank.LTA => full ? "Lieutenant" : "LTA",
                     Rank.CPT => full ? "Captain" : "CPT",
                     Rank.MAJ => full ? "Major" : "MAJ",
                     Rank.LTC => full ? "Lieutenant-Colonel" : "LTC",
@@ -47,6 +49,7 @@ namespace GUI.Converters
                     Rank.LG => full ? "Lieutenant-General" : "LG",
                     Rank.GEN => full ? "General" : "GEN",
                     Rank.ME1_T => full ? "Military Expert 1 (Trainee)" : "ME1(T)",
+                    Rank.ME1_A => full ? "Military Expert 1 (Apprentice)" : "ME1(A)",
                     Rank.ME1 => full ? "Military Expert 1" : "ME1",
                     Rank.ME2 => full ? "Military Expert 2" : "ME2",
                     Rank.ME3 => full ? "Military Expert 3" : "ME3",
@@ -70,17 +73,15 @@ namespace GUI.Converters
                     Rank.DX11 => full ? "Defence Executive Officer 11" : "DX11",
                     Rank.DX12 => full ? "Defence Executive Officer 12" : "DX12",
                     _ => full ? "Other" : "OTHER"
-                };
-            }
-            else
-            {
-                throw new ArgumentException("value was not a Rank");
-            }
+                    #endregion
+                },
+                _ => throw new ArgumentException("value was not a Rank")
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
