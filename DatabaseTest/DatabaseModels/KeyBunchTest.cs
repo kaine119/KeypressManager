@@ -3,6 +3,7 @@ using Database.DatabaseModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace DatabaseTest
@@ -37,7 +38,7 @@ namespace DatabaseTest
         public void Write_InsertsNewRecordForExistingPersonnel()
         {
             int initialAllPersonnelCount = db.AllPersonnel.Count();
-            List<Person> personnel = db.AllPersonnel.Take(2).ToList();
+            ObservableCollection<Person> personnel = new ObservableCollection<Person>(db.AllPersonnel.Take(2));
             KeyBunch newBunch = new KeyBunch
             {
                 Name = "New key bunch",
@@ -61,7 +62,7 @@ namespace DatabaseTest
         public void Write_InsertsNewRecordAndWritesNewPersonnel()
         {
             int initialAllPersonnelCount = db.AllPersonnel.Count();
-            var personnel = new List<Person>
+            var personnel = new ObservableCollection<Person>
             {
                 new Person { Name = "KeyBunchTestWrite New Person 1", NRIC = "909Z", Rank = Rank.PTE },
                 new Person { Name = "KeyBunchTestWrite New Person 2", NRIC = "910Z", Rank = Rank.PTE }

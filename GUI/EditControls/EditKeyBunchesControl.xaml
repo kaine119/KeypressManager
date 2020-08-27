@@ -131,9 +131,12 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <GroupBox Margin="0,0,5,0" Header="Authorized Personnel" Grid.Row="0">
-                        <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedPersonnel}"/>
+                        <ListBox ItemsSource="{Binding Path=SelectedKeyBunch.AuthorizedPersonnel, UpdateSourceTrigger=PropertyChanged}"/>
                     </GroupBox>
                     <GroupBox Margin="0,5,5,0" Header="Add Personnel" Grid.Row="1">
+                        <GroupBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}"/>
+                        </GroupBox.InputBindings>
                         <StackPanel>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -142,11 +145,11 @@
                                 </Grid.ColumnDefinitions>
                                 <DockPanel Margin="0,0,0,5" Grid.Column="0">
                                     <Label Content="NRIC" VerticalAlignment="Center"/>
-                                    <TextBox />
+                                    <TextBox Text="{Binding PersonToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" x:Name="NRIC" />
                                 </DockPanel>
                                 <DockPanel Margin="0,0,0,5" Grid.Column="1">
                                     <Label Content="Rank" VerticalAlignment="Center"/>
-                                    <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}">
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" SelectedValue="{Binding PersonToAdd.Rank}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock 
@@ -179,13 +182,13 @@
                             </Grid>
                             <DockPanel Margin="0,0,0,5">
                                 <Label Content="Name" VerticalAlignment="Center"/>
-                                <TextBox />
+                                <TextBox Text="{Binding PersonToAdd.Name, UpdateSourceTrigger=PropertyChanged}" />
                             </DockPanel>
                             <DockPanel Margin="0,0,0,5">
                                 <Label Content="Contact number" VerticalAlignment="Center"/>
-                                <TextBox />
+                                <TextBox Text="{Binding PersonToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" />
                             </DockPanel>
-                            <Button Style="{DynamicResource HighlightButton}">
+                            <Button Style="{DynamicResource HighlightButton}" Command="{Binding CmdAddPerson}">
                                 Add
                             </Button>
                         </StackPanel>

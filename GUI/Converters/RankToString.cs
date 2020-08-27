@@ -13,6 +13,7 @@ namespace GUI.Converters
             return value switch
             {
                 null => "",
+                "" => "",
                 Rank rank => rank switch
                 {
                     #region Rank -> string

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -11,7 +12,7 @@ namespace Database.DatabaseModels
         public string Name { get; set; }
         public string BunchNumber { get; set; }
         public int? NumberOfKeys { get; set; }
-        public List<Person> AuthorizedPersonnel { get; set; } = new List<Person>();
+        public ObservableCollection<Person> AuthorizedPersonnel { get; set; } = new ObservableCollection<Person>();
         public List<Squadron> AuthorizedSquadrons { get; set; } = new List<Squadron>();
         public KeyList KeyList { get; set; }
 

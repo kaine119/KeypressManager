@@ -35,7 +35,7 @@ namespace GUI.ViewModels
         public ObservableCollection<Person> AuthorizedPersonnel =>
             new ObservableCollection<Person>(
                 PendingKeys.Aggregate(
-                    PendingKeys.First().AuthorizedPersonnel,
+                    PendingKeys.First().AuthorizedPersonnel.ToList(),
                     (list, person) => new List<Person>(list.Intersect(person.AuthorizedPersonnel))
                 )
             );
