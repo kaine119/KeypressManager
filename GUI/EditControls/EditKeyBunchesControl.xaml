@@ -81,10 +81,15 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <ListBox Grid.Column="0"
-                             Margin="0,0,10,0"
-                             ItemsSource="{Binding AllKeyBunches}"
-                             SelectedValue="{Binding SelectedKeyBunch}"/>
+            <DockPanel Grid.Column="0">
+                <Button DockPanel.Dock="Top"
+                        Margin="0,0,10,10"
+                        Content="Add new bunch" Command="{Binding CmdAddKeyBunch}" CommandParameter="{Binding ElementName=BunchNumber, Mode=OneWay}"/>
+                <ListBox DockPanel.Dock="Top"
+                         Margin="0,0,10,0"
+                         ItemsSource="{Binding AllKeyBunches}"
+                         SelectedValue="{Binding SelectedKeyBunch}"/>
+            </DockPanel>
             <Grid Grid.Column="1" Visibility="{Binding SelectedKeyBunch, Converter={StaticResource NullToVisibility}, ConverterParameter=Invert}">
                 <TextBlock HorizontalAlignment="Center"
                             FontSize="25">
@@ -103,7 +108,7 @@
                 <StackPanel Margin="0,0,5,0" Grid.Column="0" Grid.Row="0">
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
                         <Label Content="Bunch Number" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding SelectedKeyBunch.BunchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding SelectedKeyBunch.BunchNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="BunchNumber"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Margin="0,0,0,5">
                         <Label Content="Under key list" VerticalAlignment="Center"/>

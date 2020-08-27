@@ -2,19 +2,62 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Database.DatabaseModels
 {
-    public class KeyBunch : DatabaseModel
+    public class KeyBunch : DatabaseModel, INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public string BunchNumber { get; set; }
-        public int? NumberOfKeys { get; set; }
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
+            }
+        }
+
+        private string _bunchNumber;
+        public string BunchNumber
+        {
+            get { return _bunchNumber; }
+            set
+            {
+                _bunchNumber = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BunchNumber"));
+            }
+        }
+
+        private int? _numberOfKeys;
+
+        public int? NumberOfKeys
+        {
+            get { return _numberOfKeys; }
+            set
+            {
+                _numberOfKeys = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NumberOfKeys"));
+            }
+        }
+
         public ObservableCollection<Person> AuthorizedPersonnel { get; set; } = new ObservableCollection<Person>();
         public List<Squadron> AuthorizedSquadrons { get; set; } = new List<Squadron>();
-        public KeyList KeyList { get; set; }
+
+        private KeyList _keyList;
+
+        public KeyList KeyList
+        {
+            get { return _keyList; }
+            set
+            {
+                _keyList = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("KeyList"));
+            }
+        }
 
         public override bool IsValid => !(Name is null) && !(BunchNumber is null) && !(NumberOfKeys is null);
 
@@ -69,6 +112,8 @@ namespace Database.DatabaseModels
                 return results.Values;
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public bool Match(string searchTerm)
         {

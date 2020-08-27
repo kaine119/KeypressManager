@@ -49,9 +49,20 @@ namespace GUI.ViewModels
         }
 
         /// <summary>
+        /// Adds a new key bunch based on a template.
+        /// </summary>
+        public RelayCommand<TextBox> CmdAddKeyBunch { get; set; }
+
+        /// <summary>
+        /// The number of new keybunches added, used for deduping
+        /// </summary>
+        private int addedKeyBunchesCount = 0;
+
+        /// <summary>
         /// Adds the person in the "Add Personnel" field to the current keybunch's Authorized Personnel.
         /// </summary>
         public RelayCommand<TextBox> CmdAddPerson { get; set; }
+
 
         /// <summary>
         /// Save all keybunches.
@@ -90,8 +101,27 @@ namespace GUI.ViewModels
                 },
                 canExecute: () => PersonToAdd.IsValid
             );
-        }
 
+            CmdAddKeyBunch = new RelayCommand<TextBox>(
+                execute: (focusTarget) =>
+                {
+                    addedKeyBunchesCount += 1;
+                    KeyBunch newKeyBunch = new KeyBunch
+                    {
+                        Name = "New key bunch" + (addedKeyBunchesCount > 1 ? $" ({addedKeyBunchesCount})" : ""),
+                        BunchNumber = $"{addedKeyBunchesCount:D2}"
+                    };
+                    AllKeyBunches.Insert(0, newKeyBunch);
+                    
+                    SelectedKeyBunch = newKeyBunch;
+                    if (focusTarget != null)
+                    {
+                        focusTarget.Focus();
+                        focusTarget.SelectAll();
+                    }
+                }
+            );
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
