@@ -2,6 +2,7 @@
 using System.Windows;
 using Database;
 using System.Windows.Input;
+using System.Reflection;
 
 namespace GUI
 {
@@ -16,6 +17,8 @@ namespace GUI
             InitializeComponent();
             vm = new DashboardViewModel(path);
             DataContext = vm;
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            VersionBox.Text = $"v{version.Major}.{version.Minor}.{version.Revision}";
         }
 
         private void StartBookingWindow(object sender, RoutedEventArgs e)

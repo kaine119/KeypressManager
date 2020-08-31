@@ -213,6 +213,12 @@
                         </DockPanel>
                     </GroupBox>
                 </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" TextElement.Foreground="{DynamicResource NormalTextBrush}">
+                    <TextBlock>
+                        KeypressManager
+                        <Run Name="VersionBox"/>
+                    </TextBlock>
+                </StackPanel>
             </DockPanel>
         </Grid>
     </Border>
