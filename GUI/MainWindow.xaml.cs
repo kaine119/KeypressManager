@@ -11,11 +11,10 @@ namespace GUI
     public partial class MainWindow : Window
     {
         DashboardViewModel vm;
-        public MainWindow()
+        public MainWindow(string path)
         {
             InitializeComponent();
-            // TODO: not hardcode this
-            vm = new DashboardViewModel(@"E:\Documents\code\KeypressManager\GUI\main.sqlite3");
+            vm = new DashboardViewModel(path);
             DataContext = vm;
         }
 
