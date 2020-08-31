@@ -214,9 +214,17 @@
                     </GroupBox>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" TextElement.Foreground="{DynamicResource NormalTextBrush}">
+                    <TextBlock FontSize="17" HorizontalAlignment="Left">Paya Lebar Airbase</TextBlock>
                     <TextBlock>
                         KeypressManager
                         <Run Name="VersionBox"/>
+                    </TextBlock>
+                    <TextBlock>
+                        Developed by
+                        <Run Foreground="{DynamicResource HighlightTextBrush}"
+                             ToolTip="There are absolutely no easter eggs in this application.">
+                            PTE Mui Kai En
+                        </Run>
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
