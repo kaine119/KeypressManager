@@ -31,8 +31,8 @@
     </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <Button Margin="10" Content="Save" Click="Button_Click" Style="{DynamicResource HighlightButton}"/>
-            <Button Margin="0,10,10,10" Content="Cancel"/>
+            <Button Margin="10" Content="Save" Click="Save_Click" Style="{DynamicResource HighlightButton}"/>
+            <Button Margin="0,10,10,10" Click="Cancel_Click" Content="Cancel"/>
         </StackPanel>
         <TabControl Background="{DynamicResource ContentBackgroundBrush}" Padding="0" Margin="10,5,10,0" BorderThickness="0">
             <TabItem Header="Key Lists">

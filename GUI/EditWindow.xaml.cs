@@ -19,13 +19,18 @@ namespace GUI
             EditKeyBunchesControl.DataContext = editKeyVM;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
             if (CanSave)
             {
                 editKeyVM.CmdSave.Execute(null);
                 DialogResult = true;
             }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }
