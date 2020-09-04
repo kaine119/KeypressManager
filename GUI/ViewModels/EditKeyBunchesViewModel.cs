@@ -97,7 +97,7 @@ namespace GUI.ViewModels
                         }    
                     );
                     PersonToAdd = new Person();
-                    focusTarget.Focus();
+                    focusTarget?.Focus();
                 },
                 canExecute: () => PersonToAdd.IsValid
             );

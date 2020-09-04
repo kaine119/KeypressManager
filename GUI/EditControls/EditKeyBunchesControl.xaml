@@ -205,7 +205,7 @@
                                 <Label Content="Contact number" VerticalAlignment="Center"/>
                                 <TextBox Text="{Binding PersonToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" TabIndex="7"/>
                             </DockPanel>
-                            <Button Style="{DynamicResource HighlightButton}" Command="{Binding CmdAddPerson}">
+                            <Button Style="{DynamicResource HighlightButton}" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}">
                                 Add
                             </Button>
                         </StackPanel>

@@ -58,7 +58,7 @@ namespace GUI
             switch (e.Key)
             {
                 case Key.Home:
-                    SearchBox.Focus();
+                    SearchBox?.Focus();
                     e.Handled = true;
                     break;
                 case Key.End:
