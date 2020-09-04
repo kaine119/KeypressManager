@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using Microsoft.Data.Sqlite;
 
@@ -103,7 +104,9 @@ namespace GUI
             {
                 try
                 {
-                    File.Copy(@"Assets\Template.sqlite3", dialog.FileName, overwrite: true);
+                    string currentAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    string sourcePath = Path.Join(currentAssemblyDirectory, @"Assets\Template.sqlite3");
+                    File.Copy(sourcePath, dialog.FileName, overwrite: true);
                     GUI.Properties.Settings.Default.DatabaseLocation = dialog.FileName;
                     GUI.Properties.Settings.Default.Save();
                     path = dialog.FileName;
