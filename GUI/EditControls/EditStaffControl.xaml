@@ -1,0 +1,165 @@
+﻿<UserControl x:Class="GUI.EditControls.EditStaffControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:convert="clr-namespace:GUI.Converters"
+             xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
+             xmlns:vm="clr-namespace:GUI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1200"
+             d:DataContext="{d:DesignInstance {x:Type vm:EditStaffViewModel}}">
+    <UserControl.Resources>
+        <convert:NullToVisibility x:Key="NullToVisibility"/>
+        <convert:RankToString x:Key="RankToStr"/>
+        <ObjectDataProvider x:Key="AllRanks" MethodName="GetValuesWithSeparators"
+                            ObjectType="{x:Type model:RankHelper}"/>
+        <DataTemplate DataType="{x:Type model:Person}">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                <TextBlock>
+                    <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                    <TextBlock Text="{Binding Name}"/>
+                </TextBlock>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Border Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Column="0" 
+                     Margin="0,0,10,0"
+                     ItemsSource="{Binding AllStaff}" 
+                     SelectedValue="{Binding SelectedStaff}"
+                     />
+            <StackPanel Grid.Column="1">
+                <GroupBox Header="Add new personnel">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="0">
+                                <Label Content="NRIC" VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding StaffToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" 
+                                        x:Name="NRIC"
+                                        TabIndex="4"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="1">
+                                <Label Content="Rank" VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" 
+                                            SelectedValue="{Binding StaffToAdd.Rank}"
+                                            TabIndex="5">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource RankToStr}}"
+                                                        ToolTip="{Binding Converter={StaticResource RankToStr}, ConverterParameter=Full}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="-1">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                    <Setter Property="Focusable" Value="False"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ComboBoxItem">
+                                                                <Separator 
+                                                        Margin="0,10"
+                                                        IsEnabled="False"
+                                                        Focusable="False"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                            </DockPanel>
+                        </Grid>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Name" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding StaffToAdd.Name, UpdateSourceTrigger=PropertyChanged}" TabIndex="6" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Contact number" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding StaffToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" TabIndex="7"/>
+                        </DockPanel>
+                        <Button Content="Add staff" 
+                                Style="{DynamicResource HighlightButton}"
+                                HorizontalAlignment="Left"
+                                Command="{Binding CmdAddStaff}"
+                                Margin="0,5" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}"/>
+                    </StackPanel>
+                </GroupBox>
+                
+                <GroupBox Header="Selected personnel" 
+                          Visibility="{Binding SelectedStaff, Converter={StaticResource NullToVisibility}}"
+                          Margin="0,10">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="0">
+                                <Label Content="NRIC" VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding SelectedStaff.NRIC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="1">
+                                <Label Content="Rank" VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" SelectedValue="{Binding SelectedStaff.Rank}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock 
+                                        Text="{Binding Converter={StaticResource RankToStr}}"
+                                        ToolTip="{Binding Converter={StaticResource RankToStr}, ConverterParameter=Full}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="-1">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                    <Setter Property="Focusable" Value="False"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ComboBoxItem">
+                                                                <Separator 
+                                                                Margin="0,10"
+                                                                IsEnabled="False"
+                                                                Focusable="False"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                            </DockPanel>
+                        </Grid>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Name" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding SelectedStaff.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Contact number" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding SelectedStaff.ContactNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+                        <Button Background="IndianRed" 
+                                Content="Remove staff" 
+                                ToolTip="ORD loh"
+                                HorizontalAlignment="Left"
+                                Margin="0,5" Command="{Binding CmdRemoveSelectedStaff}"/>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

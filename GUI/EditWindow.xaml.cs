@@ -9,6 +9,7 @@ namespace GUI
     public partial class EditWindow : Window
     {
         private EditKeyBunchesViewModel editKeyVM = new EditKeyBunchesViewModel();
+        private EditStaffViewModel editStaffVM = new EditStaffViewModel();
 
         public bool CanSave =>
             editKeyVM.CmdSave.CanExecute();
@@ -17,6 +18,7 @@ namespace GUI
         {
             InitializeComponent();
             EditKeyBunchesControl.DataContext = editKeyVM;
+            EditStaffControl.DataContext = editStaffVM;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)

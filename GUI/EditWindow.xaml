@@ -35,14 +35,17 @@
             <Button Margin="0,10,10,10" Click="Cancel_Click" Content="Cancel"/>
         </StackPanel>
         <TabControl Background="{DynamicResource ContentBackgroundBrush}" Padding="0" Margin="10,5,10,0" BorderThickness="0">
-            <TabItem Header="Key Lists">
-                <edit:EditKeyListsControl/>
-            </TabItem>
             <TabItem Header="Keys">
                 <edit:EditKeyBunchesControl x:Name="EditKeyBunchesControl"/>
             </TabItem>
+            <TabItem Header="Key Lists">
+                <edit:EditKeyListsControl/>
+            </TabItem>
             <TabItem Header="Squadrons">
                 <edit:EditSquadronsControl/>
+            </TabItem>
+            <TabItem Header="Staff">
+                <edit:EditStaffControl x:Name="EditStaffControl"/>
             </TabItem>
         </TabControl>
     </DockPanel>
