@@ -1,6 +1,7 @@
 ﻿using GUI.ViewModels;
 using System.Windows;
 using Database;
+using System;
 using System.Windows.Input;
 using System.Reflection;
 
@@ -26,8 +27,8 @@ namespace GUI
             BookingViewModel newVm;
             try
             {
-                // if the keys are all booked out, book them in; if they are all booked in, book them out.
                 newVm = new BookingViewModel(vm.SelectedKeyBunches, vm.SelectedKeyBunchesAllBookedOut ? BookingViewModel.BookingMode.In : BookingViewModel.BookingMode.Out);
+                // if the keys are all booked out, book them in; if they are all booked in, book them out.
                 BookingWindow bookingWindow = new BookingWindow
                 {
                     Owner = this,
@@ -46,9 +47,14 @@ namespace GUI
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Warning);
             }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show("Staff not configured, please add staff members in Edit Keypress.",
+                                "No staff configured",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+            }
         }
-
-
 
         /// <summary>
         /// Handle Home (focuses the search bar) and End (opens the booking window).
