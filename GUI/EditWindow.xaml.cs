@@ -26,6 +26,7 @@ namespace GUI
             if (CanSave)
             {
                 editKeyVM.CmdSave.Execute(null);
+                editStaffVM.CmdSave.Execute(null);
                 DialogResult = true;
             }
         }

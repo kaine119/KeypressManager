@@ -54,6 +54,11 @@ namespace GUI.ViewModels
         public RelayCommand<TextBox> CmdRemoveSelectedStaff { get; set; }
 
         /// <summary>
+        /// Saves the configured staff.
+        /// </summary>
+        public RelayCommand<object> CmdSave { get; set; }
+
+        /// <summary>
         /// View model for the Edit Staff window.
         /// </summary>
         public EditStaffViewModel()
@@ -88,6 +93,14 @@ namespace GUI.ViewModels
                     focusTarget?.Focus();
                 },
                 canExecute: () => SelectedStaff != null
+            );
+
+            CmdSave = new RelayCommand<object>(
+                execute: (_) =>
+                {
+                    Person.WriteStaff(AllStaff);
+                },
+                canExecute: () => AllStaff.All(person => person.IsValid)
             );
         }
 
