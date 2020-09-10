@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Database.DatabaseModels
@@ -144,7 +145,7 @@ namespace Database.DatabaseModels
         /// <exception cref="InvalidOperationException">Thrown if the entry is not valid.</exception>
         /// <exception cref="InvalidOperationException">Thrown if any of the personnel does not exist.</exception>
         /// <exception cref="PersonNotAuthorizedException">Thrown if any of the personnel is not authorized.</exception>
-        public override void Write()
+        public override void Write(IDbTransaction transaction)
         {
             if (!IsValid) throw new InvalidOperationException("LogEntry object is not valid.");
             if (PersonDrawingKey.ID is null || PersonIssuingKey.ID is null ||
@@ -158,27 +159,29 @@ namespace Database.DatabaseModels
             }
             if (ID is null)
             {
-                ID = DbConnection.Query<int>(
-                    @"INSERT INTO LogEntries (
-                        keyBunchDrawnId,
-                        timeIssued, personDrawingKeyId, personIssuingKeyId,
-                        timeReturned, personReturningKeyId, personReceivingKeyId
-                    ) VALUES (
-                        @KeyBunchDrawnId,
-                        @TimeIssued, @PersonDrawingKeyId, @PersonIssuingKeyId,
-                        @TimeReturned, @PersonReturningKeyId, @PersonReceivingKeyId
-                    ); SELECT last_insert_rowid();",
-                    new
-                    {
-                        KeyBunchDrawnId = KeyBunchDrawn.ID,
-                        TimeIssued,
-                        PersonDrawingKeyId = PersonDrawingKey.ID,
-                        PersonIssuingKeyId = PersonIssuingKey.ID,
-                        TimeReturned,
-                        PersonReturningKeyId = PersonReturningKey?.ID,
-                        PersonReceivingKeyId = PersonReceivingKey?.ID
-                    }
-                ).Single();
+                ID = 
+                    DbConnection.Query<int>(
+                        @"INSERT INTO LogEntries (
+                            keyBunchDrawnId,
+                            timeIssued, personDrawingKeyId, personIssuingKeyId,
+                            timeReturned, personReturningKeyId, personReceivingKeyId
+                        ) VALUES (
+                            @KeyBunchDrawnId,
+                            @TimeIssued, @PersonDrawingKeyId, @PersonIssuingKeyId,
+                            @TimeReturned, @PersonReturningKeyId, @PersonReceivingKeyId
+                        ); SELECT last_insert_rowid();",
+                        new
+                        {
+                            KeyBunchDrawnId = KeyBunchDrawn.ID,
+                            TimeIssued,
+                            PersonDrawingKeyId = PersonDrawingKey.ID,
+                            PersonIssuingKeyId = PersonIssuingKey.ID,
+                            TimeReturned,
+                            PersonReturningKeyId = PersonReturningKey?.ID,
+                            PersonReceivingKeyId = PersonReceivingKey?.ID
+                        },
+                        transaction
+                    ).Single();
             }
             else
             {

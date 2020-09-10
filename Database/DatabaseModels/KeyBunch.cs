@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -211,29 +212,33 @@ namespace Database.DatabaseModels
         /// Save the keybunch to the database, and updates authorizations for personnel and squadrons.
         /// Also inserts/updates personnel records for any new/modified personnel, but not for squadrons.
         /// </summary>
-        public override void Write()
+        public override void Write(IDbTransaction transaction)
         {
             if (!IsValid) throw new ArgumentException("Keybunch not valid to write to database");
             if (ID is null)
             {
                 // Write the KeyBunch record, and get the (new) KeyBunch ID.
-                ID = DbConnection.Query<int>(@"
-                        INSERT INTO KeyBunches (name, bunchNumber, numberOfKeys, keyListId)
-                        VALUES (@Name, @BunchNumber, @NumberOfKeys, @KeyListId);
-                        SELECT last_insert_rowid()",
-                        new { Name, BunchNumber, NumberOfKeys, KeyListId = KeyList.ID }).Single();
+                ID = DbConnection.Query<int>(
+                        @"INSERT INTO KeyBunches (name, bunchNumber, numberOfKeys, keyListId) 
+                          VALUES (@Name, @BunchNumber, @NumberOfKeys, @KeyListId); 
+                          SELECT last_insert_rowid()",
+                        new { Name, BunchNumber, NumberOfKeys, KeyListId = KeyList.ID },
+                        transaction
+                     ).Single();
             }
             else
             {
                 // Update the existing KeyBunch record.
-                DbConnection.Execute(@"
-                    UPDATE KeyBunches
-                    SET name = @Name,
-                        bunchNumber = @BunchNumber,
-                        numberOfKeys = @NumberOfKeys,
-                        keyListId = @KeyListId
-                    WHERE id = @ID",
-                    new { ID, Name, BunchNumber, NumberOfKeys, KeyListId = KeyList.ID });
+                DbConnection.Execute(
+                    @"UPDATE KeyBunches
+                      SET name = @Name,
+                      bunchNumber = @BunchNumber,
+                      numberOfKeys = @NumberOfKeys,
+                      keyListId = @KeyListId
+                      WHERE id = @ID",
+                    new { ID, Name, BunchNumber, NumberOfKeys, KeyListId = KeyList.ID },
+                    transaction
+                    );
             }
 
             // i'm probably gonna regret this, but...
@@ -243,22 +248,25 @@ namespace Database.DatabaseModels
             DbConnection.Execute(
                 @"DELETE FROM Authorizations
                   WHERE keyBunchId = @KeyBunchId",
-                new { KeyBunchId = ID }
+                new { KeyBunchId = ID },
+                transaction
             );
             DbConnection.Execute(
                 @"DELETE FROM SquadronAuthorizations
                   WHERE keyBunchId = @KeyBunchId",
-                new { KeyBunchId = ID }
+                new { KeyBunchId = ID },
+                transaction
             );
 
             // Write the authorizations in the Join table.
             foreach (var person in AuthorizedPersonnel)
             {
-                person.Write();
-                DbConnection.Execute(@"
-                    INSERT INTO Authorizations (keyBunchId, personId)
-                    VALUES (@KeyBunchId, @PersonId)",
-                    new { KeyBunchId = ID, PersonId = person.ID }
+                person.Write(transaction);
+                DbConnection.Execute(
+                    @"INSERT INTO Authorizations (keyBunchId, personId)
+                      VALUES (@KeyBunchId, @PersonId)",
+                    new { KeyBunchId = ID, PersonId = person.ID },
+                    transaction
                 );
             }
 
@@ -268,7 +276,8 @@ namespace Database.DatabaseModels
                 DbConnection.Execute(
                     @"INSERT INTO SquadronAuthorizations (keyBunchId, squadronId)
                       VALUES (@KeyBunchId, @SquadronId)",
-                    new { KeyBunchId = ID, SquadronId = squadron.ID }
+                    new { KeyBunchId = ID, SquadronId = squadron.ID },
+                    transaction
                 );
             }
         }

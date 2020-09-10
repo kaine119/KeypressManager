@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Database.DatabaseModels
@@ -56,24 +57,27 @@ namespace Database.DatabaseModels
         /// <summary>
         /// Saves the name of the keylist. DOES NOT update the keys in the list.
         /// </summary>
-        public override void Write()
+        public override void Write(IDbTransaction transaction)
         {
             if (!IsValid) throw new ArgumentException("KeyList not valid to write to database");
             if (ID is null)
             {
                 // Write a new record, save off its ID
-                ID = DbConnection.Query<int>(@"
-                        INSERT INTO KeyLists (name) VALUES (@Name);
-                        SELECT last_insert_rowid()",
-                        new { Name }).Single();
+                ID = DbConnection.Query<int>(
+                        @"INSERT INTO KeyLists (name) VALUES (@Name); 
+                          SELECT last_insert_rowid()",
+                        new { Name },
+                        transaction
+                     ).Single();
             }
             else
             {
                 // Update the existing record
-                DbConnection.Execute(@"
-                    UPDATE KeyLists SET name = @Name
-                    WHERE id = @ID",
-                    new { Name, ID });
+                DbConnection.Execute(
+                    @"UPDATE KeyLists SET name = @Name WHERE id = @ID",
+                    new { Name, ID },
+                    transaction
+                );
             }
         }
     }
