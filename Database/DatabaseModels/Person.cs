@@ -3,6 +3,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Data;
 
 namespace Database.DatabaseModels
 {
@@ -55,6 +56,25 @@ namespace Database.DatabaseModels
                 }
             );
 
+        public static void WriteStaff(IEnumerable<Person> staff)
+        {
+            foreach (Person staffMember in staff) staffMember.Write();
+            IDbTransaction transaction = DbConnection.BeginTransaction();
+            DbConnection.Execute(
+                @"DELETE FROM Staff;",
+                transaction
+            );
+            foreach (Person staffMember in staff)
+            {
+                DbConnection.Execute(
+                    @"INSERT INTO Staff (personId) VALUES (@StaffId)",
+                    new { StaffId = staffMember.ID },
+                    transaction
+                );
+            }
+            transaction.Commit();
+        }
+
         public bool Match(string searchTerm) =>
             Regex.IsMatch(
                 Regex.IsMatch(searchTerm, @"\d{1,3}[A-Za-z]?$") ? NRIC : Name,
@@ -76,24 +96,31 @@ namespace Database.DatabaseModels
         /// Writes the person to the database.
         /// Does NOT update squadron associations; use Squadron.Write().
         /// </summary>
-        public override void Write()
+        public override void Write(IDbTransaction transaction)
         {
             if (!IsValid) throw new ArgumentException("Person not valid to write to database");
             if (ID is null)
             {
                 // The personnel doesn't exist yet, write a new one
-                ID = DbConnection.Query<int>(@"INSERT INTO personnel (nric, name, rank, contactNumber)
-                                                VALUES (@NRIC, @Name, @Rank, @ContactNumber);
-                                               SELECT last_insert_rowid();",
-                                             new { NRIC, Name, Rank, ContactNumber }).Single();
+                ID = 
+                    DbConnection.Query<int>(
+                        @"INSERT INTO personnel (nric, name, rank, contactNumber)
+                        VALUES (@NRIC, @Name, @Rank, @ContactNumber);
+                        SELECT last_insert_rowid();",
+                        new { NRIC, Name, Rank, ContactNumber },
+                        transaction
+                    ).Single();
             }
             else
             {
                 // The personnel exists, update the existing one
-                DbConnection.Execute(@"UPDATE personnel
-                                        SET nric = @NRIC, name = @Name, rank = @Rank, contactNumber = @ContactNumber
-                                        WHERE id = @ID",
-                                     new { NRIC, Name, Rank, ContactNumber, ID });
+                DbConnection.Execute(
+                    @"UPDATE personnel 
+                      SET nric = @NRIC, name = @Name, rank = @Rank, contactNumber = @ContactNumber 
+                      WHERE id = @ID",
+                    new { NRIC, Name, Rank, ContactNumber, ID },
+                    transaction
+                );
             }
         }
     }

@@ -48,5 +48,24 @@ namespace DatabaseTest
             Person testAfterWrite = db.AllPersonnel.Where(person => person.Name == "PersonWrite").Single();
             Assert.AreEqual("106A", testAfterWrite.NRIC);
         }
+
+        [TestMethod]
+        public void GetStaff_GetsCorrectly()
+        {
+            IEnumerable<Person> staff = Person.AllStaff;
+            Person charlie = staff.First();
+            Assert.AreEqual("Charlie Chan", charlie.Name);
+            Assert.AreEqual("103C", charlie.NRIC);
+        }
+
+        [TestMethod]
+        public void WriteStaff_ReplacesCorrectly()
+        {
+            Person dennis = Person.AllStaff.ElementAt(1);
+            List<Person> staffToWrite = new List<Person> { dennis };
+            Person.WriteStaff(staffToWrite);
+            Assert.AreEqual(1, Person.AllStaff.Count());
+            Assert.AreEqual(dennis, Person.AllStaff.Single());
+        }
     }
 }

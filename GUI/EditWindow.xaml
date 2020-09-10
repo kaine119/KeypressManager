@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:edit="clr-namespace:GUI.EditControls"
+        xmlns:vm="clr-namespace:GUI.ViewModels"
         mc:Ignorable="d"
         Title="EditWindow" Height="800" Width="1200"
         x:Name="ThisWindow"
         WindowStartupLocation="CenterOwner"
-        Style="{DynamicResource {x:Type Window}}">
+        Style="{DynamicResource {x:Type Window}}"
+        d:DataContext="{d:DesignInstance {x:Type vm:EditViewModel}}">
     <Window.Resources>
         <Style TargetType="ListBoxItem">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -31,18 +33,24 @@
     </Window.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <Button Margin="10" Content="Save" Click="Button_Click" Style="{DynamicResource HighlightButton}"/>
-            <Button Margin="0,10,10,10" Content="Cancel"/>
+            <Button Margin="10" Content="Save"
+                    Style="{DynamicResource HighlightButton}"
+                    Command="{Binding CmdSave}" 
+                    CommandParameter="{Binding ElementName=ThisWindow, Mode=OneWay}"/>
+            <Button Margin="0,10,10,10" Click="Cancel_Click" Content="Cancel"/>
         </StackPanel>
         <TabControl Background="{DynamicResource ContentBackgroundBrush}" Padding="0" Margin="10,5,10,0" BorderThickness="0">
+            <TabItem Header="Keys">
+                <edit:EditKeyBunchesControl DataContext="{Binding EditKeyBunchesVM}"/>
+            </TabItem>
             <TabItem Header="Key Lists">
                 <edit:EditKeyListsControl/>
             </TabItem>
-            <TabItem Header="Keys">
-                <edit:EditKeyBunchesControl x:Name="EditKeyBunchesControl"/>
-            </TabItem>
             <TabItem Header="Squadrons">
                 <edit:EditSquadronsControl/>
+            </TabItem>
+            <TabItem Header="Staff">
+                <edit:EditStaffControl DataContext="{Binding EditStaffVM}"/>
             </TabItem>
         </TabControl>
     </DockPanel>

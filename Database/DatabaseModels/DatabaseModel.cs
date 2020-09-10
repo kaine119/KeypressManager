@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using Microsoft.Data.Sqlite;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Database.DatabaseModels
 {
@@ -21,10 +17,25 @@ namespace Database.DatabaseModels
         public static void EstablishConnection(string connectionString)
         {
             DbConnection = new SqliteConnection(connectionString);
+            DbConnection.Open();
         }
 
         public int? ID { get; protected set; }
         public abstract bool IsValid { get; }
-        public abstract void Write();
+
+        public void Write()
+        {
+            IDbTransaction transaction = DbConnection.BeginTransaction();
+            try
+            {
+                Write(transaction);
+                transaction.Commit();
+            }
+            finally
+            {
+                transaction.Dispose();
+            }
+        }
+        public abstract void Write(IDbTransaction transaction);
     }
 }

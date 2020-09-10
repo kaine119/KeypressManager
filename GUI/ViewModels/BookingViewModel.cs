@@ -142,11 +142,12 @@ namespace GUI.ViewModels
         /// </summary>
         /// <param name="pendingKeys">A list of keys to be booked in or out.</param>
         /// <param name="mode">Whether the keys are to be booked in or out.</param>
+        /// <exception cref="InvalidOperationException">Thrown when no staff is configured.</exception>
         public BookingViewModel(ObservableCollection<KeyBunch> pendingKeys, BookingMode mode)
         {
             PendingKeys = pendingKeys;
             Mode = mode;
-            SelectedStaff = Staff.First();
+            SelectedStaff = Staff.First(); // throws InvalidOperationException if Staff is empty.
             SearchTerm = "";
 
             CmdBook = new RelayCommand<BookingWindow>(

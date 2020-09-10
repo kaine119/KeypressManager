@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Database.DatabaseModels
@@ -12,7 +13,7 @@ namespace Database.DatabaseModels
             DbConnection.Query<Person>(
                 @"SELECT * FROM Personnel AS p
                   WHERE p.squadronId = @ID",
-                new { ID }            
+                new { ID }
             );
 
         public override bool IsValid => !(Name is null);
@@ -37,16 +38,19 @@ namespace Database.DatabaseModels
         /// <param name="person">The person to associate with the squadron.</param>
         public void AddPersonnel(Person person)
         {
+            IDbTransaction transaction = DbConnection.BeginTransaction();
             if (person.ID is null)
             {
-                person.Write();
+                person.Write(transaction);
             }
             DbConnection.Execute(
                 @"UPDATE personnel
                   SET squadronId = @SquadronId
                   WHERE id = @PersonId",
-                new { SquadronId = ID, PersonId = person.ID }
+                new { SquadronId = ID, PersonId = person.ID },
+                transaction
             );
+            transaction.Commit();
         }
 
         /// <summary>
@@ -64,17 +68,19 @@ namespace Database.DatabaseModels
         /// <summary>
         /// Saves the squadron. Does not write members; use <see cref="AddPersonnel"/> to add personnel to the squadron.
         /// </summary>
-        public override void Write()
+        public override void Write(IDbTransaction transaction)
         {
             if (!IsValid) throw new InvalidOperationException("Squadron not valid to write to database");
             if (ID is null)
             {
-                ID = DbConnection.Query<int>(
-                    @"INSERT INTO Squadrons (name)
-                      VALUES (@Name);
-                      SELECT last_insert_rowid();",
-                    new { Name }
-                ).Single();
+                ID =
+                    DbConnection.Query<int>(
+                        @"INSERT INTO Squadrons (name)
+                          VALUES (@Name);
+                          SELECT last_insert_rowid();",
+                        new { Name },
+                        transaction
+                    ).Single();
             }
             else
             {
@@ -82,7 +88,8 @@ namespace Database.DatabaseModels
                     @"UPDATE Squadrons
                       SET name = @Name
                       WHERE id = @ID",
-                    new { Name, ID }
+                    new { Name, ID },
+                    transaction
                 );
             }
         }
