@@ -21,6 +21,7 @@ namespace Database.DatabaseModels
         public static void EstablishConnection(string connectionString)
         {
             DbConnection = new SqliteConnection(connectionString);
+            DbConnection.Open();
         }
 
         public int? ID { get; protected set; }

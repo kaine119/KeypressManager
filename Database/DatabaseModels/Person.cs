@@ -3,6 +3,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Data;
 
 namespace Database.DatabaseModels
 {
@@ -54,6 +55,24 @@ namespace Database.DatabaseModels
                     return p;
                 }
             );
+
+        public static void WriteStaff(IEnumerable<Person> staff)
+        {
+            foreach (Person staffMember in staff) staffMember.Write();
+            IDbTransaction transaction = DbConnection.BeginTransaction();
+            DbConnection.Execute(
+                @"DELETE FROM Staff;",
+                transaction: transaction
+            );
+            foreach (Person staffMember in staff)
+            {
+                DbConnection.Execute(
+                    @"INSERT INTO Staff (personId) VALUES (@StaffId)",
+                    new { StaffId = staffMember.ID },
+                    transaction: transaction
+                );
+            }
+        }
 
         public bool Match(string searchTerm) =>
             Regex.IsMatch(
