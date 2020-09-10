@@ -136,7 +136,7 @@
                     </DockPanel>
                     <DockPanel Grid.Column="1" Margin="0,0,0,5">
                         <Label Content="Number of keys" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Text="{Binding SelectedKeyBunch.NumberOfKeys, Mode=TwoWay, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}"
                                  TabIndex="3"/>
                     </DockPanel>
                 </StackPanel>

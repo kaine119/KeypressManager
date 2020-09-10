@@ -109,7 +109,8 @@ namespace GUI.ViewModels
                     KeyBunch newKeyBunch = new KeyBunch
                     {
                         Name = "New key bunch" + (addedKeyBunchesCount > 1 ? $" ({addedKeyBunchesCount})" : ""),
-                        BunchNumber = $"{addedKeyBunchesCount:D2}"
+                        BunchNumber = $"{addedKeyBunchesCount:D2}",
+                        KeyList = AllKeyLists.First()
                     };
                     AllKeyBunches.Insert(0, newKeyBunch);
                     
