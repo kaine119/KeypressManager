@@ -63,11 +63,37 @@ namespace GUI.ViewModels
                     .Select(item => item.KeyBunch)
             );
 
+        /// <summary>
+        /// Whether all the keys selected are present.
+        /// </summary>
         public bool SelectedKeyBunchesAllBookedIn =>
             SelectedKeyBunches.All(kb => PresentKeys.Select(item => item.KeyBunch).Contains(kb));
 
+        /// <summary>
+        /// Whether all the keys selected are booked out.
+        /// </summary>
         public bool SelectedKeyBunchesAllBookedOut =>
             SelectedKeyBunches.All(kb => BookedOutKeys.Select(item => item.KeyBunch).Contains(kb));
+
+        /// <summary>
+        /// All staff available.
+        /// </summary>
+        public ObservableCollection<Person> AllStaff =>
+            new ObservableCollection<Person>(Person.AllStaff);
+
+        private Person _selectedStaff;
+        /// <summary>
+        /// The currently selected staff member. Passed to the booking window as the default selection.
+        /// </summary>
+        public Person SelectedStaff
+        {
+            get { return _selectedStaff; }
+            set
+            {
+                _selectedStaff = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedStaff"));
+            }
+        }
 
         public DashboardViewModel(string path)
         {
@@ -90,6 +116,8 @@ namespace GUI.ViewModels
                 item.PropertyChanged += OnKeyListItemPropertyChanged;
                 BookedOutKeys.Add(item);
             }
+
+            SelectedStaff = AllStaff.FirstOrDefault();
         }
 
         public void RefreshViewModel()
@@ -109,6 +137,12 @@ namespace GUI.ViewModels
                 DashboardKeyListItem item = new DashboardKeyListItem(key, false);
                 item.PropertyChanged += OnKeyListItemPropertyChanged;
                 BookedOutKeys.Add(item);
+            }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AllStaff"));
+            if (SelectedStaff is null)
+            {
+                SelectedStaff = AllStaff.FirstOrDefault();
             }
         }
 

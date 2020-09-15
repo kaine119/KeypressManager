@@ -18,7 +18,11 @@ namespace GUI
             // Use a timer to update the time field, and keep it up to date with current time.
             Timer.Elapsed += (_, e) =>
             {
-                Dispatcher.Invoke(() => (DataContext as BookingViewModel).TimeBooked = new DateTimeOffset(e.SignalTime));
+                try
+                {
+                    Dispatcher.Invoke(() => (DataContext as BookingViewModel).TimeBooked = new DateTimeOffset(e.SignalTime));
+                }
+                catch (System.Threading.Tasks.TaskCanceledException) { }
             };
             Timer.AutoReset = true;
             Timer.Enabled = true;

@@ -27,8 +27,10 @@ namespace GUI
             BookingViewModel newVm;
             try
             {
-                newVm = new BookingViewModel(vm.SelectedKeyBunches, vm.SelectedKeyBunchesAllBookedOut ? BookingViewModel.BookingMode.In : BookingViewModel.BookingMode.Out);
                 // if the keys are all booked out, book them in; if they are all booked in, book them out.
+                newVm = new BookingViewModel(vm.SelectedKeyBunches,
+                                             vm.SelectedKeyBunchesAllBookedOut ? BookingViewModel.BookingMode.In : BookingViewModel.BookingMode.Out,
+                                             vm.SelectedStaff);
                 BookingWindow bookingWindow = new BookingWindow
                 {
                     Owner = this,
