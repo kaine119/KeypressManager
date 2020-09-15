@@ -330,6 +330,17 @@
                             </TextBlock>
                         </DockPanel>
                     </GroupBox>
+                    <Label Content="Current staff on duty"/>
+                    <ComboBox ItemsSource="{Binding AllStaff}" SelectedValue="{Binding SelectedStaff}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="Person">
+                                <TextBlock Foreground="{DynamicResource NormalTextBrush}">
+                                    <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                    <Run Text="{Binding Name}"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" TextElement.Foreground="{DynamicResource NormalTextBrush}">
                     <TextBlock>
