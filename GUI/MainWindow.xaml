@@ -9,6 +9,7 @@
         Title="MainWindow" Height="900" Width="1600" MinWidth="900"
         WindowState="Maximized"
         Style="{DynamicResource {x:Type Window}}"
+        d:DataContext="{d:DesignInstance {x:Type vm:DashboardViewModel}}"
         KeyDown="Window_KeyDown">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DashboardKeyListItem}">
@@ -71,6 +72,7 @@
         <convert:NullToVisibility x:Key="NullToVis"/>
         <convert:MultipleToInvis x:Key="MultipleToInvis"/>
         <convert:BoolToVisibility x:Key="BoolToVis"/>
+        <convert:RankToString x:Key="RankToStr"/>
     </Window.Resources>
     <Border Padding="20,15,20,20" BorderThickness="0,5,0,0" BorderBrush="{DynamicResource GroupBoxOutlineBrush}">
         <Grid>
@@ -128,46 +130,162 @@
                                     <Button Click="StartBookingWindow" Visibility="{Binding Path=SelectedKeyBunchesAllBookedIn, Converter={StaticResource BoolToVis}}" Style="{DynamicResource HighlightButton}" Margin="0,0,0,10">Book all out &gt;&gt;</Button>
                                 </StackPanel>
                                 <StackPanel Visibility="{Binding Path=SelectedKeyBunches, Converter={StaticResource MultipleToInvis}}">
-                                    <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}, ConverterParameter=True}">
+                                    <StackPanel Visibility="{Binding Converter={StaticResource LogToVis}, ConverterParameter=True}"
+                                                DataContext="{Binding Path=LogEntryForSelectedBunch}">
                                         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
                                             <Label Content="Date booked out" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox Text="{Binding Path=TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                         </DockPanel>
-                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                                                   DataContext="{Binding PersonDrawingKey}">
                                             <Label Content="Booked out by" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonDrawingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                <TextBox.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Rank" Converter="{StaticResource RankToStr}"/>
+                                                        <Binding Path="Name"/>
+                                                    </MultiBinding>
+                                                </TextBox.Text>
+                                                <TextBox.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                                            <Run Text="{Binding Name}"/>
+                                                            -
+                                                            <Run Text="{Binding NRIC}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ContactNumber}"/>
+                                                    </StackPanel>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
                                         </DockPanel>
-                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                                                   DataContext="{Binding PersonIssuingKey}">
                                             <Label Content="Issued by" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                <TextBox.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Rank" Converter="{StaticResource RankToStr}"/>
+                                                        <Binding Path="Name"/>
+                                                    </MultiBinding>
+                                                </TextBox.Text>
+                                                <TextBox.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                                            <Run Text="{Binding Name}"/>
+                                                            -
+                                                            <Run Text="{Binding NRIC}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ContactNumber}"/>
+                                                    </StackPanel>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
                                         </DockPanel>
                                         <Button Click="StartBookingWindow" Content="&lt;&lt; Book in" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                     </StackPanel>
-                                    <StackPanel Visibility="{Binding Path=LogEntryForSelectedBunch, Converter={StaticResource LogToVis}}">
+                                    <StackPanel Visibility="{Binding Converter={StaticResource LogToVis}}"
+                                                DataContext="{Binding LogEntryForSelectedBunch}">
                                         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
                                             <Label Content="Last booked out at" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox Text="{Binding Path=TimeIssued, StringFormat='d/M/yyyy HH:mm'}" IsReadOnly="True" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                         </DockPanel>
-                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                                                   DataContext="{Binding PersonDrawingKey}">
                                             <Label Content="Last borrowed by" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonDrawingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                <TextBox.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Rank" Converter="{StaticResource RankToStr}"/>
+                                                        <Binding Path="Name"/>
+                                                    </MultiBinding>
+                                                </TextBox.Text>
+                                                <TextBox.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                                            <Run Text="{Binding Name}"/>
+                                                            -
+                                                            <Run Text="{Binding NRIC}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ContactNumber}"/>
+                                                    </StackPanel>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
                                         </DockPanel>
-                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                                                   DataContext="{Binding PersonIssuingKey}">
                                             <Label Content="Last issued by" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonIssuingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                <TextBox.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Rank" Converter="{StaticResource RankToStr}"/>
+                                                        <Binding Path="Name"/>
+                                                    </MultiBinding>
+                                                </TextBox.Text>
+                                                <TextBox.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                                            <Run Text="{Binding Name}"/>
+                                                            -
+                                                            <Run Text="{Binding NRIC}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ContactNumber}"/>
+                                                    </StackPanel>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
                                         </DockPanel>
                                         <Separator Margin="0,10,0,10"/>
                                         <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
                                             <Label Content="Last booked in at" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.TimeReturned, StringFormat='d/M/yyyy HH:mm'}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox Text="{Binding Path=TimeReturned, StringFormat='d/M/yyyy HH:mm'}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                         </DockPanel>
-                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                                                   DataContext="{Binding PersonReturningKey}">
                                             <Label Content="Last returned by" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReturningKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                <TextBox.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Rank" Converter="{StaticResource RankToStr}"/>
+                                                        <Binding Path="Name"/>
+                                                    </MultiBinding>
+                                                </TextBox.Text>
+                                                <TextBox.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                                            <Run Text="{Binding Name}"/>
+                                                            -
+                                                            <Run Text="{Binding NRIC}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ContactNumber}"/>
+                                                    </StackPanel>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
                                         </DockPanel>
-                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5">
+                                        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,5"
+                                                   DataContext="{Binding PersonReceivingKey}">
                                             <Label Content="Last received by" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Path=LogEntryForSelectedBunch.PersonReceivingKey.Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                                <TextBox.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Rank" Converter="{StaticResource RankToStr}"/>
+                                                        <Binding Path="Name"/>
+                                                    </MultiBinding>
+                                                </TextBox.Text>
+                                                <TextBox.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                                                            <Run Text="{Binding Name}"/>
+                                                            -
+                                                            <Run Text="{Binding NRIC}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding ContactNumber}"/>
+                                                    </StackPanel>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
                                         </DockPanel>
                                         <Button Click="StartBookingWindow" Content="Book out &gt;&gt;" Margin="0,10,0,10" Style="{DynamicResource HighlightButton}"/>
                                     </StackPanel>
