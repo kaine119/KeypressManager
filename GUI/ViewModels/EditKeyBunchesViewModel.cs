@@ -63,6 +63,10 @@ namespace GUI.ViewModels
         /// </summary>
         public RelayCommand<TextBox> CmdAddPerson { get; set; }
 
+        /// <summary>
+        /// Removes a person from the currently selected keybunch's Authorized Personnel.
+        /// </summary>
+        public RelayCommand<Person> CmdRemovePerson { get; set; }
 
         /// <summary>
         /// Save all keybunches.
@@ -100,6 +104,13 @@ namespace GUI.ViewModels
                     focusTarget?.Focus();
                 },
                 canExecute: () => PersonToAdd.IsValid
+            );
+
+            CmdRemovePerson = new RelayCommand<Person>(
+                execute: (personToRemove) =>
+                {
+                    SelectedKeyBunch.AuthorizedPersonnel.Remove(personToRemove);
+                }
             );
 
             CmdAddKeyBunch = new RelayCommand<TextBox>(

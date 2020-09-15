@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:GUI.ViewModels"
              xmlns:convert="clr-namespace:GUI.Converters"
              mc:Ignorable="d" 
+             Name="ThisWindow"
              d:DesignHeight="700" d:DesignWidth="1200"
              d:DataContext="{d:DesignInstance {x:Type vm:EditKeyBunchesViewModel}}">
     <UserControl.Resources>
@@ -20,22 +21,39 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" FontSize="22" Text="{Binding BunchNumber}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                    <StackPanel Grid.Column="1">
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Name}" TextWrapping="Wrap"/>
-                        <TextBlock><Run Text="Number of keys: "/><InlineUIContainer>
-                                        <TextBlock Text="{Binding NumberOfKeys}"/>
-                                    </InlineUIContainer></TextBlock>
+                        <TextBlock>
+                            <Run Text="Number of keys: "/>
+                            <TextBlock Text="{Binding NumberOfKeys}"/>
+                        </TextBlock>
                     </StackPanel>
                 </Grid>
             </Border>
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:Person}">
             <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
-                <TextBlock>
-                    <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
-                    <TextBlock Text="{Binding Name}"/>
-                    <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
-                </TextBlock>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Style="{DynamicResource IconButton}" Width="15" Height="15" 
+                            Command="{Binding DataContext.CmdRemovePerson, ElementName=ThisWindow}"
+                            CommandParameter="{Binding}">
+                        <PathGeometry>
+                            <PathGeometry.Figures>
+                                <PathFigure StartPoint="0,0">
+                                    <LineSegment Point="25,25"/>
+                                </PathFigure>
+                                <PathFigure StartPoint="0,25">
+                                    <LineSegment Point="25,0"/>
+                                </PathFigure>
+                            </PathGeometry.Figures>
+                        </PathGeometry>
+                    </Button>
+                    <TextBlock DockPanel.Dock="Left">
+                        <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
+                    </TextBlock>
+                </DockPanel>
             </Border>
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:KeyList}">
@@ -50,20 +68,11 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <!-- TODO: revisit this and see if squadron authorization selection works -->
-                    <CheckBox Grid.Column="0" 
-                              VerticalAlignment="Center" 
-                              FocusVisualStyle="{x:Null}"
-                              IsChecked="{Binding IsSelected}">
-                        <CheckBox.LayoutTransform>
-                            <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                        </CheckBox.LayoutTransform>
-                    </CheckBox>
                     <StackPanel Grid.Column="1" Margin="5,0,0,0">
                         <TextBlock Text="{Binding Path=Name}" TextWrapping="Wrap"/>
                         <TextBlock>
-                                    Number of personnel: <TextBlock Text="{Binding Path=Personnel.Count}"/>
-                                </TextBlock>
+                            Number of personnel: <TextBlock Text="{Binding Path=Personnel.Count}"/>
+                        </TextBlock>
                     </StackPanel>
                 </Grid>
             </Border>
