@@ -4,8 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GUI.EditControls"
+             xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
+             xmlns:convert="clr-namespace:GUI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <convert:NullToVisibility x:Key="NullToVisibility"/>
+        <convert:RankToString x:Key="RankToStr"/>
+        <ObjectDataProvider x:Key="AllRanks" MethodName="GetValuesWithSeparators"
+                            ObjectType="{x:Type model:RankHelper}"/>
+        <DataTemplate DataType="{x:Type model:Person}">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                <TextBlock>
+                    <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                    <TextBlock Text="{Binding Name}"/>
+                </TextBlock>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:Squadron}">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                <TextBlock Text="{Binding Name}"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <Border Padding="10">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -13,9 +34,82 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <ListBox Grid.Column="0" Margin="0,0,10,0">
-                <ListBoxItem>Hello?</ListBoxItem>
             </ListBox>
-            <Grid Grid.Column="1"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                    <Label Content="Squadron name"/>
+                    <TextBox/>
+                </DockPanel>
+                <GroupBox Grid.Row="1" Header="Squadron personnel" Margin="0,0,0,10">
+                    <ListBox Grid.Row="1" />
+                </GroupBox>
+                <GroupBox Header="Add personnel to squadron" Grid.Row="2">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="0">
+                                <Label Content="NRIC" VerticalAlignment="Center"/>
+                                <TextBox Text="" 
+                                        x:Name="NRIC"
+                                        TabIndex="4"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="1">
+                                <Label Content="Rank" VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" 
+                                          SelectedValue=""
+                                          TabIndex="5">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource RankToStr}}"
+                                                       ToolTip="{Binding Converter={StaticResource RankToStr}, ConverterParameter=Full}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="-1">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                    <Setter Property="Focusable" Value="False"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ComboBoxItem">
+                                                                <Separator 
+                                                                    Margin="0,10"
+                                                                    IsEnabled="False"
+                                                                    Focusable="False"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                            </DockPanel>
+                        </Grid>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Name" VerticalAlignment="Center"/>
+                            <TextBox Text="" TabIndex="6" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Contact number" VerticalAlignment="Center"/>
+                            <TextBox Text="" TabIndex="7"/>
+                        </DockPanel>
+                        <Button Content="Add personnel" 
+                                Style="{DynamicResource HighlightButton}"
+                                HorizontalAlignment="Left"
+                                Margin="0,5"/>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
