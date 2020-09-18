@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Database;
+﻿using Database;
 using Database.DatabaseModels;
-using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
 
 namespace DatabaseTest
 {
@@ -25,9 +25,9 @@ namespace DatabaseTest
             Person newPerson = new Person { Name = "NewSquadronTest", Rank = Rank.PTE, NRIC = "101A", ContactNumber = "90123456" };
             Person bob = db.AllPersonnel.Single(person => person.Name == "Bob Lee");
             Squadron sqn = new Squadron { Name = "TEST SQN" };
+            sqn.Personnel.Add(newPerson);
+            sqn.Personnel.Add(bob);
             sqn.Write();
-            sqn.AddPersonnel(newPerson);
-            sqn.AddPersonnel(bob);
 
             Squadron written = db.AllSquadrons.Single(sqn => sqn.Name == "TEST SQN");
             Assert.IsTrue(written.Personnel.Contains(bob));

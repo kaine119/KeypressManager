@@ -22,8 +22,15 @@ CREATE TABLE Personnel (
   name TEXT NOT NULL,
   rank INTEGER NOT NULL,
   nric TEXT NOT NULL,
-  contactNumber TEXT,
-  squadronId INTEGER NULL,
+  contactNumber TEXT
+);
+
+CREATE TABLE PersonnelSquadrons (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  personId INTEGER,
+  squadronId INTEGER,
+  unique (personId, squadronId),
+  FOREIGN KEY (personId) REFERENCES Personnel(id),
   FOREIGN KEY (squadronId) REFERENCES Squadrons(id)
 );
 

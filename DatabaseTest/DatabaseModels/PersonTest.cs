@@ -23,7 +23,7 @@ namespace DatabaseTest
             Assert.AreEqual("90123456", alice.ContactNumber);
 
             Person bob = db.AllPersonnel.ElementAt(1);
-            Assert.AreEqual("111 SQN", bob.Squadron.Name);
+            Assert.AreEqual("111 SQN", bob.Squadrons.First().Name);
         }
 
         [TestMethod]

@@ -105,7 +105,7 @@ namespace Database.DatabaseModels
                             results.Add((int)kb.ID, kb);
                             bunch = kb;
                         }
-                        bunch.AuthorizedSquadrons.Add(sqn);
+                        bunch.AuthorizedSquadrons.Add(Squadron.ById(sqn.ID.Value));
                         return bunch;
                     }
                 );
@@ -157,7 +157,7 @@ namespace Database.DatabaseModels
                   INNER JOIN Squadrons AS sqn ON sqn_a.squadronId = sqn.id",
                 (kb, sqn) =>
                 {
-                    result.AuthorizedSquadrons.Add(sqn);
+                    result.AuthorizedSquadrons.Add(Squadron.ById(sqn.ID.Value));
                     return result;
                 }
             );
