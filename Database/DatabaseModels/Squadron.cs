@@ -12,6 +12,17 @@ namespace Database.DatabaseModels
         public string Name { get; set; }
         public ObservableCollection<Person> Personnel { get; set; } = new ObservableCollection<Person>();
 
+        public override bool Equals(object obj)
+        {
+            return obj is Squadron squadron &&
+                   Name == squadron.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name);
+        }
+
         public override bool IsValid => !(Name is null);
 
         public static IEnumerable<Squadron> All
