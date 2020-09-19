@@ -1,6 +1,7 @@
 ﻿using Database;
 using Database.DatabaseModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace GUI.ViewModels
             }
         }
 
-        public ObservableCollection<DashboardKeyListItem> DisplayedPresentKeys => 
+        public ObservableCollection<DashboardKeyListItem> DisplayedPresentKeys =>
             SearchTerm == ""
                     ? PresentKeys
                     : new ObservableCollection<DashboardKeyListItem>(PresentKeys.Where(item => item.KeyBunch.Match(SearchTerm)));
@@ -95,6 +96,8 @@ namespace GUI.ViewModels
             }
         }
 
+        public ObservableCollection<KeyList> AllKeyLists => new ObservableCollection<KeyList>(KeyList.All);
+
         public DashboardViewModel(string path)
         {
             db = new KeypressDatabase(path);
@@ -144,6 +147,8 @@ namespace GUI.ViewModels
             {
                 SelectedStaff = AllStaff.FirstOrDefault();
             }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AllKeyLists"));
         }
 
         private void OnKeyListItemPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -26,6 +26,7 @@ namespace GUI.ViewModels
             {
                 _selectedKeyBunch = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedKeyBunch"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvailableSquadrons"));
             }
         }
 

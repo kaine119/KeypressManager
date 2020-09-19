@@ -310,27 +310,22 @@
 
             <DockPanel Grid.Row="1"  Grid.Column="1">
                 <StackPanel DockPanel.Dock="Top">
-                    <GroupBox Header="External keypress" Margin="0,0,0,10">
-                        <DockPanel Width="180">
-                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
-                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>3</Bold>/65</Span> drawn out
-                            </TextBlock>
-                        </DockPanel>
-                    </GroupBox>
-                    <GroupBox Header="149 Keypress" Margin="0,0,0,10">
-                        <DockPanel Width="180">
-                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
-                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>18</Bold>/40</Span> drawn out
-                            </TextBlock>
-                        </DockPanel>
-                    </GroupBox>
-                    <GroupBox Header="Internal keypress" Margin="0,0,0,10">
-                        <DockPanel Width="180">
-                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
-                                    <Span FontSize="30" BaselineAlignment="Baseline"><Bold>3</Bold>/24</Span> drawn out
-                            </TextBlock>
-                        </DockPanel>
-                    </GroupBox>
+                    <ItemsControl Width="180" ItemsSource="{Binding AllKeyLists}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="KeyList">
+                                <GroupBox Header="{Binding Name}" Margin="0,0,0,10">
+                                    <DockPanel>
+                                        <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
+                                            <Span FontSize="30" BaselineAlignment="Baseline">
+                                                <Run FontWeight="Bold" Text="{Binding UnreturnedKeys.Count, Mode=OneWay}"/>/<Run Text="{Binding Keys.Count, Mode=OneWay}"/>
+                                            </Span>
+                                            drawn out
+                                        </TextBlock>
+                                    </DockPanel>
+                                </GroupBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                     <Label Content="Current staff on duty"/>
                     <ComboBox ItemsSource="{Binding AllStaff}" SelectedValue="{Binding SelectedStaff}">
                         <ComboBox.ItemTemplate>
