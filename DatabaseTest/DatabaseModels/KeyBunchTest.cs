@@ -85,7 +85,7 @@ namespace DatabaseTest
         [TestMethod]
         public void Write_InsertsNewRecordAndWritesSquadron()
         {
-            List<Squadron> squadrons = db.AllSquadrons.ToList();
+            ObservableCollection<Squadron> squadrons = new ObservableCollection<Squadron>(db.AllSquadrons);
             KeyBunch newBunch = new KeyBunch
             {
                 Name = "New key bunch 3",
