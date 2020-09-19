@@ -57,7 +57,7 @@
             </Border>
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:KeyList}">
-            <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+            <Border TextElement.Foreground="{DynamicResource NormalTextBrush}">
                 <TextBlock Text="{Binding Name}"/>
             </Border>
         </DataTemplate>
