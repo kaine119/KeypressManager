@@ -34,7 +34,7 @@
             </Border>
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:Person}">
-            <Border TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+            <Border TextElement.Foreground="{DynamicResource NormalTextBrush}">
                 <TextBlock>
                     <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
                     <TextBlock Text="{Binding Name}"/>
