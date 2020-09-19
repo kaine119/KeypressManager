@@ -126,5 +126,10 @@ namespace Database.DatabaseModels
                 );
             }
         }
+
+        public override void Delete(IDbTransaction transaction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

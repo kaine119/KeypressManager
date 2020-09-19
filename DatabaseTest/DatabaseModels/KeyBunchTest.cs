@@ -112,6 +112,14 @@ namespace DatabaseTest
         }
 
         [TestMethod]
+        public void Delete_DeletesKeyBunches()
+        {
+            KeyBunch target = db.AllKeyBunches.Single(bunch => bunch.Name == "HQ");
+            target.Delete();
+            Assert.IsFalse(db.AllKeyBunches.Any(bunch => bunch.Name == "HQ"));
+        }
+
+        [TestMethod]
         public void IsPersonnelAuthorized_ReturnsCorrectly()
         {
             KeyBunch mess = db.AllKeyBunches.First();

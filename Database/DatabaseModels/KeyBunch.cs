@@ -151,7 +151,7 @@ namespace Database.DatabaseModels
 
             // Join KeyBunch to Person via Authorizations
             // LEFT OUTER JOIN to include any bunches that don't have any auths
-            DbConnection.Query<KeyBunch,Person, KeyBunch>(
+            DbConnection.Query<KeyBunch, Person, KeyBunch>(
                 @"SELECT kb.*, p.* FROM KeyBunches as kb
                   LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
                   LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
@@ -295,6 +295,11 @@ namespace Database.DatabaseModels
                     transaction
                 );
             }
+        }
+
+        public override void Delete(IDbTransaction transaction)
+        {
+            throw new NotImplementedException();
         }
     }
 }
