@@ -32,28 +32,43 @@ namespace GUI.ViewModels
             }
         }
 
+        private EditSquadronsViewModel _editSquadronsVM;
+
+        public EditSquadronsViewModel EditSquadronsVM
+        {
+            get { return _editSquadronsVM; }
+            set
+            {
+                _editSquadronsVM = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("EditSquadronsVM"));
+            }
+        }
+
         public RelayCommand<EditWindow> CmdSave { get; set; }
 
         public EditViewModel()
         {
             EditStaffVM = new EditStaffViewModel();
             EditKeyBunchesVM = new EditKeyBunchesViewModel();
+            EditSquadronsVM = new EditSquadronsViewModel();
 
             CmdSave = new RelayCommand<EditWindow>(
                 execute: (window) =>
                 {
                     EditKeyBunchesVM.CmdSave.Execute(null);
                     EditStaffVM.CmdSave.Execute(null);
+                    EditSquadronsVM.CmdSave.Execute(null);
                     if (window != null)
                     {
                         window.DialogResult = true;
                     }
                 },
-                canExecute: () => EditKeyBunchesVM.CmdSave.CanExecute() && EditStaffVM.CmdSave.CanExecute()
+                canExecute: () => EditKeyBunchesVM.CmdSave.CanExecute() && EditStaffVM.CmdSave.CanExecute() && EditSquadronsVM.CmdSave.CanExecute()
             );
 
             EditKeyBunchesVM.CmdSave.CanExecuteChanged += (_, __) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CmdSave"));
             EditStaffVM.CmdSave.CanExecuteChanged      += (_, __) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CmdSave"));
+            EditSquadronsVM.CmdSave.CanExecuteChanged  += (_, __) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CmdSave"));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

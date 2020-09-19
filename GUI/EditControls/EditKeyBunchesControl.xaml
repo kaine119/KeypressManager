@@ -63,18 +63,28 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:Squadron}">
             <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Style="{DynamicResource IconButton}" Width="15" Height="15" 
+                            Command="{Binding DataContext.CmdRemoveSquadron, ElementName=ThisWindow}"
+                            CommandParameter="{Binding}">
+                        <PathGeometry>
+                            <PathGeometry.Figures>
+                                <PathFigure StartPoint="0,0">
+                                    <LineSegment Point="25,25"/>
+                                </PathFigure>
+                                <PathFigure StartPoint="0,25">
+                                    <LineSegment Point="25,0"/>
+                                </PathFigure>
+                            </PathGeometry.Figures>
+                        </PathGeometry>
+                    </Button>
                     <StackPanel Grid.Column="1" Margin="5,0,0,0">
                         <TextBlock Text="{Binding Path=Name}" TextWrapping="Wrap"/>
                         <TextBlock>
                             Number of personnel: <TextBlock Text="{Binding Path=Personnel.Count}"/>
                         </TextBlock>
                     </StackPanel>
-                </Grid>
+                </DockPanel>
             </Border>
         </DataTemplate>
         <ObjectDataProvider x:Key="AllRanks" MethodName="GetValuesWithSeparators"
@@ -118,6 +128,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Margin="0,0,5,0" Grid.Column="0" Grid.Row="0">
                     <DockPanel Grid.Column="0" Margin="0,0,0,5">
@@ -149,79 +160,90 @@
                                  TabIndex="3"/>
                     </DockPanel>
                 </StackPanel>
-                <Grid Grid.Column="0" Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Margin="0,0,5,0" Header="Authorized Personnel" Grid.Row="0">
-                        <ListBox ItemsSource="{Binding Path=SelectedKeyBunch.AuthorizedPersonnel, UpdateSourceTrigger=PropertyChanged}"/>
-                    </GroupBox>
-                    <GroupBox Margin="0,5,5,0" Header="Add Personnel" Grid.Row="1">
-                        <GroupBox.InputBindings>
-                            <KeyBinding Key="Return" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}"/>
-                        </GroupBox.InputBindings>
-                        <StackPanel>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                </Grid.ColumnDefinitions>
-                                <DockPanel Margin="0,0,0,5" Grid.Column="0">
-                                    <Label Content="NRIC" VerticalAlignment="Center"/>
-                                    <TextBox Text="{Binding PersonToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" x:Name="NRIC"
+                <GroupBox Margin="0,0,5,0" Header="Authorized Personnel" Grid.Column="0" Grid.Row="1">
+                    <ListBox ItemsSource="{Binding Path=SelectedKeyBunch.AuthorizedPersonnel, UpdateSourceTrigger=PropertyChanged}"/>
+                </GroupBox>
+                <GroupBox Margin="0,5,5,0" Header="Add Personnel" Grid.Column="0" Grid.Row="2">
+                    <GroupBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}"/>
+                    </GroupBox.InputBindings>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="0">
+                                <Label Content="NRIC" VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding PersonToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" x:Name="NRIC"
                                              TabIndex="4"/>
-                                </DockPanel>
-                                <DockPanel Margin="0,0,0,5" Grid.Column="1">
-                                    <Label Content="Rank" VerticalAlignment="Center"/>
-                                    <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" SelectedValue="{Binding PersonToAdd.Rank}"
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="1">
+                                <Label Content="Rank" VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" SelectedValue="{Binding PersonToAdd.Rank}"
                                               TabIndex="5">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock 
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock 
                                                     Text="{Binding Converter={StaticResource RankToStr}}"
                                                     ToolTip="{Binding Converter={StaticResource RankToStr}, ConverterParameter=Full}"/>
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                        <ComboBox.ItemContainerStyle>
-                                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding}" Value="-1">
-                                                        <Setter Property="IsEnabled" Value="False"/>
-                                                        <Setter Property="Focusable" Value="False"/>
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="ComboBoxItem">
-                                                                    <Separator 
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="-1">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                    <Setter Property="Focusable" Value="False"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ComboBoxItem">
+                                                                <Separator 
                                                                         Margin="0,10"
                                                                         IsEnabled="False"
                                                                         Focusable="False"/>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </ComboBox.ItemContainerStyle>
-                                    </ComboBox>
-                                </DockPanel>
-                            </Grid>
-                            <DockPanel Margin="0,0,0,5">
-                                <Label Content="Name" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding PersonToAdd.Name, UpdateSourceTrigger=PropertyChanged}" TabIndex="6" />
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
                             </DockPanel>
-                            <DockPanel Margin="0,0,0,5">
-                                <Label Content="Contact number" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding PersonToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" TabIndex="7"/>
-                            </DockPanel>
-                            <Button Style="{DynamicResource HighlightButton}" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}">
-                                Add
-                            </Button>
-                        </StackPanel>
-                    </GroupBox>
-                </Grid>
+                        </Grid>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Name" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding PersonToAdd.Name, UpdateSourceTrigger=PropertyChanged}" TabIndex="6" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Contact number" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding PersonToAdd.ContactNumber, UpdateSourceTrigger=PropertyChanged}" TabIndex="7"/>
+                        </DockPanel>
+                        <Button Style="{DynamicResource HighlightButton}" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}">
+                            Add personnel
+                        </Button>
+                    </StackPanel>
+                </GroupBox>
                 <GroupBox Margin="5,0,0,0" Grid.Column="1" Grid.Row="1" Header="Authorized Squadrons">
                     <ListBox ItemsSource="{Binding SelectedKeyBunch.AuthorizedSquadrons}"/>
+                </GroupBox>
+                <GroupBox Margin="0,5,0,0" Header="Add Squadron" Grid.Column="1" Grid.Row="2">
+                    <Grid>
+                        <StackPanel>
+                            <Label>Choose a squadron</Label>
+                            <ComboBox Margin="5,0,0,0" 
+                                      ItemsSource="{Binding AvailableSquadrons, Mode=OneWay}"
+                                      SelectedValue="{Binding SelectedSquadron}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <Button VerticalAlignment="Bottom" Command="{Binding CmdAddSquadron}">Add squadron</Button>
+                    </Grid>
                 </GroupBox>
             </Grid>
         </Grid>

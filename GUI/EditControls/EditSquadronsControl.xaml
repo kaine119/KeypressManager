@@ -4,18 +4,150 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GUI.EditControls"
+             xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
+             xmlns:vm="clr-namespace:GUI.ViewModels"
+             xmlns:convert="clr-namespace:GUI.Converters"
+             Name="ThisWindow"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance {x:Type vm:EditSquadronsViewModel}}">
+    <UserControl.Resources>
+        <convert:NullToVisibility x:Key="NullToVisibility"/>
+        <convert:RankToString x:Key="RankToStr"/>
+        <ObjectDataProvider x:Key="AllRanks" MethodName="GetValuesWithSeparators"
+                            ObjectType="{x:Type model:RankHelper}"/>
+        <DataTemplate DataType="{x:Type model:Person}">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Style="{DynamicResource IconButton}" Width="15" Height="15" 
+                            Command="{Binding DataContext.CmdRemovePerson, ElementName=ThisWindow}"
+                            CommandParameter="{Binding}">
+                        <PathGeometry>
+                            <PathGeometry.Figures>
+                                <PathFigure StartPoint="0,0">
+                                    <LineSegment Point="25,25"/>
+                                </PathFigure>
+                                <PathFigure StartPoint="0,25">
+                                    <LineSegment Point="25,0"/>
+                                </PathFigure>
+                            </PathGeometry.Figures>
+                        </PathGeometry>
+                    </Button>
+                    <TextBlock DockPanel.Dock="Left">
+                        <TextBlock Text="{Binding Rank, Converter={StaticResource RankToStr}}"/>
+                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Text="{ Binding NRIC, StringFormat=- {0} }"/>
+                    </TextBlock>
+                </DockPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:Squadron}">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                <TextBlock Text="{Binding Name}"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <Border Padding="10">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" Margin="0,0,10,0">
-                <ListBoxItem>Hello?</ListBoxItem>
-            </ListBox>
-            <Grid Grid.Column="1"/>
+            <DockPanel Margin="0,0,10,0">
+                <Button DockPanel.Dock="top"
+                        Content="Add new squadron"
+                        Margin="0,0,0,10"
+                        Command="{Binding CmdAddSquadron}"/>
+                <ListBox Grid.Column="0"
+                         ItemsSource="{Binding AllSquadrons}"
+                         SelectedValue="{Binding SelectedSquadron}"/>
+            </DockPanel>
+            <Grid Grid.Column="1" Visibility="{Binding SelectedSquadron, Converter={StaticResource NullToVisibility}, ConverterParameter=Invert}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center">Add a new squadron</TextBlock>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="3">
+                        <Line X1="0" X2="50" Y1="0" Y2="0" StrokeThickness="1" Stroke="#bbb" VerticalAlignment="Center"/>
+                        <TextBlock Margin="3" Foreground="#bbb" FontSize="9" FontWeight="Bold">OR</TextBlock>
+                        <Line X1="0" X2="50" Y1="0" Y2="0" StrokeThickness="1" Stroke="#bbb" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Center">select a keybunch on the left to edit.</TextBlock>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1" Visibility="{Binding SelectedSquadron, Converter={StaticResource NullToVisibility}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                    <Label Content="Squadron name"/>
+                    <TextBox Text="{Binding SelectedSquadron.Name}"/>
+                </DockPanel>
+                <GroupBox Grid.Row="1" Header="Squadron personnel" Margin="0,0,0,10">
+                    <ListBox Grid.Row="1" ItemsSource="{Binding SelectedSquadron.Personnel}" />
+                </GroupBox>
+                <GroupBox Header="Add personnel to squadron" Grid.Row="2">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="0">
+                                <Label Content="NRIC" VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding PersonToAdd.NRIC}" 
+                                         x:Name="NRIC"
+                                         TabIndex="4"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5" Grid.Column="1">
+                                <Label Content="Rank" VerticalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding Source={StaticResource AllRanks}}" 
+                                          SelectedValue="{Binding PersonToAdd.Rank}"
+                                          TabIndex="5">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource RankToStr}}"
+                                                       ToolTip="{Binding Converter={StaticResource RankToStr}, ConverterParameter=Full}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding}" Value="-1">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                    <Setter Property="Focusable" Value="False"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ComboBoxItem">
+                                                                <Separator 
+                                                                    Margin="0,10"
+                                                                    IsEnabled="False"
+                                                                    Focusable="False"/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                            </DockPanel>
+                        </Grid>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Name" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding PersonToAdd.Name}" TabIndex="6" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,5">
+                            <Label Content="Contact number" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding PersonToAdd.ContactNumber}" TabIndex="7"/>
+                        </DockPanel>
+                        <Button Content="Add personnel" 
+                                Style="{DynamicResource HighlightButton}"
+                                HorizontalAlignment="Left"
+                                Margin="0,5" Command="{Binding CmdAddPerson}" CommandParameter="{Binding ElementName=NRIC, Mode=OneWay}"/>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

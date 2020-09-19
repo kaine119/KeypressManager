@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 
@@ -9,64 +10,76 @@ namespace Database.DatabaseModels
     public class Squadron : DatabaseModel
     {
         public string Name { get; set; }
-        public IEnumerable<Person> Personnel =>
-            DbConnection.Query<Person>(
-                @"SELECT * FROM Personnel AS p
-                  WHERE p.squadronId = @ID",
-                new { ID }
-            );
+        public ObservableCollection<Person> Personnel { get; set; } = new ObservableCollection<Person>();
+
+        public override bool Equals(object obj)
+        {
+            return obj is Squadron squadron &&
+                   Name == squadron.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name);
+        }
 
         public override bool IsValid => !(Name is null);
 
-        public static IEnumerable<Squadron> All =>
-            DbConnection.Query<Squadron>(
-                @"SELECT * FROM Squadrons;"
-            );
+        public static IEnumerable<Squadron> All
+        {
+            get
+            {
+                var results = new Dictionary<int, Squadron>();
+
+                DbConnection.Query<Squadron, Person, Squadron>(
+                    @"SELECT s.*, p.* FROM Squadrons AS s
+                      LEFT OUTER JOIN PersonnelSquadrons AS p_s ON s.id = p_s.squadronId
+                      LEFT OUTER JOIN personnel AS p ON p_s.personId = p.id;",
+                    (s, p) =>
+                    {
+                        Squadron squadron;
+                        if (!results.TryGetValue((int)s.ID, out squadron))
+                        {
+                            results.Add((int)s.ID, s);
+                            squadron = s;
+                        }
+                        if (!(p is null))
+                           squadron.Personnel.Add(p);
+                        return squadron;
+                    }
+                );
+
+                return results.Values;
+            }
+        }
+
 
         public static Squadron ById(int id)
         {
-            return DbConnection.Query<Squadron>(
-                @"SELECT * FROM Squadrons
-                  WHERE id = @ID",
-                new { ID = id }
-            ).Single();
+            Squadron result = null;
+
+            DbConnection.Query<Squadron, Person, Squadron>(
+                @"SELECT s.*, p.* FROM PersonnelSquadrons as p_s
+                      LEFT OUTER JOIN squadrons AS s ON p_s.squadronId = s.id
+                      LEFT OUTER JOIN personnel AS p ON p_s.personId = p.id
+                  WHERE s.id = @SquadronID;",
+                (s, p) =>
+                {
+                    if (result == null)
+                    {
+                        result = s;
+                    }
+                    if (!(p is null))
+                        result.Personnel.Add(p);
+                    return result;
+                },
+                new { SquadronID = id });
+
+            return result;
         }
 
         /// <summary>
-        /// Associates a person to the squadron, and saves the Person record.
-        /// </summary>
-        /// <param name="person">The person to associate with the squadron.</param>
-        public void AddPersonnel(Person person)
-        {
-            IDbTransaction transaction = DbConnection.BeginTransaction();
-            if (person.ID is null)
-            {
-                person.Write(transaction);
-            }
-            DbConnection.Execute(
-                @"UPDATE personnel
-                  SET squadronId = @SquadronId
-                  WHERE id = @PersonId",
-                new { SquadronId = ID, PersonId = person.ID },
-                transaction
-            );
-            transaction.Commit();
-        }
-
-        /// <summary>
-        /// Associates personnel to the squadron, and saves the Person records.
-        /// </summary>
-        /// <param name="personnel">The personnel to associate with the squadron.</param>
-        public void AddPersonnel(IEnumerable<Person> personnel)
-        {
-            foreach (var person in personnel)
-            {
-                AddPersonnel(person);
-            }
-        }
-
-        /// <summary>
-        /// Saves the squadron. Does not write members; use <see cref="AddPersonnel"/> to add personnel to the squadron.
+        /// Saves the squadron and its members.
         /// </summary>
         public override void Write(IDbTransaction transaction)
         {
@@ -89,6 +102,26 @@ namespace Database.DatabaseModels
                       SET name = @Name
                       WHERE id = @ID",
                     new { Name, ID },
+                    transaction
+                );
+            }
+
+            // First delete all associations to reflect any deleted personnel...
+            DbConnection.Execute(
+                @"DELETE FROM PersonnelSquadrons
+                  WHERE squadronId = @SquadronID",
+                new { SquadronID = ID },
+                transaction
+            );
+
+            // ...then add them back.
+            foreach (Person person in Personnel)
+            {
+                person.Write(transaction);
+                DbConnection.Execute(
+                    @"INSERT INTO PersonnelSquadrons (personId, squadronId)
+                        VALUES (@PersonID, @SquadronID)",
+                    new { PersonID = person.ID, SquadronID = ID },
                     transaction
                 );
             }
