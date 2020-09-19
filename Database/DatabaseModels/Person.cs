@@ -19,9 +19,14 @@ namespace Database.DatabaseModels
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Person)) return false;
-            var person = (Person)obj;
-            return NRIC == person.NRIC && Name == person.Name && Rank == person.Rank && ContactNumber == person.ContactNumber;
+            return obj is Person person &&
+                   NRIC == person.NRIC &&
+                   Name == person.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(NRIC, Name);
         }
 
         public override bool IsValid => !(NRIC is null) && !(Name is null) && !(Rank is null);
