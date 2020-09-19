@@ -1,4 +1,5 @@
 ﻿using Database.DatabaseModels;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -49,6 +50,25 @@ namespace GUI.ViewModels
         }
 
         /// <summary>
+        /// The squadrons that can be authorized to draw the selected bunch (i.e. not already authorized)
+        /// </summary>
+        public IEnumerable<Squadron> AvailableSquadrons => Squadron.All.Except(SelectedKeyBunch?.AuthorizedSquadrons ?? Enumerable.Empty<Squadron>());
+
+        private Squadron _selectedSquadron;
+        /// <summary>
+        /// The currently selected squadron in the "Add Squadron" group.
+        /// </summary>
+        public Squadron SelectedSquadron
+        {
+            get { return _selectedSquadron; }
+            set
+            {
+                _selectedSquadron = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedSquadron"));
+            }
+        }
+
+        /// <summary>
         /// Adds a new key bunch based on a template.
         /// </summary>
         public RelayCommand<TextBox> CmdAddKeyBunch { get; set; }
@@ -67,6 +87,11 @@ namespace GUI.ViewModels
         /// Removes a person from the currently selected keybunch's Authorized Personnel.
         /// </summary>
         public RelayCommand<Person> CmdRemovePerson { get; set; }
+
+        /// <summary>
+        /// Adds the selected squadron to the currently keybunch's Authorized Squadrons.
+        /// </summary>
+        public RelayCommand<object> CmdAddSquadron { get; set; }
 
         /// <summary>
         /// Save all keybunches.
@@ -111,6 +136,15 @@ namespace GUI.ViewModels
                 {
                     SelectedKeyBunch.AuthorizedPersonnel.Remove(personToRemove);
                 }
+            );
+
+            CmdAddSquadron = new RelayCommand<object>(
+                execute: (_) =>
+                {
+                    SelectedKeyBunch.AuthorizedSquadrons.Add(SelectedSquadron);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvailableSquadrons"));
+                },
+                canExecute: () => SelectedSquadron != null
             );
 
             CmdAddKeyBunch = new RelayCommand<TextBox>(

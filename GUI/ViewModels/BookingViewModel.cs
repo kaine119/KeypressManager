@@ -34,10 +34,11 @@ namespace GUI.ViewModels
         /// </summary>
         public ObservableCollection<Person> AuthorizedPersonnel =>
             new ObservableCollection<Person>(
-                PendingKeys.Aggregate(
-                    PendingKeys.First().AuthorizedPersonnel.ToList(),
-                    (list, person) => new List<Person>(list.Intersect(person.AuthorizedPersonnel))
-                )
+                PendingKeys.Skip(1)
+                    .Aggregate(
+                        new HashSet<Person>(PendingKeys.First().AllAuthorizedPersonnel),
+                        (hash, keybunch) => { hash.IntersectWith(keybunch.AllAuthorizedPersonnel); return hash; }
+                    )
             );
 
         private string _searchTerm;
