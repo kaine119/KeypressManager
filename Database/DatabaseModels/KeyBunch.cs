@@ -45,8 +45,22 @@ namespace Database.DatabaseModels
             }
         }
 
+        /// <summary>
+        /// The personnel listed on the bunch's Authorization List.
+        /// </summary>
         public ObservableCollection<Person> AuthorizedPersonnel { get; set; } = new ObservableCollection<Person>();
-        public List<Squadron> AuthorizedSquadrons { get; set; } = new List<Squadron>();
+        /// <summary>
+        /// Any squadrons also authorized to draw a bunch.
+        /// </summary>
+        public ObservableCollection<Squadron> AuthorizedSquadrons { get; set; } = new ObservableCollection<Squadron>();
+
+        /// <summary>
+        /// All personnel allowed to draw a key; aggregates personnel in <see cref="AuthorizedPersonnel"/> and <see cref="AuthorizedSquadrons"/>.
+        /// </summary>
+        public IEnumerable<Person> AllAuthorizedPersonnel =>
+            AuthorizedPersonnel.Union(
+                AuthorizedSquadrons.SelectMany((sqn) => sqn.Personnel)
+            );
 
         private KeyList _keyList;
 
@@ -144,7 +158,8 @@ namespace Database.DatabaseModels
                   WHERE kb.id = @ID",
                 (kb, p) =>
                 {
-                    result.AuthorizedPersonnel.Add(p);
+                    if (p != null)
+                        result.AuthorizedPersonnel.Add(p);
                     return result;
                 },
                 new { ID = id }
