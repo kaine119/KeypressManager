@@ -94,6 +94,11 @@ namespace GUI.ViewModels
         public RelayCommand<object> CmdAddSquadron { get; set; }
 
         /// <summary>
+        /// Removes a squadron from the currently selected keybunch's Authorized Squadrons.
+        /// </summary>
+        public RelayCommand<Squadron> CmdRemoveSquadron { get; set; }
+
+        /// <summary>
         /// Save all keybunches.
         /// </summary>
         public RelayCommand<object> CmdSave { get; set; }
@@ -145,6 +150,14 @@ namespace GUI.ViewModels
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvailableSquadrons"));
                 },
                 canExecute: () => SelectedSquadron != null
+            );
+
+            CmdRemoveSquadron = new RelayCommand<Squadron>(
+                execute: (squadronToRemove) =>
+                {
+                    SelectedKeyBunch.AuthorizedSquadrons.Remove(squadronToRemove);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvailableSquadrons"));
+                }
             );
 
             CmdAddKeyBunch = new RelayCommand<TextBox>(

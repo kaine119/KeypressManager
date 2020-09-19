@@ -63,18 +63,28 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type model:Squadron}">
             <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Style="{DynamicResource IconButton}" Width="15" Height="15" 
+                            Command="{Binding DataContext.CmdRemoveSquadron, ElementName=ThisWindow}"
+                            CommandParameter="{Binding}">
+                        <PathGeometry>
+                            <PathGeometry.Figures>
+                                <PathFigure StartPoint="0,0">
+                                    <LineSegment Point="25,25"/>
+                                </PathFigure>
+                                <PathFigure StartPoint="0,25">
+                                    <LineSegment Point="25,0"/>
+                                </PathFigure>
+                            </PathGeometry.Figures>
+                        </PathGeometry>
+                    </Button>
                     <StackPanel Grid.Column="1" Margin="5,0,0,0">
                         <TextBlock Text="{Binding Path=Name}" TextWrapping="Wrap"/>
                         <TextBlock>
                             Number of personnel: <TextBlock Text="{Binding Path=Personnel.Count}"/>
                         </TextBlock>
                     </StackPanel>
-                </Grid>
+                </DockPanel>
             </Border>
         </DataTemplate>
         <ObjectDataProvider x:Key="AllRanks" MethodName="GetValuesWithSeparators"
