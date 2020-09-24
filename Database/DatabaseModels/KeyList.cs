@@ -44,7 +44,7 @@ namespace Database.DatabaseModels
         /// </summary>
         public IEnumerable<KeyBunch> Keys =>
             DbConnection.Query<KeyBunch>(
-                @"SELECT * FROM KeyBunches WHERE keyListId = @ID",
+                @"SELECT * FROM KeyBunches WHERE keyListId = @ID AND isDeleted = 0;",
                 new { ID }
             );
 

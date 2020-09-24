@@ -9,6 +9,7 @@ CREATE TABLE KeyBunches (
   bunchNumber TEXT NOT NULL,
   keyListId INTEGER NOT NULL,
   numberOfKeys INTEGER NOT NULL,
+  isDeleted INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (keyListId) REFERENCES KeyLists(id)
 );
 

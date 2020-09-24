@@ -16,13 +16,13 @@ namespace DatabaseTest
         [TestMethod]
         public void KeyBunch_InstantiatesCorrectly()
         {
-            KeyBunch mess = db.AllKeyBunches.First();
+            KeyBunch mess = db.AllKeyBunches.Single(bunch => bunch.Name == "Mess");
             Assert.AreEqual("Mess", mess.Name);
             Assert.AreEqual("01", mess.BunchNumber);
             Assert.AreEqual("Alice Tan", mess.AuthorizedPersonnel.First().Name);
             Assert.AreEqual("Main Keypress", mess.KeyList.Name);
 
-            KeyBunch hq = db.AllKeyBunches.ElementAt(2);
+            KeyBunch hq = db.AllKeyBunches.Single(bunch => bunch.Name == "HQ");
             Assert.AreEqual("111 SQN", hq.AuthorizedSquadrons.First().Name);
         }
 
@@ -114,9 +114,17 @@ namespace DatabaseTest
         [TestMethod]
         public void Delete_DeletesKeyBunches()
         {
-            KeyBunch target = db.AllKeyBunches.Single(bunch => bunch.Name == "HQ");
+            KeyBunch target = db.AllKeyBunches.Single(bunch => bunch.Name == "Office");
             target.Delete();
-            Assert.IsFalse(db.AllKeyBunches.Any(bunch => bunch.Name == "HQ"));
+            Assert.IsFalse(db.AllKeyBunches.Any(bunch => bunch.Name == "Office"));
+        }
+
+        [TestMethod]
+        public void DeleteMultiple_DeletesMultipleKeyBunches()
+        {
+            IEnumerable<KeyBunch> targets = db.AllKeyBunches.Where(bunch => bunch.KeyList.Name == "Test Keypress");
+            KeyBunch.DeleteMultiple(targets);
+            Assert.AreEqual(0, db.AllKeyBunches.Where(bunch => bunch.KeyList.Name == "Test Keypress").Count());
         }
 
         [TestMethod]
@@ -132,8 +140,8 @@ namespace DatabaseTest
         [TestMethod]
         public void IsPersonnelAuthorized_ReturnsThroughSquadrons()
         {
-            KeyBunch hq = db.AllKeyBunches.ElementAt(2);
-            Person bob = db.AllPersonnel.ElementAt(1);
+            KeyBunch hq = db.AllKeyBunches.Single(bunch => bunch.Name == "HQ");
+            Person bob = db.AllPersonnel.Single(person => person.Name == "Bob Lee");
             Assert.IsTrue(hq.IsPersonAuthorized(bob));
         }
     }
