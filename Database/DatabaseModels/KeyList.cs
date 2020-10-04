@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 
@@ -13,9 +14,19 @@ namespace Database.DatabaseModels
     /// directly to a KeyBunch, i.e.
     /// keyBunch.KeyList = keyList;
     /// </summary>
-    public class KeyList : DatabaseModel
+    public class KeyList : DatabaseModel, INotifyPropertyChanged
     {
-        public string Name { get; set; }
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
+            }
+        }
 
         public override bool IsValid => !(Name is null);
 
@@ -23,12 +34,8 @@ namespace Database.DatabaseModels
         {
             return obj is KeyList list &&
                    ID == list.ID &&
+                   ID != null &&
                    Name == list.Name;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ID, Name);
         }
 
         /// <summary>
@@ -85,5 +92,7 @@ namespace Database.DatabaseModels
         {
             throw new NotImplementedException();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
