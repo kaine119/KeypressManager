@@ -4,18 +4,53 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GUI.EditControls"
+             xmlns:vm="clr-namespace:GUI.ViewModels"
+             xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance {x:Type vm:EditKeyListsViewModel}}">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type model:KeyList}">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="{DynamicResource ContentBackgroundBrush}">
+                <TextBlock Text="{Binding Name}"/>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <Border Padding="10">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" Margin="0,0,10,0">
-                <ListBoxItem>Hello?</ListBoxItem>
-            </ListBox>
-            <Grid Grid.Column="1"/>
+            <DockPanel Grid.Column="0" Margin="0,0,10,0">
+                <Button DockPanel.Dock="Top"
+                        Margin="0,0,0,10"
+                        Content="Add new squadron"
+                        Command="{Binding CmdAddKeyList}"/>
+
+                <ListBox Grid.Column="0"
+                         ItemsSource="{Binding AllKeyLists}"
+                         SelectedIndex="{Binding SelectedIndex}"/>
+
+            </DockPanel>
+            <Grid Grid.Column="1">
+                <StackPanel>
+                    <GroupBox Header="Edit Key List">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Label Content="Name"/>
+                                <TextBox Width="200" 
+                                         Name="KeyListName"
+                                         Text="{Binding SelectedKeyList.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <TextBlock Margin="10" TextWrapping="Wrap" Foreground="{DynamicResource NormalTextBrush}">
+                        Please save key lists before adding keys, otherwise they will 
+                        not show up when editing key bunches.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
