@@ -96,11 +96,6 @@ namespace GUI.ViewModels
         public RelayCommand<KeyBunch> CmdRemoveKeyBunch { get; set; }
 
         /// <summary>
-        /// The number of new keybunches added, used for deduping
-        /// </summary>
-        private int addedKeyBunchesCount = 0;
-
-        /// <summary>
         /// Adds the person in the "Add Personnel" field to the current keybunch's Authorized Personnel.
         /// </summary>
         public RelayCommand<TextBox> CmdAddPerson { get; set; }
@@ -138,7 +133,8 @@ namespace GUI.ViewModels
             PersonToAdd = new Person();
 
             CmdSave = new RelayCommand<object>(
-                execute: (_) => { 
+                execute: (_) =>
+                {
                     foreach (KeyBunch kb in AllKeyBunches) kb.Write();
                     KeyBunch.DeleteMultiple(KeyBunchesToDelete);
                 },
@@ -146,7 +142,7 @@ namespace GUI.ViewModels
             );
 
             CmdAddPerson = new RelayCommand<TextBox>(
-                execute: (focusTarget) => 
+                execute: (focusTarget) =>
                 {
                     SelectedKeyBunch.AuthorizedPersonnel.Add(
                         new Person
@@ -155,7 +151,7 @@ namespace GUI.ViewModels
                             NRIC = PersonToAdd.NRIC,
                             Rank = PersonToAdd.Rank,
                             ContactNumber = PersonToAdd.ContactNumber
-                        }    
+                        }
                     );
                     PersonToAdd = new Person();
                     focusTarget?.Focus();
@@ -190,15 +186,19 @@ namespace GUI.ViewModels
             CmdAddKeyBunch = new RelayCommand<TextBox>(
                 execute: (focusTarget) =>
                 {
-                    addedKeyBunchesCount += 1;
+                    int keyBunchNumber = AllKeyBunches.Select(bunch =>
+                    {
+                        bool result = int.TryParse(bunch.BunchNumber, out int ret);
+                        return result ? ret : 0;
+                    }).Max() + 1;
                     KeyBunch newKeyBunch = new KeyBunch
                     {
-                        Name = "New key bunch" + (addedKeyBunchesCount > 1 ? $" ({addedKeyBunchesCount})" : ""),
-                        BunchNumber = $"{addedKeyBunchesCount:D2}",
+                        Name = $"New key bunch {keyBunchNumber}",
+                        BunchNumber = $"{keyBunchNumber:D2}",
                         KeyList = AllKeyLists.First()
                     };
                     AllKeyBunches.Insert(0, newKeyBunch);
-                    
+
                     SelectedKeyBunch = newKeyBunch;
                     if (focusTarget != null)
                     {

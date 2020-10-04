@@ -206,6 +206,7 @@ namespace Database.DatabaseModels
         {
             return obj is KeyBunch bunch &&
                    ID == bunch.ID &&
+                   ID != null &&
                    Name == bunch.Name &&
                    BunchNumber == bunch.BunchNumber;
         }
