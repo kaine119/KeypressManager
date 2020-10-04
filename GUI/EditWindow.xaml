@@ -44,7 +44,7 @@
                 <edit:EditKeyBunchesControl DataContext="{Binding EditKeyBunchesVM}"/>
             </TabItem>
             <TabItem Header="Key Lists">
-                <edit:EditKeyListsControl/>
+                <edit:EditKeyListsControl DataContext="{Binding EditKeyListsVM}"/>
             </TabItem>
             <TabItem Header="Squadrons">
                 <edit:EditSquadronsControl DataContext="{Binding EditSquadronsVM}"/>
