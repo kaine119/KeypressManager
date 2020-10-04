@@ -43,6 +43,16 @@
                                          Name="KeyListName"
                                          Text="{Binding SelectedKeyList.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Label Content="Color" VerticalAlignment="Center"/>
+                                <Rectangle
+                                    Margin="5,0,10,0" 
+                                    Width="30" 
+                                    Height="30"
+                                    Name="ColorIndicator" Fill="{Binding SelectedColor}"/>
+                                <Button Content="Pick color" FontSize="12"
+                                        Click="PickColorHandler"/>
+                            </StackPanel>
                         </StackPanel>
                     </GroupBox>
                     <TextBlock Margin="10" TextWrapping="Wrap" Foreground="{DynamicResource NormalTextBrush}">

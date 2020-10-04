@@ -36,6 +36,18 @@ namespace GUI.ViewModels
 
         public KeyList SelectedKeyList => AllKeyLists[SelectedIndex];
 
+        private string _selectedColor;
+
+        public string SelectedColor
+        {
+            get { return _selectedColor; }
+            set
+            {
+                _selectedColor = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedColor"));
+            }
+        }
+
         private int newKeylistCount = 0;
 
         public RelayCommand<TextBox> CmdAddKeyList { get; set; }
@@ -45,6 +57,8 @@ namespace GUI.ViewModels
         public EditKeyListsViewModel()
         {
             AllKeyLists = new ObservableCollection<KeyList>(KeyList.All);
+
+            SelectedColor = "#ffff00";
 
             CmdAddKeyList = new RelayCommand<TextBox>(
                 execute: (focusTarget) =>

@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>GUI</RootNamespace>
     <AssemblyName>KeypressDatabase</AssemblyName>
     <Version>0.4.0</Version>
