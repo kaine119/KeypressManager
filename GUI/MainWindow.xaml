@@ -12,8 +12,16 @@
         d:DataContext="{d:DesignInstance {x:Type vm:DashboardViewModel}}"
         KeyDown="Window_KeyDown">
     <Window.Resources>
+        <convert:LogEntryReturnedToDetailVisibility x:Key="LogToVis" />
+        <convert:NullToVisibility x:Key="NullToVis"/>
+        <convert:MultipleToInvis x:Key="MultipleToInvis"/>
+        <convert:BoolToVisibility x:Key="BoolToVis"/>
+        <convert:RankToString x:Key="RankToStr"/>
+        <convert:HexTripletToBrush x:Key="HexTripletToBrush"/>
         <DataTemplate DataType="{x:Type vm:DashboardKeyListItem}">
-            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="#4b566a">
+            <Border Padding="10" TextElement.Foreground="{DynamicResource NormalTextBrush}" Background="#4b566a"
+                    BorderBrush="{Binding Path=KeyBunch.KeyList.Colour, Converter={StaticResource HexTripletToBrush}}"
+                    BorderThickness="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -25,7 +33,9 @@
                             <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                         </CheckBox.LayoutTransform>
                     </CheckBox>
-                    <TextBlock Grid.Column="1" FontSize="22" Text="{Binding Path=KeyBunch.BunchNumber}" Margin="10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Path=KeyBunch.BunchNumber}" 
+                               Grid.Column="1" FontSize="22" 
+                               Margin="10,0" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="{Binding Path=KeyBunch.Name}" TextWrapping="Wrap"/>
                         <TextBlock>
@@ -68,11 +78,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <convert:LogEntryReturnedToDetailVisibility x:Key="LogToVis" />
-        <convert:NullToVisibility x:Key="NullToVis"/>
-        <convert:MultipleToInvis x:Key="MultipleToInvis"/>
-        <convert:BoolToVisibility x:Key="BoolToVis"/>
-        <convert:RankToString x:Key="RankToStr"/>
     </Window.Resources>
     <Border Padding="20,15,20,20" BorderThickness="0,5,0,0" BorderBrush="{DynamicResource GroupBoxOutlineBrush}">
         <Grid>
@@ -313,7 +318,7 @@
                     <ItemsControl Width="180" ItemsSource="{Binding AllKeyLists}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="KeyList">
-                                <GroupBox Header="{Binding Name}" Margin="0,0,0,10">
+                                <GroupBox Header="{Binding Name}" Margin="0,0,0,10" BorderBrush="{Binding Colour, Converter={StaticResource HexTripletToBrush}}">
                                     <DockPanel>
                                         <TextBlock DockPanel.Dock="Left" VerticalAlignment="Top">
                                             <Span FontSize="30" BaselineAlignment="Baseline">
