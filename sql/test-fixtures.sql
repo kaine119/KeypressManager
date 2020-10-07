@@ -1,7 +1,8 @@
 -- Dummy fixtures for testing --
 INSERT INTO KeyLists (id, name) 
   VALUES (1, "Main Keypress"),
-         (2, "Test Keypress");
+         (2, "Test Keypress"),
+         (3, "Keypress to delete");
 
 INSERT INTO KeyBunches (id, name, bunchNumber, keyListId, numberOfKeys)
   VALUES (1, "Mess", "01", 1, 4),
@@ -9,7 +10,9 @@ INSERT INTO KeyBunches (id, name, bunchNumber, keyListId, numberOfKeys)
          (3, "HQ", "B01", 1, 20),
          (4, "Edit target", "B11", 1, 25),
          (5, "Pristine 1", "01", 2, 10),
-         (6, "Pristine 2", "01", 2, 10);
+         (6, "Pristine 2", "01", 2, 10),
+         (7, "Delete me 1", "01", 3, 10),
+         (8, "Delete me 2", "02", 3, 10);
 
 INSERT INTO Squadrons (id, name)
   VALUES (1, "111 SQN");

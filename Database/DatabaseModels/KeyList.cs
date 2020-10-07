@@ -28,6 +28,18 @@ namespace Database.DatabaseModels
             }
         }
 
+        private string _colour;
+
+        public string Colour
+        {
+            get { return _colour; }
+            set
+            {
+                _colour = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Colour"));
+            }
+        }
+
         public override bool IsValid => !(Name is null);
 
         public override bool Equals(object obj)
@@ -71,9 +83,9 @@ namespace Database.DatabaseModels
             {
                 // Write a new record, save off its ID
                 ID = DbConnection.Query<int>(
-                        @"INSERT INTO KeyLists (name) VALUES (@Name); 
+                        @"INSERT INTO KeyLists (name, colour) VALUES (@Name, @Colour); 
                           SELECT last_insert_rowid()",
-                        new { Name },
+                        new { Name, Colour },
                         transaction
                      ).Single();
             }
@@ -81,8 +93,10 @@ namespace Database.DatabaseModels
             {
                 // Update the existing record
                 DbConnection.Execute(
-                    @"UPDATE KeyLists SET name = @Name WHERE id = @ID",
-                    new { Name, ID },
+                    @"UPDATE KeyLists 
+                        SET name = @Name, colour = @Colour
+                      WHERE id = @ID",
+                    new { Name, Colour, ID },
                     transaction
                 );
             }

@@ -122,9 +122,9 @@ namespace DatabaseTest
         [TestMethod]
         public void DeleteMultiple_DeletesMultipleKeyBunches()
         {
-            IEnumerable<KeyBunch> targets = db.AllKeyBunches.Where(bunch => bunch.KeyList.Name == "Test Keypress");
+            IEnumerable<KeyBunch> targets = db.AllKeyBunches.Where(bunch => bunch.KeyList.Name == "Keypress to delete");
             KeyBunch.DeleteMultiple(targets);
-            Assert.AreEqual(0, db.AllKeyBunches.Where(bunch => bunch.KeyList.Name == "Test Keypress").Count());
+            Assert.AreEqual(0, db.AllKeyBunches.Where(bunch => bunch.KeyList.Name == "Keypress to delete").Count());
         }
 
         [TestMethod]

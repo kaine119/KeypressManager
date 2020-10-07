@@ -24,10 +24,11 @@ namespace DatabaseTest
         {
             KeyList keyList = new KeyList
             {
-                Name = "New Keylist"
+                Name = "New Keylist",
+                Colour = "ff0000"
             };
             keyList.Write();
-            Assert.AreEqual(3, db.AllKeyLists.Count());
+            Assert.AreEqual(4, db.AllKeyLists.Count());
             Assert.AreEqual("New Keylist", db.AllKeyLists.Last().Name);
         }
 
