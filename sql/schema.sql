@@ -1,6 +1,7 @@
 CREATE TABLE KeyLists (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL
+  name TEXT NOT NULL,
+  colour TEXT NOT NULL DEFAULT "3a86c3"
 );
 
 CREATE TABLE KeyBunches (
@@ -9,6 +10,7 @@ CREATE TABLE KeyBunches (
   bunchNumber TEXT NOT NULL,
   keyListId INTEGER NOT NULL,
   numberOfKeys INTEGER NOT NULL,
+  isDeleted INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (keyListId) REFERENCES KeyLists(id)
 );
 

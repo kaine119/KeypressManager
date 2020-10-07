@@ -221,5 +221,10 @@ namespace Database.DatabaseModels
 
             Write();
         }
+
+        public override void Delete(IDbTransaction transaction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

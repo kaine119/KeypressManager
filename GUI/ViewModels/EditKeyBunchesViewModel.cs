@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace GUI.ViewModels
@@ -29,6 +30,21 @@ namespace GUI.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvailableSquadrons"));
             }
         }
+
+        private ObservableCollection<KeyBunch> _keyBunchesToDelete;
+        /// <summary>
+        /// The key bunches to be deleted upon saving.
+        /// </summary>
+        public ObservableCollection<KeyBunch> KeyBunchesToDelete
+        {
+            get { return _keyBunchesToDelete; }
+            set
+            {
+                _keyBunchesToDelete = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("KeyBunchesToDelete"));
+            }
+        }
+
 
         /// <summary>
         /// All key lists in the database.
@@ -75,9 +91,9 @@ namespace GUI.ViewModels
         public RelayCommand<TextBox> CmdAddKeyBunch { get; set; }
 
         /// <summary>
-        /// The number of new keybunches added, used for deduping
+        /// Removes a given key bunch from the current list, and adds it to a list to be deleted.
         /// </summary>
-        private int addedKeyBunchesCount = 0;
+        public RelayCommand<KeyBunch> CmdRemoveKeyBunch { get; set; }
 
         /// <summary>
         /// Adds the person in the "Add Personnel" field to the current keybunch's Authorized Personnel.
@@ -112,15 +128,21 @@ namespace GUI.ViewModels
             AllKeyBunches = new ObservableCollection<KeyBunch>(KeyBunch.All);
             AllKeyLists = new ObservableCollection<KeyList>(KeyList.All);
 
+            KeyBunchesToDelete = new ObservableCollection<KeyBunch>();
+
             PersonToAdd = new Person();
 
             CmdSave = new RelayCommand<object>(
-                execute: (_) => { foreach (KeyBunch kb in AllKeyBunches) { kb.Write(); } },
+                execute: (_) =>
+                {
+                    foreach (KeyBunch kb in AllKeyBunches) kb.Write();
+                    KeyBunch.DeleteMultiple(KeyBunchesToDelete);
+                },
                 canExecute: () => AllKeyBunches.All(kb => kb.IsValid)
             );
 
             CmdAddPerson = new RelayCommand<TextBox>(
-                execute: (focusTarget) => 
+                execute: (focusTarget) =>
                 {
                     SelectedKeyBunch.AuthorizedPersonnel.Add(
                         new Person
@@ -129,7 +151,7 @@ namespace GUI.ViewModels
                             NRIC = PersonToAdd.NRIC,
                             Rank = PersonToAdd.Rank,
                             ContactNumber = PersonToAdd.ContactNumber
-                        }    
+                        }
                     );
                     PersonToAdd = new Person();
                     focusTarget?.Focus();
@@ -164,21 +186,33 @@ namespace GUI.ViewModels
             CmdAddKeyBunch = new RelayCommand<TextBox>(
                 execute: (focusTarget) =>
                 {
-                    addedKeyBunchesCount += 1;
+                    int keyBunchNumber = AllKeyBunches.Select(bunch =>
+                    {
+                        bool result = int.TryParse(bunch.BunchNumber, out int ret);
+                        return result ? ret : 0;
+                    }).DefaultIfEmpty(0).Max() + 1;
                     KeyBunch newKeyBunch = new KeyBunch
                     {
-                        Name = "New key bunch" + (addedKeyBunchesCount > 1 ? $" ({addedKeyBunchesCount})" : ""),
-                        BunchNumber = $"{addedKeyBunchesCount:D2}",
+                        Name = $"New key bunch {keyBunchNumber}",
+                        BunchNumber = $"{keyBunchNumber:D2}",
                         KeyList = AllKeyLists.First()
                     };
                     AllKeyBunches.Insert(0, newKeyBunch);
-                    
+
                     SelectedKeyBunch = newKeyBunch;
                     if (focusTarget != null)
                     {
                         focusTarget.Focus();
                         focusTarget.SelectAll();
                     }
+                }
+            );
+
+            CmdRemoveKeyBunch = new RelayCommand<KeyBunch>(
+                execute: (keyBunch) =>
+                {
+                    KeyBunchesToDelete.Add(keyBunch);
+                    AllKeyBunches.Remove(keyBunch);
                 }
             );
         }

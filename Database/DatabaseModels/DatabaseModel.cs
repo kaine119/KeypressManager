@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace Database.DatabaseModels
@@ -23,6 +25,9 @@ namespace Database.DatabaseModels
         public int? ID { get; protected set; }
         public abstract bool IsValid { get; }
 
+        /// <summary>
+        /// Write the object to the database.
+        /// </summary>
         public void Write()
         {
             IDbTransaction transaction = DbConnection.BeginTransaction();
@@ -37,5 +42,49 @@ namespace Database.DatabaseModels
             }
         }
         public abstract void Write(IDbTransaction transaction);
+
+        /// <summary>
+        /// Deletes the current object from the database with a new transaction.
+        /// Deletion is done with <see cref="Delete(IDbTransaction)"/>.
+        /// </summary>
+        public void Delete()
+        {
+            if (ID is int)
+            {
+                IDbTransaction transaction = DbConnection.BeginTransaction();
+                try
+                {
+                    Delete(transaction);
+                    transaction.Commit();
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
+            }
+            else
+            {
+                throw new System.InvalidOperationException($"Can't delete a non-written record of type {GetType()}");
+            }
+        }
+
+        public abstract void Delete(IDbTransaction transaction);
+
+        public static void DeleteMultiple(IEnumerable<DatabaseModel> objects)
+        {
+            IDbTransaction transaction = DbConnection.BeginTransaction();
+            try
+            {
+                foreach (var obj in objects)
+                {
+                    obj.Delete(transaction);
+                }
+                transaction.Commit();
+            }
+            finally
+            {
+                transaction.Dispose();
+            }
+        }
     }
 }

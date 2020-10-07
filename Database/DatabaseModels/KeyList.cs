@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 
@@ -13,9 +14,31 @@ namespace Database.DatabaseModels
     /// directly to a KeyBunch, i.e.
     /// keyBunch.KeyList = keyList;
     /// </summary>
-    public class KeyList : DatabaseModel
+    public class KeyList : DatabaseModel, INotifyPropertyChanged
     {
-        public string Name { get; set; }
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
+            }
+        }
+
+        private string _colour;
+
+        public string Colour
+        {
+            get { return _colour; }
+            set
+            {
+                _colour = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Colour"));
+            }
+        }
 
         public override bool IsValid => !(Name is null);
 
@@ -23,12 +46,8 @@ namespace Database.DatabaseModels
         {
             return obj is KeyList list &&
                    ID == list.ID &&
+                   ID != null &&
                    Name == list.Name;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ID, Name);
         }
 
         /// <summary>
@@ -44,7 +63,7 @@ namespace Database.DatabaseModels
         /// </summary>
         public IEnumerable<KeyBunch> Keys =>
             DbConnection.Query<KeyBunch>(
-                @"SELECT * FROM KeyBunches WHERE keyListId = @ID",
+                @"SELECT * FROM KeyBunches WHERE keyListId = @ID AND isDeleted = 0;",
                 new { ID }
             );
 
@@ -64,9 +83,9 @@ namespace Database.DatabaseModels
             {
                 // Write a new record, save off its ID
                 ID = DbConnection.Query<int>(
-                        @"INSERT INTO KeyLists (name) VALUES (@Name); 
+                        @"INSERT INTO KeyLists (name, colour) VALUES (@Name, @Colour); 
                           SELECT last_insert_rowid()",
-                        new { Name },
+                        new { Name, Colour },
                         transaction
                      ).Single();
             }
@@ -74,11 +93,20 @@ namespace Database.DatabaseModels
             {
                 // Update the existing record
                 DbConnection.Execute(
-                    @"UPDATE KeyLists SET name = @Name WHERE id = @ID",
-                    new { Name, ID },
+                    @"UPDATE KeyLists 
+                        SET name = @Name, colour = @Colour
+                      WHERE id = @ID",
+                    new { Name, Colour, ID },
                     transaction
                 );
             }
         }
+
+        public override void Delete(IDbTransaction transaction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

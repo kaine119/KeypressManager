@@ -45,6 +45,19 @@ namespace Database.DatabaseModels
             }
         }
 
+        private bool _isDeleted;
+
+        public bool IsDeleted
+        {
+            get { return _isDeleted; }
+            set
+            {
+                _isDeleted = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsDeleted"));
+            }
+        }
+
+
         /// <summary>
         /// The personnel listed on the bunch's Authorization List.
         /// </summary>
@@ -90,6 +103,7 @@ namespace Database.DatabaseModels
                       LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
                       LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
                       LEFT OUTER JOIN KeyLists AS kl ON kb.keyListId = kl.id
+                      WHERE kb.isDeleted = 0
                       ORDER BY kb.keyListId, kb.bunchNumber ASC;",
                     (kb, p, kl) =>
                     {
@@ -109,8 +123,9 @@ namespace Database.DatabaseModels
                 // Add the squadrons to the relevant keybunches
                 DbConnection.Query<KeyBunch, Squadron, KeyBunch>(
                     @"SELECT kb.*, sqn.* FROM KeyBunches AS kb
-                  INNER JOIN SquadronAuthorizations AS sqn_a ON sqn_a.keyBunchId = kb.id
-                  INNER JOIN Squadrons AS sqn ON sqn_a.squadronId = sqn.id",
+                      INNER JOIN SquadronAuthorizations AS sqn_a ON sqn_a.keyBunchId = kb.id
+                      INNER JOIN Squadrons AS sqn ON sqn_a.squadronId = sqn.id
+                      WHERE kb.isDeleted = 0",
                     (kb, sqn) =>
                     {
                         KeyBunch bunch;
@@ -151,7 +166,7 @@ namespace Database.DatabaseModels
 
             // Join KeyBunch to Person via Authorizations
             // LEFT OUTER JOIN to include any bunches that don't have any auths
-            DbConnection.Query<KeyBunch,Person, KeyBunch>(
+            DbConnection.Query<KeyBunch, Person, KeyBunch>(
                 @"SELECT kb.*, p.* FROM KeyBunches as kb
                   LEFT OUTER JOIN Authorizations AS a ON a.keyBunchId = kb.id
                   LEFT OUTER JOIN Personnel AS p  ON a.personId = p.id
@@ -191,6 +206,7 @@ namespace Database.DatabaseModels
         {
             return obj is KeyBunch bunch &&
                    ID == bunch.ID &&
+                   ID != null &&
                    Name == bunch.Name &&
                    BunchNumber == bunch.BunchNumber;
         }
@@ -296,5 +312,27 @@ namespace Database.DatabaseModels
                 );
             }
         }
+
+        /// <summary>
+        /// "Deletes" a key bunch within the given transaction. <br/>
+        /// Instead of actually deleting the key bunch, this only *hides* the keybunch by adding a flag to the row.
+        /// </summary>
+        public override void Delete(IDbTransaction transaction)
+        {
+            DbConnection.Execute(
+                @"UPDATE KeyBunches
+                  SET isDeleted = 1
+                  WHERE id = @ID",
+                new { ID },
+                transaction
+            );
+            IsDeleted = true;
+        }
+
+        /// <summary>
+        /// Delete multiple key bunches.
+        /// </summary>
+        /// <param name="keyBunches">A enumerable containing the keybunches to delete.</param>
+        public static void DeleteMultiple(IEnumerable<KeyBunch> keyBunches) => DatabaseModel.DeleteMultiple(keyBunches);
     }
 }
