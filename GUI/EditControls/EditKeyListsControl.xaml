@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GUI.EditControls"
+             xmlns:convert="clr-namespace:GUI.Converters"
              xmlns:vm="clr-namespace:GUI.ViewModels"
              xmlns:model="clr-namespace:Database.DatabaseModels;assembly=Database"
              mc:Ignorable="d" 
@@ -15,6 +16,7 @@
                 <TextBlock Text="{Binding Name}"/>
             </Border>
         </DataTemplate>
+        <convert:HexTripletToBrush x:Key="HexTripletToBrush"/>
     </UserControl.Resources>
     <Border Padding="10">
         <Grid>
@@ -49,7 +51,7 @@
                                     Margin="5,0,10,0" 
                                     Width="30" 
                                     Height="30"
-                                    Name="ColorIndicator" Fill="{Binding SelectedColor}"/>
+                                    Name="ColorIndicator" Fill="{Binding SelectedKeyList.Colour, Converter={StaticResource HexTripletToBrush}}"/>
                                 <Button Content="Pick color" FontSize="12"
                                         Click="PickColorHandler"/>
                             </StackPanel>

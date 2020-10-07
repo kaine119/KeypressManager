@@ -58,15 +58,14 @@ namespace GUI.ViewModels
         {
             AllKeyLists = new ObservableCollection<KeyList>(KeyList.All);
 
-            SelectedColor = "#ffff00";
-
             CmdAddKeyList = new RelayCommand<TextBox>(
                 execute: (focusTarget) =>
                 {
                     newKeylistCount++;
                     KeyList newList = new KeyList
                     {
-                        Name = $"New Keylist {newKeylistCount}"
+                        Name = $"New Keylist {newKeylistCount}",
+                        Colour = "3a86c3"
                     };
                     AllKeyLists.Add(newList);
                 }

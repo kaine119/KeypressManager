@@ -31,7 +31,7 @@ namespace GUI.EditControls
                 // then convert it to a string, padding it to 6 digits long where appropriate.
                 // Why? Didn't want to deal with WinForms <-> WPF integration properly. xd
                 string resultTriplet = (dialog.Color.ToArgb() & 0x00ffffff).ToString("x6");
-                (DataContext as EditKeyListsViewModel).SelectedColor = "#" + resultTriplet;
+                (DataContext as EditKeyListsViewModel).SelectedKeyList.Colour = resultTriplet;
             }
         }
     }
