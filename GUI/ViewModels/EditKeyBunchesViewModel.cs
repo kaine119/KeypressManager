@@ -190,7 +190,7 @@ namespace GUI.ViewModels
                     {
                         bool result = int.TryParse(bunch.BunchNumber, out int ret);
                         return result ? ret : 0;
-                    }).Max() + 1;
+                    }).DefaultIfEmpty(0).Max() + 1;
                     KeyBunch newKeyBunch = new KeyBunch
                     {
                         Name = $"New key bunch {keyBunchNumber}",
