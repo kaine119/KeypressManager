@@ -12,9 +12,9 @@ namespace DatabaseTest
     public class DatabaseTestHelper
     {
         [AssemblyInitialize]
-        public static void InitializeDatabase(TestContext testContext)
+        public static void InitializeDatabase(TestContext _)
         {
-            var _ = new KeypressDatabase($"{System.IO.Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)}/TestFixtures/test.sqlite3");
+            KeypressDatabase.Initialize($"{System.IO.Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)}/TestFixtures/test.sqlite3");
         }
     }
 }

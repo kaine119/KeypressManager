@@ -11,6 +11,13 @@ namespace GUI
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Runs on application startup. Checks if there is a database file specified by 
+        /// local settings, verifies that it exists and that we can write to it,
+        /// then runs the application. 
+        /// If any of those steps fails, ask the user whether they want to locate an existing
+        /// database, or begin a new one.
+        /// </summary>
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             string path;
@@ -55,10 +62,17 @@ namespace GUI
                         return;
                 }
             }
-            MainWindow window = new MainWindow(path);
+            KeypressDatabase.Initialize(path);
+            MainWindow window = new MainWindow();
             window.Show();
         }
 
+        /// <summary>
+        /// Prompts the user to locate an existing database, then checks if we can 
+        /// write to it.
+        /// </summary>
+        /// <param name="path">Will be set to the location of the selected file.</param>
+        /// <return>Whether the operation was successful.</return>
         private bool TryOpenExistingDatabase(out string path)
         {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
@@ -91,6 +105,12 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// Prompts the user to select a location for a new database, then tries to copy
+        /// the template database to that location.
+        /// </summary>
+        /// <param name="path">Will be set to the location of the selected file.</param>
+        /// <return>Whether the operation was successful.</return>
         private bool TryWriteNewDatabase(out string path)
         {
             Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog

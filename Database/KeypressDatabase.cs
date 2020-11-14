@@ -8,7 +8,7 @@ namespace Database
 {
     public class KeypressDatabase
     {
-        public KeypressDatabase(string databasePath)
+        public static void Initialize(string databasePath)
         {
             SqlMapper.RemoveTypeMap(typeof(DateTimeOffset));
             SqlMapper.RemoveTypeMap(typeof(DateTimeOffset?));
