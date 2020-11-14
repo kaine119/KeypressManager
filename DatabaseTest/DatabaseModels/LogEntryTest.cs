@@ -10,8 +10,6 @@ namespace DatabaseTest
     [TestClass, TestCategory("Models")]
     public class LogEntryTest
     {
-        KeypressDatabase db = DatabaseTestHelper.TestDatabase;
-
         [TestMethod]
         public void IsKeyReturned_CorrectlyReturns()
         {
@@ -38,7 +36,7 @@ namespace DatabaseTest
         [TestMethod]
         public void LogEntry_InstantiatesCorrectly()
         {
-            LogEntry firstLog = db.AllLogEntries.First();
+            LogEntry firstLog = LogEntry.All.First();
             Assert.AreEqual(new DateTime(2020, 4, 1, 12, 0, 0), firstLog.TimeIssued);
             Assert.AreEqual(new DateTime(2020, 4, 1, 13, 0, 0), firstLog.TimeReturned);
             Assert.AreEqual("Alice Tan", firstLog.PersonDrawingKey.Name);
@@ -46,14 +44,14 @@ namespace DatabaseTest
             Assert.AreEqual("Alice Tan", firstLog.PersonReturningKey.Name);
             Assert.AreEqual("Charlie Chan", firstLog.PersonReceivingKey.Name);
 
-            LogEntry unreturnedLog = db.AllLogEntries.ElementAt(1);
+            LogEntry unreturnedLog = LogEntry.All.ElementAt(1);
             Assert.IsFalse(unreturnedLog.IsKeyReturned);
         }
 
         [TestMethod]
         public void Unreturned_GetsUnreturnedKeys()
         {
-            List<LogEntry> logs = db.LogsEntriesForUnreturnedKeys.ToList();
+            List<LogEntry> logs = LogEntry.ForUnreturnedKeys.ToList();
             Assert.AreEqual(1, logs.Count());
             Assert.AreEqual(new DateTime(2020, 4, 1, 12, 1, 0), logs.First().TimeIssued);
             Assert.IsTrue(logs.All(log => !log.IsKeyReturned));
@@ -62,29 +60,29 @@ namespace DatabaseTest
         [TestMethod]
         public void Write_WritesLogForDrawingOut()
         {
-            Person customer = db.AllPersonnel.First();
-            Person staff = db.AllPersonnel.Last();
+            Person customer = Person.All.First();
+            Person staff = Person.All.Last();
             LogEntry log = new LogEntry
             {
-                KeyBunchDrawn = db.AllKeyBunches.First(),
+                KeyBunchDrawn = KeyBunch.All.First(),
                 TimeIssued = new DateTimeOffset(2020, 4, 1, 14, 0, 0, TimeSpan.FromHours(8)),
                 PersonDrawingKey = customer,
                 PersonIssuingKey = staff
             };
             log.Write();
 
-            LogEntry writtenLog = db.AllLogEntries.Last();
+            LogEntry writtenLog = LogEntry.All.Last();
             Assert.AreEqual(log.TimeIssued, writtenLog.TimeIssued.Value);
         }
 
         [TestMethod]
         public void Write_WritesCorrectlyForExistingPersonnel()
         {
-            Person customer = db.AllPersonnel.First();
-            Person staff = db.AllPersonnel.Last();
+            Person customer = Person.All.First();
+            Person staff = Person.All.Last();
             LogEntry log = new LogEntry
             {
-                KeyBunchDrawn = db.AllKeyBunches.First(),
+                KeyBunchDrawn = KeyBunch.All.First(),
                 TimeIssued = new DateTimeOffset(2020, 4, 1, 14, 0, 0, TimeSpan.FromHours(8)),
                 PersonDrawingKey = customer,
                 PersonIssuingKey = staff,
@@ -94,16 +92,16 @@ namespace DatabaseTest
             };
             log.Write();
 
-            LogEntry writtenLog = db.AllLogEntries.Last();
+            LogEntry writtenLog = LogEntry.All.Last();
             Assert.AreEqual(log.TimeIssued, writtenLog.TimeIssued.Value);
         }
 
         [TestMethod]
         public void Write_ThrowsOnUnauthorizedPersonnel()
         {
-            KeyBunch keyBunchDrawn = db.AllKeyBunches.First();
-            Person unauthorized = db.AllPersonnel.ElementAt(1);
-            Person staff = db.AllPersonnel.Last();
+            KeyBunch keyBunchDrawn = KeyBunch.All.First();
+            Person unauthorized = Person.All.ElementAt(1);
+            Person staff = Person.All.Last();
             LogEntry log = new LogEntry
             {
                 KeyBunchDrawn = keyBunchDrawn,

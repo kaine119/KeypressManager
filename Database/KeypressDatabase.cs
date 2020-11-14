@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Database.DatabaseModels;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -16,16 +15,6 @@ namespace Database
             SqlMapper.AddTypeHandler(typeof(DateTimeOffset?), new UnixTimestampDateTimeHandler());
             DatabaseModel.EstablishConnection($"Data source={databasePath}");
         }
-
-        public IEnumerable<Person> AllPersonnel => Person.All;
-        public IEnumerable<KeyBunch> AllKeyBunches => KeyBunch.All;
-        public IEnumerable<KeyList> AllKeyLists => KeyList.All;
-        public IEnumerable<LogEntry> AllLogEntries => LogEntry.All;
-        public IEnumerable<Squadron> AllSquadrons => Squadron.All;
-
-        public IEnumerable<LogEntry> LogsEntriesForUnreturnedKeys => LogEntry.ForUnreturnedKeys;
-        public IEnumerable<KeyBunch> UnreturnedKeys => KeyBunch.Unreturned;
-
 
         /// <summary>
         /// Book a key out.

@@ -1,7 +1,4 @@
-﻿using Database;
-using Database.DatabaseModels;
-using DatabaseTest;
-using System;
+﻿using Database.DatabaseModels;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DatabaseTest
@@ -9,12 +6,10 @@ namespace DatabaseTest
     [TestClass, TestCategory("Models")]
     public class KeyListTest
     {
-        KeypressDatabase db = DatabaseTestHelper.TestDatabase;
-
         [TestMethod]
         public void KeyList_InstantiatesCorrectly()
         {
-            KeyList keyList = db.AllKeyLists.Single(list => list.Name == "Test Keypress");
+            KeyList keyList = KeyList.All.Single(list => list.Name == "Test Keypress");
             Assert.AreEqual(2, keyList.ID);
             Assert.AreEqual(2, keyList.Keys.Count());
         }
@@ -28,19 +23,19 @@ namespace DatabaseTest
                 Colour = "ff0000"
             };
             keyList.Write();
-            Assert.AreEqual(4, db.AllKeyLists.Count());
-            Assert.AreEqual("New Keylist", db.AllKeyLists.Last().Name);
+            Assert.AreEqual(4, KeyList.All.Count());
+            Assert.AreEqual("New Keylist", KeyList.All.Last().Name);
         }
 
         [TestMethod]
         public void Write_EditsExistingList()
         {
-            int initialAllKeyListsCount = db.AllKeyLists.Count();
-            KeyList keyList = db.AllKeyLists.Single(list => list.Name == "Test Keypress");
+            int initialAllKeyListsCount = KeyList.All.Count();
+            KeyList keyList = KeyList.All.Single(list => list.Name == "Test Keypress");
             keyList.Name = "Test Keypress (edited)";
             keyList.Write();
-            Assert.AreEqual(initialAllKeyListsCount, db.AllKeyLists.Count());
-            Assert.IsTrue(db.AllKeyLists.Any(list => list.Name == "Test Keypress (edited)"));
+            Assert.AreEqual(initialAllKeyListsCount, KeyList.All.Count());
+            Assert.IsTrue(KeyList.All.Any(list => list.Name == "Test Keypress (edited)"));
         }
     }
 }
