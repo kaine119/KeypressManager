@@ -1,28 +1,24 @@
-﻿using System;
+﻿using Database.DatabaseModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Database.DatabaseModels;
-using Database;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DatabaseTest
 {
     [TestClass, TestCategory("Models")]
     public class PersonTest
     {
-        KeypressDatabase db = DatabaseTestHelper.TestDatabase;
-
         [TestMethod]
         public void Person_InstantiatesCorrectly()
         {
-            Person alice = db.AllPersonnel.First();
+            Person alice = Person.All.First();
             Assert.AreEqual(1, alice.ID);
             Assert.AreEqual("Alice Tan", alice.Name);
             Assert.AreEqual("101A", alice.NRIC);
             Assert.AreEqual(Rank.REC, alice.Rank);
             Assert.AreEqual("90123456", alice.ContactNumber);
 
-            Person bob = db.AllPersonnel.ElementAt(1);
+            Person bob = Person.All.ElementAt(1);
             Assert.AreEqual("111 SQN", bob.Squadrons.First().Name);
         }
 
@@ -36,16 +32,16 @@ namespace DatabaseTest
                 Rank = Rank.REC
             };
             test.Write();
-            Assert.IsTrue(db.AllPersonnel.Any(arg => arg.Name == "PersonWrite"));
+            Assert.IsTrue(Person.All.Any(arg => arg.Name == "PersonWrite"));
         }
 
         [TestMethod]
         public void Write_EditsExistingPersonCorrectly()
         {
-            Person test = db.AllPersonnel.Where(person => person.Name == "PersonWrite").Single();
+            Person test = Person.All.Where(person => person.Name == "PersonWrite").Single();
             test.NRIC = "106A";
             test.Write();
-            Person testAfterWrite = db.AllPersonnel.Where(person => person.Name == "PersonWrite").Single();
+            Person testAfterWrite = Person.All.Where(person => person.Name == "PersonWrite").Single();
             Assert.AreEqual("106A", testAfterWrite.NRIC);
         }
 

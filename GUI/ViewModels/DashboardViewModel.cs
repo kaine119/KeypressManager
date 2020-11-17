@@ -12,7 +12,6 @@ namespace GUI.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private KeypressDatabase db;
         public ObservableCollection<DashboardKeyListItem> PresentKeys { get; set; }
         public ObservableCollection<DashboardKeyListItem> BookedOutKeys { get; set; }
 
@@ -98,10 +97,8 @@ namespace GUI.ViewModels
 
         public ObservableCollection<KeyList> AllKeyLists => new ObservableCollection<KeyList>(KeyList.All);
 
-        public DashboardViewModel(string path)
+        public DashboardViewModel()
         {
-            db = new KeypressDatabase(path);
-
             SearchTerm = "";
 
             PresentKeys = new ObservableCollection<DashboardKeyListItem>();

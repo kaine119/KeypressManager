@@ -13,10 +13,10 @@ namespace GUI
     public partial class MainWindow : Window
     {
         DashboardViewModel vm;
-        public MainWindow(string path)
+        public MainWindow()
         {
             InitializeComponent();
-            vm = new DashboardViewModel(path);
+            vm = new DashboardViewModel();
             DataContext = vm;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             VersionBox.Text = $"v{version.Major}.{version.Minor}.{version.Revision}";
