@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using Database;
 using Microsoft.Data.Sqlite;
 
 namespace GUI
