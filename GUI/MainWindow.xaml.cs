@@ -19,7 +19,7 @@ namespace GUI
             vm = new DashboardViewModel();
             DataContext = vm;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionBox.Text = $"v{version.Major}.{version.Minor}.{version.Revision}";
+            VersionBox.Text = $"v{version.Major}.{version.Minor}.{version.Build}";
         }
 
         private void StartBookingWindow(object sender, RoutedEventArgs e)

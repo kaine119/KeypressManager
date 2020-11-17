@@ -6,7 +6,7 @@
         xmlns:vm="clr-namespace:GUI.ViewModels"
         xmlns:convert="clr-namespace:GUI.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600" MinWidth="900"
+        Title="Pass Office Keypress Management" Height="720" Width="1280" MinWidth="900"
         WindowState="Maximized"
         Style="{DynamicResource {x:Type Window}}"
         d:DataContext="{d:DesignInstance {x:Type vm:DashboardViewModel}}"
@@ -344,6 +344,7 @@
                     </ComboBox>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" TextElement.Foreground="{DynamicResource NormalTextBrush}">
+                    <Image Source="Assets\607_sqn.png" HorizontalAlignment="Left"/>
                     <TextBlock FontSize="17" HorizontalAlignment="Left">Paya Lebar Airbase</TextBlock>
                     <TextBlock>
                         KeypressManager

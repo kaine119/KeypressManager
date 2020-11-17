@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\607_sqn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Themes\Dark.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Resource>
