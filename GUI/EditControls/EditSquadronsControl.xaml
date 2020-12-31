@@ -97,7 +97,8 @@
                                 <Label Content="NRIC" VerticalAlignment="Center"/>
                                 <TextBox Text="{Binding PersonToAdd.NRIC}" 
                                          x:Name="NRIC"
-                                         TabIndex="4"/>
+                                         TabIndex="4"
+                                         MaxLength="4"/>
                             </DockPanel>
                             <DockPanel Margin="0,0,0,5" Grid.Column="1">
                                 <Label Content="Rank" VerticalAlignment="Center"/>
