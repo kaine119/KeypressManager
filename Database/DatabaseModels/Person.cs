@@ -33,7 +33,7 @@ namespace Database.DatabaseModels
             !(NRIC is null)
             && !(Name is null)
             && !(Rank is null)
-            && Regex.IsMatch(NRIC.ToUpper(), @"[A-Z0-9]{4}"); // 4x alphanumeric
+            && Regex.IsMatch(NRIC.ToUpper(), @"^[A-Z0-9]{4}$"); // 4x alphanumeric
 
         /// <summary>
         /// All the squadrons that this personnel is in.
