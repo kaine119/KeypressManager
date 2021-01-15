@@ -29,7 +29,11 @@ namespace Database.DatabaseModels
             return HashCode.Combine(NRIC, Name);
         }
 
-        public override bool IsValid => !(NRIC is null) && !(Name is null) && !(Rank is null);
+        public override bool IsValid =>
+            !(NRIC is null)
+            && !(Name is null)
+            && !(Rank is null)
+            && Regex.IsMatch(NRIC.ToUpper(), @"^[A-Z0-9]{4}$"); // 4x alphanumeric
 
         /// <summary>
         /// All the squadrons that this personnel is in.
@@ -144,7 +148,7 @@ namespace Database.DatabaseModels
                         @"INSERT INTO personnel (nric, name, rank, contactNumber)
                         VALUES (@NRIC, @Name, @Rank, @ContactNumber);
                         SELECT last_insert_rowid();",
-                        new { NRIC, Name, Rank, ContactNumber },
+                        new { NRIC = NRIC.ToUpper(), Name, Rank, ContactNumber },
                         transaction
                     ).Single();
             }
@@ -155,7 +159,7 @@ namespace Database.DatabaseModels
                     @"UPDATE personnel 
                       SET nric = @NRIC, name = @Name, rank = @Rank, contactNumber = @ContactNumber 
                       WHERE id = @ID",
-                    new { NRIC, Name, Rank, ContactNumber, ID },
+                    new { NRIC = NRIC.ToUpper(), Name, Rank, ContactNumber, ID },
                     transaction
                 );
             }

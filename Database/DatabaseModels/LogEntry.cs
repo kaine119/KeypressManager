@@ -57,10 +57,12 @@ namespace Database.DatabaseModels
                 // If the key hasn't been returned yet, only all three of the issuing fields are required
                 // If the key has been returned, both the issuing and the returning fields are required
                 // Therefore, either the first three fields are required or all six fields are required.
+                // If the key has been returned, the time returned should be greater than the time issued.
                 return !(KeyBunchDrawn is null)
                     && (!(TimeIssued is null) && !(PersonDrawingKey is null) && !(PersonIssuingKey is null)) // first 3 fields
                     || (!(TimeIssued is null) && !(PersonDrawingKey is null) && !(PersonIssuingKey is null)  // all 6 fields
-                        && !(TimeReturned is null) && !(PersonReturningKey is null) && !(PersonReceivingKey is null));
+                        && !(TimeReturned is null) && !(PersonReturningKey is null) && !(PersonReceivingKey is null)
+                        && TimeReturned > TimeIssued);
             }
         }
 

@@ -87,7 +87,11 @@ namespace Database.DatabaseModels
             }
         }
 
-        public override bool IsValid => !(Name is null) && !(BunchNumber is null) && !(NumberOfKeys is null);
+        public override bool IsValid =>
+            !(Name is null)
+            && !(BunchNumber is null)
+            && !(NumberOfKeys is null)
+            && NumberOfKeys >= 0;
 
         /// <returns>All the keybunches in the database.</returns>
         public static IEnumerable<KeyBunch> All

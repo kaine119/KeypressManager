@@ -81,7 +81,7 @@
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0" Margin="0,0,0,10">
                     <Label Content="Squadron name"/>
-                    <TextBox Text="{Binding SelectedSquadron.Name}"/>
+                    <TextBox Text="{Binding SelectedSquadron.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DockPanel>
                 <GroupBox Grid.Row="1" Header="Squadron personnel" Margin="0,0,0,10">
                     <ListBox Grid.Row="1" ItemsSource="{Binding SelectedSquadron.Personnel}" />
@@ -97,7 +97,8 @@
                                 <Label Content="NRIC" VerticalAlignment="Center"/>
                                 <TextBox Text="{Binding PersonToAdd.NRIC}" 
                                          x:Name="NRIC"
-                                         TabIndex="4"/>
+                                         TabIndex="4"
+                                         MaxLength="4"/>
                             </DockPanel>
                             <DockPanel Margin="0,0,0,5" Grid.Column="1">
                                 <Label Content="Rank" VerticalAlignment="Center"/>

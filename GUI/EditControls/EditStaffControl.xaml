@@ -45,8 +45,9 @@
                             <DockPanel Margin="0,0,0,5" Grid.Column="0">
                                 <Label Content="NRIC" VerticalAlignment="Center"/>
                                 <TextBox Text="{Binding StaffToAdd.NRIC, UpdateSourceTrigger=PropertyChanged}" 
-                                        x:Name="NRIC"
-                                        TabIndex="4"/>
+                                         x:Name="NRIC"
+                                         TabIndex="4"
+                                         MaxLength="4"/>
                             </DockPanel>
                             <DockPanel Margin="0,0,0,5" Grid.Column="1">
                                 <Label Content="Rank" VerticalAlignment="Center"/>
@@ -109,7 +110,7 @@
                             </Grid.ColumnDefinitions>
                             <DockPanel Margin="0,0,0,5" Grid.Column="0">
                                 <Label Content="NRIC" VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding SelectedStaff.NRIC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedStaff.NRIC, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DockPanel>
                             <DockPanel Margin="0,0,0,5" Grid.Column="1">
                                 <Label Content="Rank" VerticalAlignment="Center"/>

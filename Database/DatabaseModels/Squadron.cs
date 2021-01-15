@@ -18,11 +18,6 @@ namespace Database.DatabaseModels
                    Name == squadron.Name;
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name);
-        }
-
         public override bool IsValid => !(Name is null);
 
         public static IEnumerable<Squadron> All
